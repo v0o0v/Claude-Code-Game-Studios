@@ -31,6 +31,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Notes that implementation is delegated to specialist agents (not done directly)
 - [ ] Uses story-embedded ADR Decision Summary / Implementation Notes as the primary implementation brief
 - [ ] Avoids full ADR reads by default; uses targeted ADR section reads only for validation or missing/stale guidance
+- [ ] Checks story ADR Version against the current ADR last-commit date before trusting embedded ADR guidance
 
 ---
 
@@ -54,6 +55,7 @@ In `solo` mode: LP-CODE-REVIEW is skipped with equivalent notes.
 - A story file exists at `production/epics/[layer]/story-[name].md` with:
   - `Status: Ready`
   - A TR-ID referencing a registered requirement
+  - `ADR Version:` matching the current governing ADR last commit date
   - At least 2 Given-When-Then acceptance criteria
   - A test evidence path
 - Referenced ADR has `Status: Accepted`
@@ -75,6 +77,7 @@ In `solo` mode: LP-CODE-REVIEW is skipped with equivalent notes.
 **Assertions:**
 - [ ] Skill reads story before spawning any agent
 - [ ] ADR status is checked before implementation begins
+- [ ] ADR Version is compared against the governing ADR's current last-commit date before embedded guidance is trusted
 - [ ] Skill uses the story's embedded ADR Decision Summary and Implementation Notes instead of re-reading the full ADR
 - [ ] Implementation is delegated to a specialist agent (not done inline)
 - [ ] All acceptance criteria are confirmed before LP-CODE-REVIEW
@@ -190,11 +193,35 @@ In `solo` mode: LP-CODE-REVIEW is skipped with equivalent notes.
 
 ---
 
+### Case 6: Stale ADR Version - Skill prompts before implementation
+
+**Fixture:**
+- Story has `ADR Version: 2026-01-15`
+- Governing ADR's current `git log -1 --format=%cs -- [adr-file]` date is `2026-03-10`
+- Story has embedded ADR Decision Summary and Implementation Notes
+
+**Input:** `/dev-story production/epics/[layer]/story-[name].md`
+
+**Expected behavior:**
+1. Skill reads the story file and detects the ADR Version mismatch
+2. Skill asks whether to refresh targeted ADR guidance, proceed with stale guidance, or stop
+3. Implementation does NOT begin until the user chooses a path
+4. If refresh is chosen, the skill reads only targeted ADR sections and updates embedded story guidance before spawning a programmer
+
+**Assertions:**
+- [ ] Skill does not trust matching-looking embedded ADR guidance when ADR Version is stale
+- [ ] User is prompted before implementation
+- [ ] Refresh path uses targeted ADR section reads, not a full ADR read by default
+- [ ] Proceed-with-risk path records an ADR-Version-Note in the story header without rewriting the stale ADR Version
+
+---
+
 ## Protocol Compliance
 
 - [ ] Does NOT write source code directly — delegates to specialist agents
 - [ ] Reads all context (story, TR-ID, story-embedded ADR guidance, manifest, engine prefs) before implementation
 - [ ] Does not perform unbounded full-file ADR reads unless embedded guidance is missing, stale, or ambiguous
+- [ ] Verifies ADR Version freshness before relying on story-embedded ADR guidance
 - [ ] "May I write" asked before updating story status and before writing code files
 - [ ] Skipped gates noted by name and mode in output
 - [ ] Updates `production/session-state/active.md` after story completion
