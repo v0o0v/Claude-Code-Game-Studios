@@ -2,11 +2,14 @@
 
 ## Skill Summary
 
-`/dev-story` reads a story file, loads all required context (referenced ADR,
-TR-ID from the registry, control manifest, engine preferences), implements the
-story, verifies that all acceptance criteria are met, and marks the story
-Complete. The skill routes implementation to the correct specialist agent based
-on the engine and file type — it does not write source code directly.
+`/dev-story` reads a story file, loads all required context (TR-ID from the
+registry, story-embedded ADR guidance, control manifest, engine preferences),
+implements the story, verifies that all acceptance criteria are met, and marks
+the story Complete. It validates the referenced ADR status with targeted reads,
+but does not re-read full ADR files by default when `/create-stories` already
+embedded the Decision Summary and Implementation Notes. The skill routes
+implementation to the correct specialist agent based on the engine and file
+type — it does not write source code directly.
 
 In `full` review mode, an LP-CODE-REVIEW gate runs before marking the story
 Complete. In `lean` or `solo` mode, LP-CODE-REVIEW is skipped and the story is
@@ -26,6 +29,8 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has a next-step handoff at the end (`/story-done`)
 - [ ] Documents LP-CODE-REVIEW gate: active in full mode, skipped in lean/solo
 - [ ] Notes that implementation is delegated to specialist agents (not done directly)
+- [ ] Uses story-embedded ADR Decision Summary / Implementation Notes as the primary implementation brief
+- [ ] Avoids full ADR reads by default; uses targeted ADR section reads only for validation or missing/stale guidance
 
 ---
 
@@ -59,8 +64,8 @@ In `solo` mode: LP-CODE-REVIEW is skipped with equivalent notes.
 **Input:** `/dev-story production/epics/[layer]/story-[name].md`
 
 **Expected behavior:**
-1. Skill reads the story file and all referenced context
-2. Skill verifies the ADR is Accepted (no block)
+1. Skill reads the story file and all required context
+2. Skill verifies the ADR is Accepted using a targeted status read (no block)
 3. Skill routes implementation to the correct specialist agent
 4. All acceptance criteria are verified as met
 5. LP-CODE-REVIEW gate spawns and returns APPROVED
@@ -70,6 +75,7 @@ In `solo` mode: LP-CODE-REVIEW is skipped with equivalent notes.
 **Assertions:**
 - [ ] Skill reads story before spawning any agent
 - [ ] ADR status is checked before implementation begins
+- [ ] Skill uses the story's embedded ADR Decision Summary and Implementation Notes instead of re-reading the full ADR
 - [ ] Implementation is delegated to a specialist agent (not done inline)
 - [ ] All acceptance criteria are confirmed before LP-CODE-REVIEW
 - [ ] LP-CODE-REVIEW appears in output as a completed gate
@@ -88,7 +94,7 @@ In `solo` mode: LP-CODE-REVIEW is skipped with equivalent notes.
 
 **Expected behavior:**
 1. Skill reads the story file
-2. Skill resolves the TR-ID and reads the governing ADR
+2. Skill resolves the TR-ID and reads enough of the governing ADR to verify status
 3. ADR status is Proposed — skill outputs a BLOCKED message
 4. Skill names the specific ADR blocking the story
 5. Skill recommends running `/architecture-decision` to advance the ADR
@@ -187,7 +193,8 @@ In `solo` mode: LP-CODE-REVIEW is skipped with equivalent notes.
 ## Protocol Compliance
 
 - [ ] Does NOT write source code directly — delegates to specialist agents
-- [ ] Reads all context (story, TR-ID, ADR, manifest, engine prefs) before implementation
+- [ ] Reads all context (story, TR-ID, story-embedded ADR guidance, manifest, engine prefs) before implementation
+- [ ] Does not perform unbounded full-file ADR reads unless embedded guidance is missing, stale, or ambiguous
 - [ ] "May I write" asked before updating story status and before writing code files
 - [ ] Skipped gates noted by name and mode in output
 - [ ] Updates `production/session-state/active.md` after story completion
