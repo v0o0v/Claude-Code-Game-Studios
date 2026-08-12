@@ -3,13 +3,13 @@
   <p align="center">
     하나의 Claude Code 세션을 완전한 게임 개발 스튜디오로 바꿔보세요.
     <br />
-    49개 에이전트. 73개 스킬. 하나로 조율되는 AI 팀.
+    56개 에이전트. 73개 스킬. 하나로 조율되는 AI 팀.
   </p>
 </p>
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
-  <a href=".claude/agents"><img src="https://img.shields.io/badge/agents-49-blueviolet" alt="49 Agents"></a>
+  <a href=".claude/agents"><img src="https://img.shields.io/badge/agents-56-blueviolet" alt="56 Agents"></a>
   <a href=".claude/skills"><img src="https://img.shields.io/badge/skills-73-green" alt="73 Skills"></a>
   <a href=".claude/hooks"><img src="https://img.shields.io/badge/hooks-12-orange" alt="12 Hooks"></a>
   <a href=".claude/rules"><img src="https://img.shields.io/badge/rules-11-red" alt="11 Rules"></a>
@@ -22,7 +22,7 @@
 
 AI와 함께 혼자 게임을 만드는 것은 강력하지만, 단일 채팅 세션에는 구조가 없습니다. 매직 넘버를 하드코딩하거나, 디자인 문서를 건너뛰거나, 스파게티 코드를 작성하는 것을 막아줄 사람이 없습니다. QA 패스도, 디자인 리뷰도, "이게 정말 게임의 비전에 맞는가?"라고 물어봐줄 사람도 없습니다.
 
-**Claude Code Game Studios**는 AI 세션에 실제 스튜디오의 구조를 부여함으로써 이 문제를 해결합니다. 하나의 범용 어시스턴트 대신, 스튜디오 계층구조로 조직된 49개의 전문 에이전트를 얻게 됩니다 — 비전을 지키는 디렉터, 자신의 도메인을 책임지는 부서 리드, 실무를 수행하는 전문가들입니다. 각 에이전트는 명확한 책임, 에스컬레이션 경로, 품질 게이트를 가지고 있습니다.
+**Claude Code Game Studios**는 AI 세션에 실제 스튜디오의 구조를 부여함으로써 이 문제를 해결합니다. 하나의 범용 어시스턴트 대신, 스튜디오 계층구조로 조직된 56개의 전문 에이전트를 얻게 됩니다 — 비전을 지키는 디렉터, 자신의 도메인을 책임지는 부서 리드, 실무를 수행하는 전문가들입니다. 각 에이전트는 명확한 책임, 에스컬레이션 경로, 품질 게이트를 가지고 있습니다.
 
 결과적으로: 모든 결정은 여전히 사용자가 내리지만, 이제는 올바른 질문을 던지고, 실수를 조기에 발견하고, 첫 브레인스토밍부터 출시까지 프로젝트를 체계적으로 유지해주는 팀이 생기는 것입니다.
 
@@ -49,7 +49,7 @@ AI와 함께 혼자 게임을 만드는 것은 강력하지만, 단일 채팅 �
 
 | 분류 | 개수 | 설명 |
 |----------|-------|-------------|
-| **에이전트** | 49 | 디자인, 프로그래밍, 아트, 오디오, 내러티브, QA, 프로덕션 전반에 걸친 전문 서브에이전트 |
+| **에이전트** | 56 | 디자인, 프로그래밍, 아트, 오디오, 내러티브, QA, 프로덕션 전반에 걸친 전문 서브에이전트 |
 | **스킬** | 73 | 모든 워크플로 단계를 위한 슬래시 명령어(`/start`, `/design-system`, `/create-epics`, `/create-stories`, `/dev-story`, `/story-done` 등) |
 | **훅** | 12 | 커밋, 푸시, 에셋 변경, 세션 라이프사이클, 에이전트 감사 추적, 갭 감지에 대한 자동 검증 |
 | **규칙** | 11 | 게임플레이, 엔진, AI, UI, 네트워크 코드 등을 편집할 때 적용되는 경로 기반 코딩 표준 |
@@ -169,7 +169,7 @@ Claude Code에서 `/`를 입력하면 73개의 스킬 전체에 접근할 수 �
 CLAUDE.md                           # Master configuration
 .claude/
   settings.json                     # Hooks, permissions, safety rules
-  agents/                           # 49 agent definitions (markdown + YAML frontmatter)
+  agents/                           # 56 agent definitions (markdown + YAML frontmatter)
   skills/                           # 73 slash commands (subdirectory per skill)
   hooks/                            # 12 hook scripts (bash, cross-platform)
   rules/                            # 11 path-scoped coding standards
@@ -268,10 +268,27 @@ production/                         # Sprint plans, milestones, release tracking
 - **스킬 수정** — 팀의 프로세스에 맞게 워크플로를 조정하세요
 - **규칙 추가** — 프로젝트의 디렉터리 구조에 맞는 새로운 경로 기반 규칙을 만드세요
 - **훅 조정** — 검증 엄격도를 조정하고 새로운 체크를 추가하세요
-- **엔진 선택** — Godot, Unity, Unreal 에이전트 세트 중 하나를 사용하거나(또는 사용하지 않아도) 됩니다
+- **엔진 선택** — Godot, Unity, Unreal, Web 에이전트 세트 중 하나를 사용하거나(또는 사용하지 않아도) 됩니다
 - **리뷰 강도 설정** — `full`(모든 디렉터 게이트), `lean`(단계 게이트만), `solo`(없음) 중 선택. `/start` 중에 설정하거나 `production/review-mode.txt`를 편집하세요. 어떤 스킬에서든 `--review solo`로 실행 단위 재정의가 가능합니다.
 
 ## 플랫폼 지원
+
+### 지원 엔진
+
+템플릿에는 네 가지 엔진 에이전트 세트가 포함되어 있습니다. `/setup-engine` 중에 하나를 선택하세요:
+
+| 엔진 | 언어 | 에이전트 세트 |
+|--------|----------|-----------|
+| **Godot 4** | GDScript / C# | `godot-specialist` + 서브 전문가 4명 |
+| **Unity** | C# | `unity-specialist` + 서브 전문가 4명 |
+| **Unreal Engine 5** | C++ / Blueprint | `unreal-specialist` + 서브 전문가 4명 |
+| **Web** | TypeScript | `web-specialist` + 서브 전문가 6명 |
+
+Web 세트는 공유된 TypeScript/Vite/WebGPU 스택 위에서 **PixiJS**(2D), **Three.js**(3D),
+또는 둘 다를 대상으로 합니다. `/setup-engine web`은 Godot 프로젝트에서 언어를 고르게
+하는 것과 같은 방식으로 어떤 렌더러를 쓸지 묻습니다.
+
+### 개발 플랫폼
 
 주 개발 및 테스트는 Git Bash를 사용하는 **Windows 10**에서 이루어집니다. 모든 훅은 POSIX 호환 패턴(`grep -P`가 아닌 `grep -E`)을 사용하며 도구가 없을 때를 위한 대체 로직을 포함하므로 macOS와 Linux에서도 동작할 것입니다. `notify.sh` 훅은 Windows 토스트 알림을 위해 PowerShell을 사용하며 그 외 환경에서는 아무 동작도 하지 않습니다 — macOS/Linux의 데스크톱 알림은 아직 연결되어 있지 않습니다. 크로스플랫폼 테스트는 진행 중이며, 플랫폼별 문제가 발견되면 이슈를 등록해 주세요.
 
