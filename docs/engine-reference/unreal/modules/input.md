@@ -1,35 +1,35 @@
-# Unreal Engine 5.7 — Input Module Reference
+# Unreal Engine 5.7 — 입력 모듈 레퍼런스
 
-**Last verified:** 2026-02-13
-**Knowledge Gap:** UE 5.7 uses Enhanced Input as default (legacy input deprecated)
-
----
-
-## Overview
-
-UE 5.7 input systems:
-- **Enhanced Input** (RECOMMENDED, default in UE5): Modular, rebindable, context-based
-- **Legacy Input**: Deprecated, avoid for new projects
+**최종 검증일:** 2026-02-13
+**지식 공백:** UE 5.7은 Enhanced Input을 기본값으로 사용(레거시 입력은 폐기 예정)
 
 ---
 
-## Enhanced Input System
+## 개요
 
-### Setup Enhanced Input
-
-1. **Enable Plugin**: `Edit > Plugins > Enhanced Input` (enabled by default in UE5)
-2. **Project Settings**: `Engine > Input > Default Classes > Default Player Input Class = EnhancedPlayerInput`
+UE 5.7 입력 시스템:
+- **Enhanced Input** (권장, UE5 기본값): 모듈형, 리바인딩 가능, 컨텍스트 기반
+- **Legacy Input**: 폐기 예정, 신규 프로젝트에서는 사용 지양
 
 ---
 
-### Create Input Actions
+## Enhanced Input 시스템
+
+### Enhanced Input 설정
+
+1. **플러그인 활성화**: `Edit > Plugins > Enhanced Input` (UE5에서 기본 활성화)
+2. **프로젝트 설정**: `Engine > Input > Default Classes > Default Player Input Class = EnhancedPlayerInput`
+
+---
+
+### Input Action 생성
 
 1. Content Browser > Input > Input Action
-2. Name it (e.g., `IA_Jump`, `IA_Move`)
-3. Configure:
+2. 이름 지정(예: `IA_Jump`, `IA_Move`)
+3. 구성:
    - **Value Type**: Digital (bool), Axis1D (float), Axis2D (Vector2D), Axis3D (Vector)
 
-Example Input Actions:
+Input Action 예시:
 - `IA_Jump`: Digital (bool)
 - `IA_Move`: Axis2D (Vector2D)
 - `IA_Look`: Axis2D (Vector2D)
@@ -37,19 +37,19 @@ Example Input Actions:
 
 ---
 
-### Create Input Mapping Context
+### Input Mapping Context 생성
 
 1. Content Browser > Input > Input Mapping Context
-2. Name it (e.g., `IMC_Default`)
-3. Add mappings:
+2. 이름 지정(예: `IMC_Default`)
+3. 매핑 추가:
    - `IA_Jump` → Space Bar
-   - `IA_Move` → W/A/S/D keys (combine X/Y)
-   - `IA_Look` → Mouse XY
-   - `IA_Fire` → Left Mouse Button
+   - `IA_Move` → W/A/S/D 키(X/Y 결합)
+   - `IA_Look` → 마우스 XY
+   - `IA_Fire` → 마우스 왼쪽 버튼
 
 ---
 
-### Bind Input in C++
+### C++에서 입력 바인딩
 
 ```cpp
 #include "EnhancedInputComponent.h"
@@ -120,46 +120,46 @@ protected:
 
 ---
 
-## Input Triggers
+## Input Trigger
 
-### Trigger Types
+### Trigger 유형
 
-Input Actions can have triggers to control when they fire:
-- **Pressed**: When input starts
-- **Released**: When input ends
-- **Hold**: Hold for duration
-- **Tap**: Quick press
-- **Pulse**: Repeated firing while held
+Input Action은 언제 발동할지를 제어하는 트리거를 가질 수 있다:
+- **Pressed**: 입력이 시작될 때
+- **Released**: 입력이 끝날 때
+- **Hold**: 일정 시간 동안 유지
+- **Tap**: 짧게 누르기
+- **Pulse**: 누르고 있는 동안 반복 발동
 
-### Add Trigger in Editor
+### 에디터에서 Trigger 추가
 
-1. Open Input Action asset
-2. Triggers > Add > Select trigger type (e.g., `Hold`)
-3. Configure (e.g., Hold Time = 0.5s)
-
----
-
-## Input Modifiers
-
-### Modifier Types
-
-Modifiers transform input values:
-- **Negate**: Flip sign (-1 ↔ 1)
-- **Dead Zone**: Ignore small inputs
-- **Scalar**: Multiply by value
-- **Smooth**: Smoothing over time
-
-### Add Modifier in Editor
-
-1. Open Input Action asset
-2. Modifiers > Add > Select modifier (e.g., `Negate`)
-3. Configure
+1. Input Action 에셋 열기
+2. Triggers > Add > 트리거 유형 선택(예: `Hold`)
+3. 구성(예: Hold Time = 0.5s)
 
 ---
 
-## Input Mapping Contexts (Context Switching)
+## Input Modifier
 
-### Multiple Contexts
+### Modifier 유형
+
+Modifier는 입력 값을 변형한다:
+- **Negate**: 부호 반전 (-1 ↔ 1)
+- **Dead Zone**: 작은 입력 무시
+- **Scalar**: 값 배율 적용
+- **Smooth**: 시간에 따른 스무딩
+
+### 에디터에서 Modifier 추가
+
+1. Input Action 에셋 열기
+2. Modifiers > Add > modifier 선택(예: `Negate`)
+3. 구성
+
+---
+
+## Input Mapping Context (컨텍스트 전환)
+
+### 다중 컨텍스트
 
 ```cpp
 // Define contexts
@@ -183,9 +183,9 @@ void EnterVehicle() {
 
 ---
 
-## Legacy Input (Deprecated)
+## Legacy Input (폐기 예정)
 
-### Legacy Input Bindings
+### Legacy Input 바인딩
 
 ```cpp
 // ❌ DEPRECATED: Do not use for new projects
@@ -203,13 +203,13 @@ void MoveForward(float Value) {
 }
 ```
 
-**Migration:** Use Enhanced Input instead.
+**마이그레이션:** Enhanced Input을 대신 사용할 것.
 
 ---
 
-## Gamepad Input
+## 게임패드 입력
 
-### Gamepad with Enhanced Input
+### Enhanced Input을 사용한 게임패드
 
 ```cpp
 // Input Mapping Context:
@@ -222,9 +222,9 @@ void MoveForward(float Value) {
 
 ---
 
-## Touch Input (Mobile)
+## 터치 입력 (모바일)
 
-### Touch Input with Enhanced Input
+### Enhanced Input을 사용한 터치 입력
 
 ```cpp
 // Input Mapping Context:
@@ -236,9 +236,9 @@ void MoveForward(float Value) {
 
 ---
 
-## Rebinding Input at Runtime
+## 런타임 입력 리바인딩
 
-### Change Key Mapping
+### 키 매핑 변경
 
 ```cpp
 #include "PlayerMappableInputConfig.h"
@@ -256,9 +256,9 @@ Subsystem->AddPlayerMappedKey(/*..*/);
 
 ---
 
-## Input Debugging
+## 입력 디버깅
 
-### Debug Input
+### 입력 디버그
 
 ```cpp
 // Console commands:
@@ -270,9 +270,9 @@ UE_LOG(LogTemp, Warning, TEXT("Move Input: %s"), *MoveVector.ToString());
 
 ---
 
-## Common Patterns
+## 일반적인 패턴
 
-### Check if Key Pressed (Quick & Dirty)
+### 키가 눌렸는지 확인 (간단한 방식)
 
 ```cpp
 // For debugging only (not recommended for gameplay)
@@ -283,6 +283,6 @@ if (GetWorld()->GetFirstPlayerController()->IsInputKeyDown(EKeys::SpaceBar)) {
 
 ---
 
-## Sources
+## 출처
 - https://docs.unrealengine.com/5.7/en-US/enhanced-input-in-unreal-engine/
 - https://docs.unrealengine.com/5.7/en-US/enhanced-input-action-and-input-mapping-context-in-unreal-engine/

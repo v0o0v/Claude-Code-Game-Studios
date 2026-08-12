@@ -1,14 +1,15 @@
-# Unity 6.3 LTS — Breaking Changes
+# Unity 6.3 LTS — 파괴적 변경사항(Breaking Changes)
 
-**Last verified:** 2026-02-13
+**최종 확인일:** 2026-02-13
 
-This document tracks breaking API changes and behavioral differences between Unity 2022 LTS
-(likely in model training) and Unity 6.3 LTS (current version). Organized by risk level.
+이 문서는 Unity 2022 LTS(모델 학습 데이터에 포함되어 있을 가능성이 높음)와
+Unity 6.3 LTS(현재 버전) 사이의 파괴적 API 변경사항 및 동작 차이를 추적한다.
+위험도별로 정리되어 있다.
 
-## HIGH RISK — Will Break Existing Code
+## 높음(HIGH RISK) — 기존 코드가 깨질 수 있음
 
-### Entities/DOTS API Complete Overhaul
-**Versions:** Entities 1.0+ (Unity 6.0+)
+### Entities/DOTS API 전면 개편
+**버전:** Entities 1.0+(Unity 6.0+)
 
 ```csharp
 // ❌ OLD (pre-Unity 6, GameObjectEntity pattern)
@@ -31,12 +32,12 @@ public partial struct DamageSystem : ISystem {
 }
 ```
 
-**Migration:** Follow Unity's ECS migration guide. Major architectural changes required.
+**마이그레이션:** Unity의 ECS 마이그레이션 가이드를 따를 것. 대규모 아키텍처 변경이 필요하다.
 
 ---
 
-### Input System — Legacy Input Deprecated
-**Versions:** Unity 6.0+
+### 입력 시스템 — 레거시 Input 폐기 예정
+**버전:** Unity 6.0+
 
 ```csharp
 // ❌ OLD: Input class (deprecated)
@@ -47,12 +48,12 @@ using UnityEngine.InputSystem;
 if (Keyboard.current.spaceKey.wasPressedThisFrame) { }
 ```
 
-**Migration:** Install Input System package, replace all `Input.*` calls with new API.
+**마이그레이션:** Input System 패키지를 설치하고, 모든 `Input.*` 호출을 새 API로 교체할 것.
 
 ---
 
-### URP/HDRP Renderer Feature API Changes
-**Versions:** Unity 6.0+
+### URP/HDRP 렌더러 피처 API 변경
+**버전:** Unity 6.0+
 
 ```csharp
 // ❌ OLD: ScriptableRenderPass.Execute signature
@@ -62,17 +63,17 @@ public override void Execute(ScriptableRenderContext context, ref RenderingData 
 public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
 ```
 
-**Migration:** Update custom render passes to use RenderGraph API.
+**마이그레이션:** 커스텀 렌더 패스를 RenderGraph API를 사용하도록 업데이트할 것.
 
 ---
 
-## MEDIUM RISK — Behavioral Changes
+## 중간(MEDIUM RISK) — 동작 변경
 
-### Addressables — Asset Loading Returns
-**Versions:** Unity 6.2+
+### Addressables — 에셋 로딩 반환값
+**버전:** Unity 6.2+
 
-Asset loading failures now throw exceptions by default instead of returning null.
-Add proper exception handling or use `TryLoad` variants.
+에셋 로딩 실패 시 이제 기본적으로 null을 반환하는 대신 예외를 던진다.
+적절한 예외 처리를 추가하거나 `TryLoad` 계열 메서드를 사용할 것.
 
 ```csharp
 // ❌ OLD: Silent null on failure
@@ -90,65 +91,65 @@ try {
 
 ---
 
-### Physics — Default Solver Iterations Changed
-**Versions:** Unity 6.0+
+### 물리 — 기본 솔버 반복 횟수 변경
+**버전:** Unity 6.0+
 
-Default solver iterations increased for better stability.
-Check `Physics.defaultSolverIterations` if you rely on old behavior.
-
----
-
-## LOW RISK — Deprecations (Still Functional)
-
-### UGUI (Legacy UI)
-**Status:** Deprecated but supported
-**Replacement:** UI Toolkit
-
-UGUI still works but UI Toolkit is recommended for new projects.
+안정성 향상을 위해 기본 솔버 반복 횟수가 증가했다.
+기존 동작에 의존하고 있다면 `Physics.defaultSolverIterations`를 확인할 것.
 
 ---
 
-### Legacy Particle System
-**Status:** Deprecated
-**Replacement:** Visual Effect Graph (VFX Graph)
+## 낮음(LOW RISK) — 폐기 예정(아직 동작함)
+
+### UGUI(레거시 UI)
+**상태:** 폐기 예정이지만 지원됨
+**대체:** UI Toolkit
+
+UGUI는 여전히 동작하지만, 신규 프로젝트에는 UI Toolkit이 권장된다.
 
 ---
 
-### Old Animation System
-**Status:** Deprecated
-**Replacement:** Animator Controller (Mecanim)
+### 레거시 파티클 시스템
+**상태:** 폐기 예정
+**대체:** Visual Effect Graph(VFX Graph)
 
 ---
 
-## Platform-Specific Breaking Changes
+### 구 애니메이션 시스템
+**상태:** 폐기 예정
+**대체:** Animator Controller(Mecanim)
+
+---
+
+## 플랫폼별 파괴적 변경사항
 
 ### WebGL
-- **Unity 6.0+**: WebGPU is now the default (WebGL 2.0 fallback available)
-- Update shaders for WebGPU compatibility
+- **Unity 6.0+**: WebGPU가 이제 기본값(WebGL 2.0 폴백 가능)
+- WebGPU 호환을 위해 셰이더 업데이트 필요
 
 ### Android
-- **Unity 6.0+**: Minimum API level raised to 24 (Android 7.0)
+- **Unity 6.0+**: 최소 API 레벨이 24(Android 7.0)로 상향됨
 
 ### iOS
-- **Unity 6.0+**: Minimum deployment target raised to iOS 13
+- **Unity 6.0+**: 최소 배포 대상이 iOS 13으로 상향됨
 
 ---
 
-## Migration Checklist
+## 마이그레이션 체크리스트
 
-When upgrading from 2022 LTS to Unity 6.3 LTS:
+2022 LTS에서 Unity 6.3 LTS로 업그레이드할 때:
 
-- [ ] Audit all DOTS/ECS code (complete rewrite likely needed)
-- [ ] Replace `Input` class with Input System package
-- [ ] Update custom render passes to RenderGraph API
-- [ ] Add exception handling to Addressables calls
-- [ ] Test physics behavior (solver iterations changed)
-- [ ] Consider migrating UGUI to UI Toolkit for new UI
-- [ ] Update WebGL shaders for WebGPU
-- [ ] Verify minimum platform versions (Android/iOS)
+- [ ] 모든 DOTS/ECS 코드를 감사할 것(전면 재작성이 필요할 가능성 높음)
+- [ ] `Input` 클래스를 Input System 패키지로 교체할 것
+- [ ] 커스텀 렌더 패스를 RenderGraph API로 업데이트할 것
+- [ ] Addressables 호출에 예외 처리를 추가할 것
+- [ ] 물리 동작을 테스트할 것(솔버 반복 횟수 변경됨)
+- [ ] 신규 UI에 대해 UGUI를 UI Toolkit으로 마이그레이션하는 것을 고려할 것
+- [ ] WebGPU를 위해 WebGL 셰이더를 업데이트할 것
+- [ ] 최소 플랫폼 버전(Android/iOS)을 확인할 것
 
 ---
 
-**Sources:**
+**출처:**
 - https://docs.unity3d.com/6000.0/Documentation/Manual/upgrade-guides.html
 - https://docs.unity3d.com/Packages/com.unity.entities@1.3/manual/upgrade-guide.html

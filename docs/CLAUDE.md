@@ -1,33 +1,33 @@
-# Docs Directory
+# Docs 디렉터리
 
-When authoring or editing files in this directory, follow these standards.
+이 디렉터리 안의 파일을 작성하거나 수정할 때는 다음 표준을 따른다.
 
-## Architecture Decision Records (`docs/architecture/`)
+## 아키텍처 결정 기록 (`docs/architecture/`)
 
-Use the ADR template: `.claude/docs/templates/architecture-decision-record.md`
+ADR 템플릿을 사용한다: `.claude/docs/templates/architecture-decision-record.md`
 
-**Required sections:** Title, Status, Context, Decision, Consequences,
+**필수 섹션:** Title, Status, Context, Decision, Consequences,
 ADR Dependencies, Engine Compatibility, GDD Requirements Addressed
 
-**Status lifecycle:** `Proposed` → `Accepted` → `Superseded`
-- Never skip `Accepted` — stories referencing a `Proposed` ADR are auto-blocked
-- Use `/architecture-decision` to create ADRs through the guided flow
+**Status 생명주기:** `Proposed` → `Accepted` → `Superseded`
+- `Accepted` 단계를 건너뛰지 말 것 — `Proposed` 상태인 ADR을 참조하는 스토리는 자동으로 차단된다
+- 가이드 흐름을 통해 ADR을 만들 때는 `/architecture-decision`을 사용한다
 
-**TR Registry:** `docs/architecture/tr-registry.yaml`
-- Stable requirement IDs (e.g. `TR-MOV-001`) that link GDD requirements to stories
-- Never renumber existing IDs — only append new ones
-- Updated by `/architecture-review` Phase 8
+**TR 레지스트리:** `docs/architecture/tr-registry.yaml`
+- GDD 요구사항을 스토리와 연결하는 고정된 요구사항 ID(예: `TR-MOV-001`)
+- 기존 ID의 번호를 재부여하지 말 것 — 새 ID만 추가한다
+- `/architecture-review` Phase 8에서 업데이트된다
 
-**Control Manifest:** `docs/architecture/control-manifest.md`
-- Flat programmer rules sheet: Required / Forbidden / Guardrails per layer
-- Date-stamped `Manifest Version:` in header
-- Stories embed this version; `/story-done` checks for staleness
+**컨트롤 매니페스트:** `docs/architecture/control-manifest.md`
+- 레이어별 Required / Forbidden / Guardrails를 정리한 프로그래머용 규칙 시트
+- 헤더에 날짜가 표시된 `Manifest Version:` 포함
+- 스토리는 이 버전을 임베드하며, `/story-done`이 최신 여부를 확인한다
 
-**Validation:** Run `/architecture-review` after completing a set of ADRs.
+**검증:** ADR 세트를 완료한 후에는 `/architecture-review`를 실행한다.
 
-## Engine Reference (`docs/engine-reference/`)
+## 엔진 레퍼런스 (`docs/engine-reference/`)
 
-Version-pinned engine API snapshots. **Always check here before using any
-engine API** — the LLM's training data predates the pinned engine version.
+버전 고정된 엔진 API 스냅샷이다. **어떤 엔진 API를 사용하기 전에도 반드시 이곳을
+먼저 확인할 것** — LLM의 학습 데이터는 고정된 엔진 버전보다 이전 시점까지만 반영되어 있다.
 
-Current engine: see `docs/engine-reference/godot/VERSION.md`
+현재 엔진: `docs/engine-reference/godot/VERSION.md` 참고

@@ -1,218 +1,218 @@
-# Example Session: Scope Crisis - Strategic Decision Making
+# 예제 세션: 스코프 위기 - 전략적 의사결정
 
-**Context:** Solo indie dev, week 8 of project (month 2), approaching Alpha milestone.
+**맥락:** 1인 인디 개발자, 프로젝트 8주차(2개월차), 알파 마일스톤을 앞둔 시점.
 
-**Crisis:**
-- Alpha milestone is in 2 weeks
-- Crafting system (Pillar 2) not yet implemented
-- Lead programmer says full crafting will take 3 weeks
-- Investor demo at Alpha - must show all pillars
+**위기 상황:**
+- 알파 마일스톤이 2주 남음
+- 제작(크래프팅) 시스템(필러 2)이 아직 구현되지 않음
+- 리드 프로그래머는 전체 크래프팅 구현에 3주가 걸릴 것이라고 말함
+- 알파 시점에 투자자 데모가 있음 - 모든 필러를 보여줘야 함
 
-**Session Duration:** ~25 minutes
-**Turns:** 8
-**Outcome:** Strategic scope decision with documented ADR
+**세션 소요 시간:** 약 25분
+**턴 수:** 8
+**결과:** 문서화된 ADR과 함께 내려진 전략적 스코프 결정
 
 ---
 
-## Turn 1: User Escalates Problem to Creative Director
+## 턴 1: 사용자가 크리에이티브 디렉터에게 문제를 에스컬레이션
 
-**User:**
-> We have a problem. Alpha is in 2 weeks. The crafting system (Pillar 2 "Emergent Discovery") isn't implemented yet. Lead programmer says it'll take 3 weeks to implement fully. But the investor demo is at Alpha and they need to see both pillars (Combat + Crafting). What should I do?
+**사용자:**
+> 문제가 생겼어. 알파가 2주 남았는데 크래프팅 시스템(필러 2 "창발적 발견")이 아직 구현이 안 됐어. 리드 프로그래머는 완전히 구현하려면 3주 걸린다고 하고. 근데 투자자 데모가 알파 시점에 있고 그들은 두 필러(전투 + 크래프팅)를 다 봐야 해. 어떻게 해야 할까?
 
-## Turn 2: Creative Director Gathers Full Context
+## 턴 2: 크리에이티브 디렉터가 전체 맥락을 파악
 
-**Agent (creative-director):**
-> This is a classic pillar vs. schedule conflict - exactly what I'm here to help resolve. Let me gather the full context before recommending options.
+**에이전트 (creative-director):**
+> 이건 전형적인 필러 대 일정 충돌이군요 - 정확히 제가 해결을 도와야 할 문제입니다. 옵션을 추천하기 전에 먼저 전체 맥락을 파악하겠습니다.
 >
-> First, let me review the relevant documents:
-> - `production/milestones/alpha.md` (milestone definition)
-> - `design/pillars.md` (what's non-negotiable)
-> - `design/gdd/crafting-system.md` (what was designed)
-> - `production/sprints/sprint-current.md` (current work)
+> 먼저 관련 문서들을 검토하겠습니다.
+> - `production/milestones/alpha.md` (마일스톤 정의)
+> - `design/pillars.md` (타협 불가능한 요소들)
+> - `design/gdd/crafting-system.md` (설계된 내용)
+> - `production/sprints/sprint-current.md` (현재 작업)
 >
-> [Reads documents]
+> [문서를 읽습니다]
 >
-> **Context Understood:**
-> - Pillar 2: "Emergent Discovery Through Experimentation" (crafting is primary expression)
-> - Alpha success criteria: "All pillars demonstrated in playable form"
-> - Investor demo purpose: Validate vision and secure next funding round
-> - Current crafting design: Tag-based deduction system with 12 tags, ~50 recipes, progressive hint unlocking
+> **파악된 맥락:**
+> - 필러 2: "실험을 통한 창발적 발견" (크래프팅이 주된 표현 수단)
+> - 알파 성공 기준: "모든 필러가 플레이 가능한 형태로 시연됨"
+> - 투자자 데모 목적: 비전을 검증하고 다음 펀딩 라운드를 확보
+> - 현재 크래프팅 설계: 태그 기반 추론 시스템, 태그 12개, 레시피 약 50개, 점진적 힌트 해금
 >
-> **Clarifying Questions:**
-> 1. Is the Alpha date **hard** (investor won't reschedule) or **soft** (we could ask for 1 more week)?
-> 2. What's the **minimum crafting** that still demonstrates Pillar 2? (One recipe? Ten recipes? Full tag system?)
-> 3. What **breaks** if crafting is cut entirely from Alpha? (Does the game still make sense?)
-> 4. How **critical** is this investor relationship? (Nice-to-have funding vs. make-or-break for project survival?)
-> 5. What's the **team status**? (Burned out from crunch? Fresh and could push if needed?)
+> **확인 질문:**
+> 1. 알파 날짜는 **확정**(투자자가 일정 변경 불가)인가요, **유동적**(1주 정도 더 요청 가능)인가요?
+> 2. 필러 2를 여전히 보여줄 수 있는 **최소한의 크래프팅**은 무엇일까요? (레시피 1개? 10개? 전체 태그 시스템?)
+> 3. 알파에서 크래프팅을 완전히 뺀다면 무엇이 **깨지나요**? (게임이 여전히 말이 되나요?)
+> 4. 이 투자자 관계는 얼마나 **중요**한가요? (있으면 좋은 정도의 펀딩인가, 프로젝트 생사가 걸린 것인가?)
+> 5. **팀 상태**는 어떤가요? (크런치로 지쳤나요? 필요하면 밀어붙일 여력이 있나요?)
 
-## Turn 3: User Provides Decision Context
+## 턴 3: 사용자가 결정에 필요한 맥락을 제공
 
-**User:**
-> 1. Hard date - investor flying in specifically for demo, can't reschedule
-> 2. I think minimum is: discovery mechanic working (tag system) + 10 recipes. Doesn't need polish.
-> 3. Without crafting, Alpha only shows combat. That's 50% of the vision - investor might think it's just another combat game
-> 4. Make-or-break. This investor is our only lead. No funding = project dies.
-> 5. Just me solo, I'm not burned out yet.
+**사용자:**
+> 1. 확정된 날짜야 - 투자자가 데모 때문에 일부러 비행기 타고 오는 거라 일정 변경 불가
+> 2. 최소한은 이거라고 생각해: 발견 메커닉(태그 시스템)이 동작하고 + 레시피 10개. 폴리싱은 필요 없어
+> 3. 크래프팅이 없으면 알파는 전투만 보여주게 돼. 그건 비전의 50%밖에 안 되고, 투자자가 그냥 흔한 전투 게임이라고 생각할 수도 있어
+> 4. 사활이 걸렸어. 이 투자자가 우리 유일한 후보야. 펀딩이 안 되면 프로젝트가 끝나
+> 5. 나 혼자 하고 있고, 아직 지치진 않았어
 
-## Turn 4: Creative Director Frames the Decision
+## 턴 4: 크리에이티브 디렉터가 결정 사항을 구조화
 
-**Agent:**
-> Thank you. Now I understand what's truly at stake. Let me frame this decision properly:
+**에이전트:**
+> 알겠습니다. 이제 진짜 걸려 있는 게 무엇인지 이해했습니다. 이 결정을 제대로 구조화해보겠습니다.
 >
-> **The Core Question:**
-> Do we deliver full crafting and slip Alpha, deliver simplified crafting and make Alpha, or cut crafting and risk the investor not seeing our full vision?
+> **핵심 질문:**
+> 전체 크래프팅을 구현하고 알파를 미룰지, 단순화된 크래프팅을 구현해 알파를 맞출지, 아니면 크래프팅을 빼고 투자자가 전체 비전을 못 볼 위험을 감수할지.
 >
-> **What's Really at Stake:**
-> - **Vision Integrity**: Can investor see Pillar 2 at all?
-> - **Schedule Trust**: Do we keep our commitment to Alpha date?
-> - **Project Survival**: No funding = no game
-> - **Quality Standards**: Is "rough but working" acceptable for this demo?
+> **진짜 걸려 있는 것:**
+> - **비전의 완전성**: 투자자가 필러 2를 볼 수 있는가?
+> - **일정에 대한 신뢰**: 알파 날짜 약속을 지키는가?
+> - **프로젝트 생존**: 펀딩이 없으면 게임도 없다
+> - **품질 기준**: 이 데모에서 "거칠지만 동작함"이 용인되는가?
 >
-> **Decision Criteria (in priority order for this scenario):**
-> 1. **Investor Confidence** (highest - project survival depends on this)
-> 2. **Pillar Representation** (high - they need to see the full vision)
-> 3. **Schedule Integrity** (medium - matters, but less than funding)
-> 4. **Polish Quality** (lowest - vertical slice can be rough)
+> **결정 기준 (이 상황에서의 우선순위):**
+> 1. **투자자 신뢰** (최우선 - 프로젝트 생존이 여기 달려 있음)
+> 2. **필러 표현** (높음 - 전체 비전을 보여줘야 함)
+> 3. **일정 준수** (중간 - 중요하지만 펀딩보다는 덜함)
+> 4. **폴리싱 품질** (최하위 - 버티컬 슬라이스는 거칠어도 됨)
 >
-> Now let me present three strategic options...
+> 이제 세 가지 전략적 옵션을 제시하겠습니다...
 
-## Turn 5: Creative Director Presents Options with Analysis
+## 턴 5: 크리에이티브 디렉터가 분석과 함께 옵션을 제시
 
-**Agent:**
-> **Option A: Implement Full Crafting System (3 weeks, slip Alpha by 1 week)**
+**에이전트:**
+> **옵션 A: 전체 크래프팅 시스템 구현 (3주, 알파를 1주 미룸)**
 >
-> **Execution:**
-> - Implement complete tag-based system with all 50 recipes
-> - Full UI polish, all features from GDD
-> - Miss Alpha date, reschedule investor demo (+1 week)
+> **실행 내용:**
+> - 50개 레시피 전체를 포함한 완전한 태그 기반 시스템 구현
+> - GDD의 모든 기능에 대한 완전한 UI 폴리싱
+> - 알파 날짜를 놓치고 투자자 데모 일정을 재조정 (+1주)
 >
-> **Pros:**
-> - ✅ Pillar 2 fully represented with production quality
-> - ✅ No design compromises
-> - ✅ First impression is polished
+> **장점:**
+> - ✅ 필러 2가 프로덕션 품질로 완전히 표현됨
+> - ✅ 설계 타협 없음
+> - ✅ 첫인상이 완성도 있음
 >
-> **Cons:**
-> - ❌ Breaks investor commitment (they're flying in for the original date)
-> - ❌ Signals schedule management issues ("if they slipped Alpha, will they slip release?")
-> - ❌ May damage investor trust more than rough demo would
+> **단점:**
+> - ❌ 투자자와의 약속을 어김 (원래 날짜에 맞춰 비행기로 오는 중임)
+> - ❌ 일정 관리 문제로 비칠 수 있음 ("알파를 미뤘다면 출시도 미룰까?")
+> - ❌ 거친 데모보다 오히려 투자자 신뢰를 더 해칠 수 있음
 >
-> **Risk: CRITICAL**
-> - Investor may not reschedule (busy schedule, other opportunities)
-> - Even if they do, the slip damages credibility
-> - Unlikely to succeed given hard date constraint
+> **리스크: 심각**
+> - 투자자가 일정을 재조정하지 못할 수도 있음 (바쁜 일정, 다른 기회)
+> - 재조정에 성공하더라도 미룬 것 자체가 신뢰도를 깎음
+> - 확정된 날짜 제약을 고려하면 성공 가능성이 낮음
 >
-> **Verdict: NOT RECOMMENDED** - The date is hard and non-negotiable
+> **결론: 비권장** - 날짜가 확정되어 있고 협상 불가능함
 >
 > ---
 >
-> **Option B: Simplify Crafting to Core Pillar (1.5 weeks, make Alpha)**
+> **옵션 B: 크래프팅을 핵심 필러 수준으로 단순화 (1.5주, 알파를 맞춤)**
 >
-> **Execution:**
-> - Implement core tag discovery mechanic ONLY
-> - 10 recipes instead of 50 (enough to demonstrate the system)
-> - Basic UI (functional, not polished)
-> - No progressive hint unlock (all tags visible at Skill 0 for demo clarity)
-> - No failed-attempt feedback system (just success/fail)
+> **실행 내용:**
+> - 핵심 태그 발견 메커닉만 구현
+> - 레시피 50개 대신 10개 (시스템을 보여주기에 충분)
+> - 기본 UI (동작은 하지만 폴리싱은 안 됨)
+> - 점진적 힌트 해금 없음 (데모의 명확성을 위해 스킬 0에서 모든 태그를 표시)
+> - 실패 시도 피드백 시스템 없음 (성공/실패만 표시)
 >
-> **Scope: "Vertical Slice of Pillar 2"**
-> - Players CAN discover recipes by combining tagged ingredients
-> - Players CAN learn tag patterns and deduce new recipes
-> - The SOUL of Pillar 2 is present, just unpolished
+> **스코프: "필러 2의 버티컬 슬라이스"**
+> - 플레이어는 태그가 붙은 재료를 조합해 레시피를 발견할 수 있음
+> - 플레이어는 태그 패턴을 학습해 새 레시피를 추론할 수 있음
+> - 필러 2의 핵심 정신은 존재하되, 폴리싱만 안 되어 있음
 >
-> **Pros:**
-> - ✅ Makes Alpha deadline (schedule integrity maintained)
-> - ✅ Pillar 2 demonstrated (investor sees full vision)
-> - ✅ Core mechanic is playable and provable
-> - ✅ Can use "Alpha → Beta improvement" as narrative ("here's rough, here's polished")
+> **장점:**
+> - ✅ 알파 마감을 지킴 (일정 신뢰 유지)
+> - ✅ 필러 2가 시연됨 (투자자가 전체 비전을 봄)
+> - ✅ 핵심 메커닉이 플레이 가능하고 증명 가능
+> - ✅ "알파 → 베타 개선"이라는 서사를 활용 가능 ("여기 거친 버전, 여기 다듬어진 버전")
 >
-> **Cons:**
-> - ⚠️ First impression is "rough" (but vertical slices are expected to be rough)
-> - ⚠️ Investor might think "this feels small" (mitigation: present roadmap showing post-Alpha expansion)
+> **단점:**
+> - ⚠️ 첫인상이 "거칠다" (다만 버티컬 슬라이스는 원래 거칠 것으로 기대됨)
+> - ⚠️ 투자자가 "이거 작아 보이는데"라고 생각할 수 있음 (완화책: 알파 이후 확장을 보여주는 로드맵 제시)
 >
-> **Risk: MEDIUM**
-> - Investor might not "get" the pillar from 10 recipes (mitigation: good demo script explaining the vision)
-> - Might feel incomplete (mitigation: frame as "vertical slice proving the concept")
+> **리스크: 중간**
+> - 투자자가 레시피 10개만으로 필러를 "이해"하지 못할 수 있음 (완화책: 비전을 잘 설명하는 데모 스크립트)
+> - 미완성으로 느껴질 수 있음 (완화책: "개념을 증명하는 버티컬 슬라이스"로 프레이밍)
 >
-> **Verdict: RECOMMENDED** - Balances all constraints
->
-> ---
->
-> **Option C: Cut Crafting from Alpha, Focus on Combat Polish (0 weeks, make Alpha)**
->
-> **Execution:**
-> - Deliver Alpha with only Pillar 1 (Combat) fully polished
-> - Use extra 2 weeks to super-polish combat, add content, make it shine
-> - Present crafting as "design doc + concept art" (not playable)
->
-> **Pros:**
-> - ✅ Makes deadline with zero stress
-> - ✅ What's there is AAA-polished
-> - ✅ No risk of "half-baked" perception
->
-> **Cons:**
-> - ❌ Pillar 2 not demonstrated (50% of vision missing)
-> - ❌ Investor sees "another combat game" - not differentiated
-> - ❌ Harder to secure funding for "potential" vs. "proven concept"
-> - ❌ If combat alone doesn't wow them, we have no fallback
->
-> **Risk: HIGH**
-> - Investor won't see what makes this game special
-> - They might think "Combat is fine, but where's the hook?"
-> - Competing games have combat - we need to show our differentiator
->
-> **Verdict: NOT RECOMMENDED** - Too risky for make-or-break demo
+> **결론: 권장** - 모든 제약을 균형 있게 맞춤
 >
 > ---
 >
-> ## My Recommendation: Option B (Simplified Crafting Core)
+> **옵션 C: 알파에서 크래프팅을 빼고 전투 폴리싱에 집중 (0주, 알파를 맞춤)**
 >
-> **Reasoning:**
-> 1. **Investor Confidence**: Making the date we committed to shows reliability
-> 2. **Pillar Visibility**: Rough but working > polished but missing. Investors back VISION, not polish.
-> 3. **Demo Narrative**: "Here's Alpha vs. Beta progression" is compelling - shows trajectory
-> 4. **Risk Mitigation**: If crafting doesn't land, combat is still solid. If we cut crafting (Option C) and combat doesn't wow them alone, we have nothing.
-> 5. **Historical Precedent**: Hades, Dead Cells, Slay the Spire all showed rough Early Access verticals and investors loved the SYSTEMS over polish
+> **실행 내용:**
+> - 필러 1(전투)만 완전히 다듬은 상태로 알파를 출시
+> - 남는 2주로 전투를 초폴리싱하고, 콘텐츠를 추가해 돋보이게 함
+> - 크래프팅은 "설계 문서 + 콘셉트 아트"로만 제시 (플레이 불가)
 >
-> **What Option B Sacrifices:**
-> - Polish (acceptable for vertical slice)
-> - Feature completeness (50 recipes → 10)
-> - Progressive unlocks (deferred to post-Alpha)
+> **장점:**
+> - ✅ 마감을 스트레스 없이 지킴
+> - ✅ 제시되는 것은 AAA 수준으로 다듬어짐
+> - ✅ "덜 완성된" 느낌을 줄 위험이 없음
 >
-> **What Option B Protects:**
-> - Schedule trust
-> - Pillar representation
-> - Vision clarity
-> - Project survival (funding secured)
+> **단점:**
+> - ❌ 필러 2가 시연되지 않음 (비전의 50%가 빠짐)
+> - ❌ 투자자에게 "또 다른 전투 게임"으로 보임 - 차별점이 없음
+> - ❌ "잠재력"보다 "증명된 콘셉트"로 펀딩을 확보하기가 더 어려움
+> - ❌ 전투 하나만으로 감명을 주지 못하면 대안이 없음
 >
-> **Implementation Plan if you choose Option B:**
-> 1. I'll create an ADR documenting this scope decision
-> 2. I'll update `design/gdd/crafting-system.md` with "Alpha Scope" markers
-> 3. I'll brief gameplay-programmer on simplified implementation
-> 4. I'll create a demo script for you: how to PRESENT the 10-recipe system to show the 50-recipe vision
+> **리스크: 높음**
+> - 투자자가 이 게임의 특별한 점을 못 볼 수 있음
+> - "전투는 괜찮은데, 훅은 어디 있지?"라고 생각할 수 있음
+> - 경쟁작들도 전투는 있으므로, 우리의 차별점을 보여줘야 함
 >
-> **But this is your call.** You know this investor better than I do. If you believe they'll value polish over pillar representation, Option C might be right. If you think they'll forgive a 1-week slip, Option A is safest creatively.
+> **결론: 비권장** - 사활이 걸린 데모에 리스크가 너무 큼
 >
-> What's your decision?
+> ---
+>
+> ## 저의 추천: 옵션 B (단순화된 크래프팅 핵심)
+>
+> **이유:**
+> 1. **투자자 신뢰**: 약속한 날짜를 지키는 것은 신뢰성을 보여줍니다
+> 2. **필러 가시성**: 거칠지만 동작하는 것 > 다듬어졌지만 없는 것. 투자자는 폴리싱이 아니라 비전을 보고 투자합니다.
+> 3. **데모 서사**: "알파 대 베타 진행 상황"은 설득력이 있습니다 - 궤적을 보여줍니다
+> 4. **리스크 완화**: 크래프팅이 잘 안 먹혀도 전투는 여전히 탄탄합니다. 크래프팅을 뺐는데(옵션 C) 전투 단독으로 감명을 못 주면 남는 게 없습니다.
+> 5. **역사적 선례**: Hades, Dead Cells, Slay the Spire 모두 거친 얼리 액세스 버티컬을 보여줬고 투자자들은 폴리싱보다 시스템 자체를 좋아했습니다
+>
+> **옵션 B가 희생하는 것:**
+> - 폴리싱 (버티컬 슬라이스에서는 용인 가능)
+> - 기능 완전성 (레시피 50개 → 10개)
+> - 점진적 해금 (알파 이후로 연기)
+>
+> **옵션 B가 지키는 것:**
+> - 일정에 대한 신뢰
+> - 필러 표현
+> - 비전의 명확성
+> - 프로젝트 생존 (펀딩 확보)
+>
+> **옵션 B를 선택하실 경우의 실행 계획:**
+> 1. 이 스코프 결정을 문서화하는 ADR을 작성하겠습니다
+> 2. `design/gdd/crafting-system.md` 를 "알파 스코프" 표시와 함께 업데이트하겠습니다
+> 3. gameplay-programmer에게 단순화된 구현을 브리핑하겠습니다
+> 4. 레시피 10개 시스템으로 50개 레시피의 비전을 보여주는 방법에 대한 데모 스크립트를 작성하겠습니다
+>
+> **하지만 최종 결정은 당신의 몫입니다.** 이 투자자를 저보다 더 잘 아실 겁니다. 그들이 필러 표현보다 폴리싱을 더 중시할 것 같다면 옵션 C가 맞을 수도 있습니다. 1주 지연을 이해해줄 것 같다면 옵션 A가 창의적으로는 가장 안전합니다.
+>
+> 어떻게 결정하시겠습니까?
 
-## Turn 6: User Makes Decision
+## 턴 6: 사용자가 결정을 내림
 
-**User:**
-> Option B. The investor is technical and will appreciate the systems thinking even if it's rough. Let's simplify the crafting scope to make Alpha. Can you create the ADR and update the GDD?
+**사용자:**
+> 옵션 B. 투자자는 기술적인 사람이라 거칠더라도 시스템적 사고를 알아볼 거야. 알파를 맞추기 위해 크래프팅 스코프를 단순화하자. ADR 만들고 GDD 업데이트해줄 수 있어?
 
-## Turn 7: Creative Director Documents Decision
+## 턴 7: 크리에이티브 디렉터가 결정을 문서화
 
-**Agent:**
-> Excellent decision. I'll document this thoroughly so future-you understands why we made this choice.
+**에이전트:**
+> 훌륭한 결정입니다. 미래의 당신이 왜 이 선택을 했는지 이해할 수 있도록 꼼꼼히 문서화하겠습니다.
 >
-> **Creating:**
-> 1. ADR-007: Alpha Crafting Scope Reduction
-> 2. Updated design/gdd/crafting-system.md with Alpha/Beta scope markers
-> 3. Updated production/milestones/alpha.md success criteria
-> 4. Demo script guidance for investor presentation
+> **생성할 것:**
+> 1. ADR-007: 알파 크래프팅 스코프 축소
+> 2. 알파/베타 스코프 표시가 추가된 design/gdd/crafting-system.md 업데이트
+> 3. production/milestones/alpha.md 성공 기준 업데이트
+> 4. 투자자 프레젠테이션용 데모 스크립트 가이드
 >
-> [Creates documents]
+> [문서를 생성합니다]
 >
-> **ADR Summary:**
+> **ADR 요약:**
 > ```markdown
 > ## Decision
 > Simplify crafting system to core tag discovery mechanic (10 recipes)
@@ -242,7 +242,7 @@
 > - Post-Alpha sprint can implement full system without rework
 > ```
 >
-> **Updated GDD Markers:**
+> **업데이트된 GDD 표시:**
 > ```markdown
 > ## Detailed Rules
 >
@@ -257,7 +257,7 @@
 > - Beta: 50 recipes (full content)
 > ```
 >
-> **Demo Script Guidance:**
+> **데모 스크립트 가이드:**
 > ```markdown
 > ## Presenting Crafting to Investor (10-recipe Alpha)
 >
@@ -284,77 +284,77 @@
 > discovery, not a recipe database."
 > ```
 >
-> May I proceed to write these documents?
+> 이 문서들을 작성해도 될까요?
 
-## Turn 8: User Approves and Agent Completes
+## 턴 8: 사용자가 승인하고 에이전트가 마무리
 
-**User:**
-> Yes, create all those documents and also notify the gameplay-programmer about the scope change.
+**사용자:**
+> 응, 그 문서들 다 만들고 gameplay-programmer한테도 스코프 변경 알려줘.
 
-**Agent:**
-> ✅ Complete! Created/Updated:
+**에이전트:**
+> ✅ 완료! 생성/업데이트한 내용:
 > - `docs/architecture/adr-007-alpha-crafting-scope.md`
-> - `design/gdd/crafting-system.md` (added Alpha/Beta scope markers)
-> - `production/milestones/alpha.md` (updated success criteria)
-> - `production/demo-script-investor-alpha.md` (new file with presentation guide)
+> - `design/gdd/crafting-system.md` (알파/베타 스코프 표시 추가)
+> - `production/milestones/alpha.md` (성공 기준 업데이트)
+> - `production/demo-script-investor-alpha.md` (프레젠테이션 가이드가 담긴 신규 파일)
 >
-> **Notifications Sent:**
+> **전달된 알림:**
 >
-> To `gameplay-programmer`:
-> > "Crafting scope simplified for Alpha: Core tag mechanic + 10 recipes only.
-> > Progressive unlocks and full recipe set deferred to post-Alpha. Updated
-> > GDD has implementation guidance. Estimated 1.5 weeks to implement Alpha scope."
+> `gameplay-programmer`에게:
+> > "알파용으로 크래프팅 스코프가 단순화되었습니다: 핵심 태그 메커닉 + 레시피 10개만.
+> > 점진적 해금과 전체 레시피 세트는 알파 이후로 연기되었습니다. 업데이트된
+> > GDD에 구현 가이드가 있습니다. 알파 스코프 구현에 예상 1.5주 소요."
 >
-> To `producer`:
-> > "Strategic decision made: Simplified crafting to make Alpha deadline.
-> > ADR-007 documents rationale. Sprint plan needs updating to reflect new scope."
+> `producer`에게:
+> > "전략적 결정이 내려졌습니다: 알파 마감을 맞추기 위해 크래프팅을 단순화했습니다.
+> > ADR-007에 근거가 문서화되어 있습니다. 스프린트 계획을 새 스코프에 맞게 업데이트해야 합니다."
 >
-> **Next Steps:**
-> 1. Gameplay-programmer can start implementing simplified crafting
-> 2. You can practice demo script before investor meeting
-> 3. Producer will update sprint plan with new task breakdown
+> **다음 단계:**
+> 1. gameplay-programmer가 단순화된 크래프팅 구현을 시작할 수 있음
+> 2. 투자자 미팅 전에 데모 스크립트를 연습할 수 있음
+> 3. producer가 새 작업 분해로 스프린트 계획을 업데이트할 예정
 >
-> **Validation:**
-> We'll know this decision was correct when:
-> - Alpha ships on time with both pillars playable
-> - Investor demo successfully communicates the vision
-> - Funding secured for continued development
+> **검증 기준:**
+> 이 결정이 옳았는지는 다음으로 알 수 있습니다.
+> - 알파가 제때 출시되고 두 필러가 모두 플레이 가능함
+> - 투자자 데모가 비전을 성공적으로 전달함
+> - 계속되는 개발을 위한 펀딩이 확보됨
 >
-> Good luck with the demo! This was the right call - vision over polish for this audience.
+> 데모 잘 되시길 바랍니다! 이 청중에게는 폴리싱보다 비전을 우선한 것이 옳은 선택이었습니다.
 
 ---
 
-## Session Summary
+## 세션 요약
 
-**What Worked Well:**
-- Creative director read context docs before proposing solutions
-- Asked 5 clarifying questions to understand constraints
-- Framed decision properly (what's at stake, evaluation criteria)
-- Presented 3 distinct options with honest pros/cons
-- Made clear recommendation with reasoning, but deferred to user
-- Documented decision thoroughly with ADR and updated all affected docs
-- Provided demo script to help user present the decision positively
+**잘 진행된 점:**
+- 크리에이티브 디렉터가 해결책을 제안하기 전에 맥락 문서를 먼저 읽음
+- 제약 조건을 이해하기 위해 확인 질문 5개를 던짐
+- 결정 사항을 제대로 구조화함(무엇이 걸려 있는지, 평가 기준)
+- 정직한 장단점과 함께 세 가지 뚜렷한 옵션을 제시함
+- 이유와 함께 명확한 추천을 하되 최종 결정은 사용자에게 맡김
+- ADR을 작성하고 영향받는 모든 문서를 업데이트해 결정을 꼼꼼히 문서화함
+- 사용자가 결정을 긍정적으로 발표할 수 있도록 데모 스크립트를 제공함
 
-**Key Collaborative Moments:**
-- Turn 2: Agent gathered full context before jumping to solutions
-- Turn 3: User provided decision criteria priority (funding > schedule > polish)
-- Turn 5: Agent presented 3 options, made recommendation, but explicitly "this is your call"
-- Turn 6: User made strategic decision
-- Turn 7: Agent provided demo script to support user's presentation
-- Turn 8: Agent cascaded decision to affected parties
+**핵심 협업 순간:**
+- 턴 2: 에이전트가 해결책으로 바로 넘어가기 전에 전체 맥락을 파악함
+- 턴 3: 사용자가 결정 기준의 우선순위(펀딩 > 일정 > 폴리싱)를 제공함
+- 턴 5: 에이전트가 옵션 3개를 제시하고 추천했지만 명시적으로 "최종 결정은 당신의 몫"이라고 함
+- 턴 6: 사용자가 전략적 결정을 내림
+- 턴 7: 에이전트가 사용자의 발표를 돕기 위해 데모 스크립트를 제공함
+- 턴 8: 에이전트가 영향받는 관계자들에게 결정을 전파함
 
-**Strategic Decision Quality:**
-- User made the final call
-- Agent provided expert analysis using game dev theory and precedent
-- Trade-offs were explicit and honest
-- Decision was documented for future reference
-- Success criteria defined for validation
+**전략적 결정 품질:**
+- 최종 결정은 사용자가 내림
+- 에이전트는 게임 개발 이론과 선례를 활용한 전문적 분석을 제공함
+- 트레이드오프가 명확하고 정직하게 제시됨
+- 결정이 향후 참조를 위해 문서화됨
+- 검증을 위한 성공 기준이 정의됨
 
-**Files Created/Updated:**
-- ADR-007 (decision record)
-- Updated crafting GDD with scope markers
-- Updated Alpha milestone definition
-- Demo script for investor presentation
+**생성/업데이트된 파일:**
+- ADR-007 (결정 기록)
+- 스코프 표시가 추가된 업데이트된 크래프팅 GDD
+- 업데이트된 알파 마일스톤 정의
+- 투자자 프레젠테이션용 데모 스크립트
 
-**Context Usage:** ~30%
-**User Satisfaction:** High - confident decision made with full information
+**컨텍스트 사용량:** 약 30%
+**사용자 만족도:** 높음 - 충분한 정보를 바탕으로 확신 있는 결정이 내려짐

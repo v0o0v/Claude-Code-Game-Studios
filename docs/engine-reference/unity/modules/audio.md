@@ -1,90 +1,90 @@
-# Unity 6.3 — Audio Module Reference
+# Unity 6.3 — 오디오 모듈 레퍼런스
 
-**Last verified:** 2026-02-13
-**Knowledge Gap:** Unity 6 audio mixer improvements
-
----
-
-## Overview
-
-Unity 6.3 audio systems:
-- **AudioSource**: Play sounds on GameObjects
-- **Audio Mixer**: Mix, effect processing, dynamic mixing
-- **Spatial Audio**: 3D positioned sound
+**최종 확인일:** 2026-02-13
+**지식 공백:** Unity 6 오디오 믹서 개선 사항
 
 ---
 
-## Basic Audio Playback
+## 개요
 
-### AudioSource Component
+Unity 6.3 오디오 시스템:
+- **AudioSource**: GameObject에서 사운드 재생
+- **Audio Mixer**: 믹싱, 이펙트 처리, 다이나믹 믹싱
+- **Spatial Audio**: 3D 위치 기반 사운드
+
+---
+
+## 기본 오디오 재생
+
+### AudioSource 컴포넌트
 
 ```csharp
 AudioSource audioSource = GetComponent<AudioSource>();
 
-// ✅ Play
+// ✅ 재생
 audioSource.Play();
 
-// ✅ Play with delay
-audioSource.PlayDelayed(0.5f); // 0.5 seconds
+// ✅ 지연 재생
+audioSource.PlayDelayed(0.5f); // 0.5초
 
-// ✅ Play one-shot (doesn't interrupt current sound)
+// ✅ 원샷 재생(현재 재생 중인 사운드를 방해하지 않음)
 audioSource.PlayOneShot(clip);
 
-// ✅ Stop
+// ✅ 정지
 audioSource.Stop();
 
-// ✅ Pause/Resume
+// ✅ 일시정지/재개
 audioSource.Pause();
 audioSource.UnPause();
 ```
 
-### Play Sound at Position (Static Method)
+### 특정 위치에서 사운드 재생 (정적 메서드)
 
 ```csharp
-// ✅ Quick 3D sound playback (auto-destroys when done)
+// ✅ 빠른 3D 사운드 재생(재생이 끝나면 자동으로 파괴됨)
 AudioSource.PlayClipAtPoint(clip, transform.position);
 
-// ✅ With volume
+// ✅ 볼륨 지정
 AudioSource.PlayClipAtPoint(clip, transform.position, 0.7f);
 ```
 
 ---
 
-## 3D Spatial Audio
+## 3D 공간 오디오
 
-### AudioSource 3D Settings
+### AudioSource 3D 설정
 
 ```csharp
 AudioSource source = GetComponent<AudioSource>();
 
 // Spatial Blend: 0 = 2D, 1 = 3D
-source.spatialBlend = 1.0f; // Fully 3D
+source.spatialBlend = 1.0f; // 완전한 3D
 
-// Doppler effect (pitch shift based on velocity)
+// 도플러 효과 (속도에 따른 피치 변화)
 source.dopplerLevel = 1.0f;
 
-// Distance attenuation
-source.minDistance = 1f;   // Full volume within this distance
-source.maxDistance = 50f;  // Inaudible beyond this distance
-source.rolloffMode = AudioRolloffMode.Logarithmic; // Natural falloff
+// 거리 감쇠
+source.minDistance = 1f;   // 이 거리 이내에서는 최대 볼륨
+source.maxDistance = 50f;  // 이 거리를 넘어서면 들리지 않음
+source.rolloffMode = AudioRolloffMode.Logarithmic; // 자연스러운 감쇠
 ```
 
-### Volume Rolloff Curves
-- **Logarithmic**: Natural, realistic (RECOMMENDED)
-- **Linear**: Steady decrease
-- **Custom**: Define your own curve
+### 볼륨 롤오프 커브
+- **Logarithmic**: 자연스럽고 사실적(권장)
+- **Linear**: 일정한 비율로 감소
+- **Custom**: 직접 커브 정의
 
 ---
 
-## Audio Mixer (Advanced Mixing)
+## Audio Mixer (고급 믹싱)
 
-### Setup Audio Mixer
+### Audio Mixer 설정
 
 1. `Assets > Create > Audio Mixer`
-2. Open mixer: `Window > Audio > Audio Mixer`
-3. Create groups: Master > SFX, Music, Dialogue
+2. 믹서 열기: `Window > Audio > Audio Mixer`
+3. 그룹 생성: Master > SFX, Music, Dialogue
 
-### Assign AudioSource to Mixer Group
+### AudioSource를 Mixer 그룹에 할당
 
 ```csharp
 using UnityEngine.Audio;
@@ -93,93 +93,93 @@ public AudioMixerGroup sfxGroup;
 
 void Start() {
     AudioSource source = GetComponent<AudioSource>();
-    source.outputAudioMixerGroup = sfxGroup; // Route to SFX group
+    source.outputAudioMixerGroup = sfxGroup; // SFX 그룹으로 라우팅
 }
 ```
 
-### Control Mixer from Code
+### 코드로 믹서 제어
 
 ```csharp
 using UnityEngine.Audio;
 
 public AudioMixer audioMixer;
 
-// ✅ Set volume (exposed parameter)
+// ✅ 볼륨 설정(노출된 파라미터)
 audioMixer.SetFloat("MusicVolume", -10f); // dB (-80 to 0)
 
-// ✅ Get volume
+// ✅ 볼륨 가져오기
 audioMixer.GetFloat("MusicVolume", out float volume);
 
-// Convert linear (0-1) to dB
+// 선형값(0-1)을 dB로 변환
 float volumeDB = Mathf.Log10(volumeLinear) * 20f;
 audioMixer.SetFloat("MusicVolume", volumeDB);
 ```
 
-### Expose Mixer Parameters
-In Audio Mixer window:
-1. Right-click parameter (e.g., Volume)
-2. "Expose 'Volume' to script"
-3. Rename in "Exposed Parameters" tab (e.g., "MusicVolume")
+### Mixer 파라미터 노출
+Audio Mixer 창에서:
+1. 파라미터(예: Volume)를 우클릭
+2. "Expose 'Volume' to script" 선택
+3. "Exposed Parameters" 탭에서 이름 변경(예: "MusicVolume")
 
 ---
 
-## Audio Effects
+## 오디오 이펙트
 
-### Add Effects to Mixer Groups
+### Mixer 그룹에 이펙트 추가
 
-In Audio Mixer:
-- Click group (e.g., SFX)
-- Click "Add Effect"
-- Choose: Reverb, Echo, Low Pass, High Pass, Distortion, etc.
+Audio Mixer에서:
+- 그룹 선택(예: SFX)
+- "Add Effect" 클릭
+- 선택: Reverb, Echo, Low Pass, High Pass, Distortion 등
 
-### Duck Music During Dialogue (Sidechain)
+### 대사 재생 중 음악 덕킹 (사이드체인)
 
 ```csharp
-// Setup in Audio Mixer:
-// 1. Create "Duck Volume" snapshot
-// 2. Lower music volume in that snapshot
-// 3. Transition to snapshot when dialogue plays
+// Audio Mixer에서 설정:
+// 1. "Duck Volume" 스냅샷 생성
+// 2. 해당 스냅샷에서 음악 볼륨을 낮춤
+// 3. 대사가 재생될 때 스냅샷으로 전환
 
 public AudioMixerSnapshot normalSnapshot;
 public AudioMixerSnapshot duckedSnapshot;
 
 public void PlayDialogue(AudioClip clip) {
-    duckedSnapshot.TransitionTo(0.5f); // 0.5s transition
+    duckedSnapshot.TransitionTo(0.5f); // 0.5초 전환
     audioSource.PlayOneShot(clip);
     Invoke(nameof(RestoreMusic), clip.length);
 }
 
 void RestoreMusic() {
-    normalSnapshot.TransitionTo(1.0f); // 1s transition back
+    normalSnapshot.TransitionTo(1.0f); // 1초 만에 원상 복귀
 }
 ```
 
 ---
 
-## Audio Performance
+## 오디오 성능
 
-### Optimize Audio Loading
+### 오디오 로딩 최적화
 
 ```csharp
 // Audio Import Settings (Inspector):
 // - Load Type:
-//   - Decompress On Load: Small clips (SFX), loads fully into memory
-//   - Compressed In Memory: Medium clips, decompressed at runtime (RECOMMENDED)
-//   - Streaming: Large clips (music), streamed from disk
+//   - Decompress On Load: 작은 클립(SFX), 메모리에 완전히 로드됨
+//   - Compressed In Memory: 중간 크기 클립, 런타임에 압축 해제됨(권장)
+//   - Streaming: 큰 클립(음악), 디스크에서 스트리밍됨
 
 // Compression Format:
-// - PCM: Uncompressed, highest quality, largest size
-// - ADPCM: 3.5x compression, good for SFX (RECOMMENDED for SFX)
-// - Vorbis/MP3: High compression, good for music (RECOMMENDED for music)
+// - PCM: 비압축, 최고 품질, 최대 용량
+// - ADPCM: 3.5배 압축, SFX에 적합(SFX에 권장)
+// - Vorbis/MP3: 고압축, 음악에 적합(음악에 권장)
 ```
 
-### Preload Audio
+### 오디오 프리로드
 
 ```csharp
-// Preload audio clip before playing (avoid stutter)
+// 재생 전 오디오 클립을 미리 로드(끊김 방지)
 audioSource.clip.LoadAudioData();
 
-// Check if loaded
+// 로드 여부 확인
 if (audioSource.clip.loadState == AudioDataLoadState.Loaded) {
     audioSource.Play();
 }
@@ -187,9 +187,9 @@ if (audioSource.clip.loadState == AudioDataLoadState.Loaded) {
 
 ---
 
-## Music Systems
+## 음악 시스템
 
-### Crossfade Between Tracks
+### 트랙 간 크로스페이드
 
 ```csharp
 public IEnumerator CrossfadeMusic(AudioSource from, AudioSource to, float duration) {
@@ -210,29 +210,29 @@ public IEnumerator CrossfadeMusic(AudioSource from, AudioSource to, float durati
 }
 ```
 
-### Seamless Music Looping
+### 끊김 없는 음악 루프
 
 ```csharp
 // Audio Import Settings:
-// - Check "Loop" for seamless music loops
+// - 끊김 없는 음악 루프를 위해 "Loop" 체크
 audioSource.loop = true;
 ```
 
 ---
 
-## Common Patterns
+## 자주 쓰이는 패턴
 
-### Random Pitch Variation (Avoid Repetition)
+### 랜덤 피치 변화 (반복감 방지)
 
 ```csharp
 void PlaySoundWithVariation(AudioClip clip) {
     AudioSource source = GetComponent<AudioSource>();
-    source.pitch = Random.Range(0.9f, 1.1f); // ±10% pitch variation
+    source.pitch = Random.Range(0.9f, 1.1f); // ±10% 피치 변화
     source.PlayOneShot(clip);
 }
 ```
 
-### Footstep Sounds (Random from Array)
+### 발소리 사운드 (배열에서 무작위 선택)
 
 ```csharp
 public AudioClip[] footstepClips;
@@ -243,11 +243,11 @@ void PlayFootstep() {
 }
 ```
 
-### Check if Sound is Playing
+### 사운드 재생 여부 확인
 
 ```csharp
 if (audioSource.isPlaying) {
-    // Sound is currently playing
+    // 사운드가 현재 재생 중
 }
 ```
 
@@ -255,30 +255,30 @@ if (audioSource.isPlaying) {
 
 ## Audio Listener
 
-### Single Listener Rule
-- Only ONE `AudioListener` should be active at a time
-- Usually attached to Main Camera
+### 단일 리스너 규칙
+- 한 번에 오직 하나의 `AudioListener`만 활성화되어야 함
+- 보통 Main Camera에 부착됨
 
 ```csharp
-// Disable extra listeners
+// 여분의 리스너 비활성화
 AudioListener listener = GetComponent<AudioListener>();
 listener.enabled = false;
 ```
 
 ---
 
-## Debugging
+## 디버깅
 
-### Audio Window
+### Audio 창
 - `Window > Audio > Audio Mixer`
-- Visualize levels, test snapshots
+- 레벨 시각화, 스냅샷 테스트
 
 ### Audio Settings
 - `Edit > Project Settings > Audio`
-- Global volume, DSP buffer size, speaker mode
+- 전역 볼륨, DSP 버퍼 크기, 스피커 모드
 
 ---
 
-## Sources
+## 출처
 - https://docs.unity3d.com/6000.0/Documentation/Manual/Audio.html
 - https://docs.unity3d.com/6000.0/Documentation/Manual/AudioMixer.html

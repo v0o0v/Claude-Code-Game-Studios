@@ -1,152 +1,153 @@
-# Example Session: /gate-check Phase Transition — Systems Design → Technical Setup
+# 예시 세션: /gate-check 단계 전환 — 시스템 디자인 → 기술 셋업
 
-**Context:** Solo indie dev, end of week 5. The Systems Design phase feels complete — 6 MVP GDDs written, cross-review done, engine set up. User wants to formally advance to Technical Setup.
+**맥락:** 1인 인디 개발자, 5주차 마지막. 시스템 디자인 단계가 마무리된 것으로 느껴집니다 — MVP GDD 6개 작성 완료, 크로스 리뷰 완료, 엔진 설정 완료. 사용자는 기술 셋업 단계로 공식적으로 넘어가고 싶어합니다.
 
-**Starting State:**
-- `production/stage.txt` — currently `systems-design`
-- `design/gdd/systems-index.md` — 6 MVP systems listed, all marked `Status: GDD Complete`
-- `design/gdd/` — 6 GDD files present
-- `design/gdd/gdd-cross-review-2026-03-10.md` — cross-review report, verdict: CONCERNS (1 low-priority note)
-- Engine configured (Godot 4.6, `/setup-engine` complete)
+**시작 상태:**
+- `production/stage.txt` — 현재 `systems-design`
+- `design/gdd/systems-index.md` — MVP 시스템 6개 목록, 전부 `Status: GDD Complete` 로 표시됨
+- `design/gdd/` — GDD 파일 6개 존재
+- `design/gdd/gdd-cross-review-2026-03-10.md` — 크로스 리뷰 보고서, 판정: CONCERNS(낮은 우선순위 메모 1건)
+- 엔진 설정 완료(Godot 4.6, `/setup-engine` 완료)
 
-**Session Duration:** ~20 minutes
-**Turns:** 7
-**Outcome:** Gate passed, `stage.txt` updated to `technical-setup`, clear list of what comes next
+**세션 소요 시간:** 약 20분
+**턴 수:** 7
+**결과:** 게이트 통과, `stage.txt` 가 `technical-setup` 으로 갱신됨, 다음 단계에 대한 명확한 목록 제공
 
 ---
 
-## Turn 1: User Initiates Gate Check
+## 턴 1: 사용자가 게이트 체크 시작
 
-**User:**
+**사용자:**
 > /gate-check
 
-## Turn 2: Agent Detects Current Phase and Runs the Check
+## 턴 2: 에이전트가 현재 단계를 감지하고 체크 실행
 
-**Agent (via /gate-check):**
-> Reading `production/stage.txt` — current phase: **systems-design**
+**에이전트 (/gate-check 경유):**
+> `production/stage.txt` 를 읽는 중 — 현재 단계: **systems-design**
 >
-> Running gate: **Systems Design → Technical Setup**
+> 게이트 실행 중: **시스템 디자인 → 기술 셋업**
 >
 > ---
-> **Required Artifacts Checklist:**
+> **필수 산출물 체크리스트:**
 >
-> | Artifact | Requirement | Status |
+> | 산출물 | 요구사항 | 상태 |
 > |----------|-------------|--------|
-> | `design/gdd/systems-index.md` | Exists, all MVP systems listed | ✅ |
-> | Per-system GDDs | All MVP systems have a GDD | ✅ (6/6) |
-> | `/design-review` per GDD | Each GDD reviewed | ✅ (6/6 review comments found) |
-> | Cross-GDD review report | `design/gdd/gdd-cross-review-*.md` exists | ✅ |
-> | Cross-review verdict | PASS or CONCERNS (not FAIL) | ✅ CONCERNS |
-> | Engine configured | `production/stage.txt` or CLAUDE.md engine entry | ✅ Godot 4.6 |
+> | `design/gdd/systems-index.md` | 존재하며, 모든 MVP 시스템이 목록에 있음 | ✅ |
+> | 시스템별 GDD | 모든 MVP 시스템에 GDD가 있음 | ✅ (6/6) |
+> | GDD별 `/design-review` | 각 GDD가 리뷰됨 | ✅ (6/6 리뷰 코멘트 발견) |
+> | 크로스 GDD 리뷰 보고서 | `design/gdd/gdd-cross-review-*.md` 존재 | ✅ |
+> | 크로스 리뷰 판정 | PASS 또는 CONCERNS(FAIL 아님) | ✅ CONCERNS |
+> | 엔진 설정 | `production/stage.txt` 또는 CLAUDE.md 엔진 항목 | ✅ Godot 4.6 |
 >
 > ---
-> **Content Scan:**
+> **콘텐츠 스캔:**
 >
-> Checking GDD completeness (8 required sections each)...
+> GDD 완성도 확인 중(각 8개 필수 섹션)...
 >
-> | GDD | Missing Sections |
+> | GDD | 누락 섹션 |
 > |-----|-----------------|
-> | movement-system.md | None ✅ |
-> | stamina-system.md | None ✅ |
-> | combat-system.md | None ✅ |
-> | inventory-system.md | None ✅ |
-> | crafting-system.md | None ✅ |
-> | exploration-system.md | None ✅ |
+> | movement-system.md | 없음 ✅ |
+> | stamina-system.md | 없음 ✅ |
+> | combat-system.md | 없음 ✅ |
+> | inventory-system.md | 없음 ✅ |
+> | crafting-system.md | 없음 ✅ |
+> | exploration-system.md | 없음 ✅ |
 >
 > ---
-> **Cross-Review Concerns (from `gdd-cross-review-2026-03-10.md`):**
+> **크로스 리뷰 우려사항(`gdd-cross-review-2026-03-10.md` 발췌):**
 >
-> 1. ⚠️ LOW — Crafting and inventory both define "item stack size" independently with different defaults (crafting: 99, inventory: 64). One system should be the authority; the other should reference it. Not blocking — can resolve in ADR.
->
-> ---
-> **Verdict: PASS**
->
-> All required artifacts present. Cross-review concern is LOW severity and can be resolved during Technical Setup via an ADR. This is a normal finding at this stage.
->
-> **May I advance `production/stage.txt` to `technical-setup`?**
-
-## Turn 3: User Confirms
-
-**User:**
-> Yes, advance it.
-
-## Turn 4: Agent Updates Stage and Presents Next Steps
-
-**Agent:**
-> Updated `production/stage.txt` → `technical-setup`
+> 1. ⚠️ LOW — 제작 시스템과 인벤토리 시스템이 "아이템 스택 크기"를 각각 독립적으로 다른 기본값으로 정의함(제작: 99, 인벤토리: 64). 한 시스템이 권위 소스가 되어야 하고, 다른 시스템은 이를 참조해야 함. 차단급은 아님 — ADR 로 해결 가능.
 >
 > ---
-> **You are now in: Technical Setup**
+> **판정: PASS**
 >
-> This phase establishes the technical foundation before production coding starts. Your goal is a complete, approved architecture so that every story written in Pre-Production has clear, unambiguous technical guidance.
+> 모든 필수 산출물이 존재합니다. 크로스 리뷰 우려사항은 LOW 심각도이며 기술 셋업 단계에서 ADR을 통해 해결할 수 있습니다. 이 단계에서는 흔히 있는 발견 사항입니다.
 >
-> **Required steps this phase (in order):**
->
-> 1. **`/create-architecture`** — Author the master architecture document. Covers system decomposition, data flow, layer boundaries, and module responsibilities.
->
-> 2. **`/architecture-decision` (one per significant technical choice)** — At minimum:
->    - Rendering approach (2D camera, viewport, etc.)
->    - Save/load strategy
->    - Audio bus architecture
->    - The "item stack size authority" issue from cross-review (crafting vs inventory)
->
-> 3. **`/architecture-review`** — Validates all ADRs for completeness, dependency ordering, and GDD traceability. Produces the TR-registry.
->
-> 4. **`/create-control-manifest`** — Converts Accepted ADRs into a flat programmer rules sheet. This is what implementation agents will consult during coding.
->
-> 5. **`/gate-check`** — Technical Setup → Pre-Production gate. Requires: architecture doc, all ADRs Accepted, control manifest, and dependency ordering resolved.
->
-> **Optional but recommended:**
-> - `/tech-debt` scan if you have any prototype code you plan to carry forward
-> - `/setup-engine` re-run if you haven't yet fetched Godot 4.6 API snapshots
->
-> **Tip:** Start with `/architecture-decision` for the item stack size conflict. It's a quick win that closes an open question before it creates ambiguity in two ADRs later.
+> **`production/stage.txt` 를 `technical-setup` 으로 진행시켜도 될까요?**
 
-## Turn 5: User Asks About the Cross-Review Concern
+## 턴 3: 사용자가 확인
 
-**User:**
-> What do I actually write in the ADR for the stack size conflict?
+**사용자:**
+> 네, 진행시켜주세요.
 
-## Turn 6: Agent Advises
+## 턴 4: 에이전트가 단계를 갱신하고 다음 단계 제시
 
-**Agent:**
-> The ADR decision is: **which system owns the canonical `max_stack_size` value?**
+**에이전트:**
+> `production/stage.txt` → `technical-setup` 으로 업데이트했습니다
 >
-> Two options to consider:
+> ---
+> **현재 단계: 기술 셋업**
 >
-> **Option A: Inventory owns it**
-> - `ItemData` resource (owned by inventory) gets `max_stack_size: int = 64`
-> - Crafting system reads from `ItemData`, never sets its own value
-> - Pros: inventory is the source of truth for all item properties
-> - Cons: crafting team needs to know to look at inventory data
+> 이 단계는 프로덕션 코딩이 시작되기 전에 기술적 기반을 확립합니다. 목표는 완전하고 승인된 아키텍처를 갖추어, 프리 프로덕션에서 작성되는 모든 스토리가 명확하고 모호하지 않은 기술적 가이드를 갖도록 하는 것입니다.
 >
-> **Option B: Item data resource owns it (shared resource)**
-> - `ItemData.max_stack_size` is the authority for both systems
-> - Both crafting and inventory import from `ItemData`
-> - Pros: single source, no coupling between crafting and inventory modules
-> - Cons: one more thing in the shared data layer
+> **이번 단계의 필수 단계(순서대로):**
 >
-> Most studios go with B (shared resource) once they have >2 systems touching item data. But either is valid for a solo project.
+> 1. **`/create-architecture`** — 마스터 아키텍처 문서 작성. 시스템 분해, 데이터 흐름, 레이어 경계, 모듈 책임을 다룹니다.
 >
-> Run `/architecture-decision` and it will guide you through the ADR format, including the Dependencies section that links this ADR back to the two GDDs.
+> 2. **`/architecture-decision`(중요 기술 선택마다 1개씩)** — 최소한 다음 항목:
+>    - 렌더링 방식(2D 카메라, 뷰포트 등)
+>    - 저장/불러오기 전략
+>    - 오디오 버스 아키텍처
+>    - 크로스 리뷰에서 나온 "아이템 스택 크기 권위" 이슈(제작 vs. 인벤토리)
+>
+> 3. **`/architecture-review`** — 모든 ADR의 완성도, 의존성 순서, GDD 추적성을 검증합니다. TR 레지스트리를 생성합니다.
+>
+> 4. **`/create-control-manifest`** — 승인된(Accepted) ADR들을 프로그래머용 규칙 시트로 변환합니다. 구현 에이전트가 코딩 중에 참조하게 될 문서입니다.
+>
+> 5. **`/gate-check`** — 기술 셋업 → 프리 프로덕션 게이트. 요구사항: 아키텍처 문서, 모든 ADR이 Accepted 상태, 컨트롤 매니페스트, 의존성 순서 해결 완료.
+>
+> **선택 사항이지만 권장:**
+> - 앞으로 이어갈 프로토타입 코드가 있다면 `/tech-debt` 스캔
+> - 아직 Godot 4.6 API 스냅샷을 받지 않았다면 `/setup-engine` 재실행
+>
+> **팁:** 아이템 스택 크기 충돌에 대해서는 `/architecture-decision` 부터 시작하세요. 나중에 두 ADR 사이에서 모호함이 생기기 전에 열린 질문을 빠르게 닫는 좋은 시작점입니다.
 
-## Turn 7: User Wraps Up
+## 턴 5: 사용자가 크로스 리뷰 우려사항에 대해 질문
 
-**User:**
-> Got it. I'll start with /architecture-decision for this.
+**사용자:**
+> 스택 크기 충돌에 대한 ADR에는 실제로 뭘 써야 하나요?
 
-**Agent:**
-> Good starting point. The ADR will document the decision, the reasoning, and the GDD requirements it addresses — so when you write code months from now, the rationale is preserved.
+## 턴 6: 에이전트가 조언
+
+**에이전트:**
+> ADR 의 결정 사항은 다음과 같습니다: **어느 시스템이 정식 `max_stack_size` 값을 소유하는가?**
 >
-> Your phase gate is logged. Run `/help` at any time during Technical Setup to see your current progress against the required checklist.
+> 고려할 두 가지 옵션이 있습니다:
+>
+> **옵션 A: 인벤토리가 소유**
+> - 인벤토리가 소유한 `ItemData` 리소스에 `max_stack_size: int = 64` 가 들어감
+> - 제작 시스템은 `ItemData` 로부터 값을 읽기만 하고 자체 값을 설정하지 않음
+> - 장점: 인벤토리가 모든 아이템 속성의 단일 진실 공급원(source of truth)이 됨
+> - 단점: 제작 팀이 인벤토리 데이터를 살펴봐야 한다는 걸 알아야 함
+>
+> **옵션 B: 아이템 데이터 리소스가 소유(공유 리소스)**
+> - `ItemData.max_stack_size` 가 두 시스템 모두의 권위 소스가 됨
+> - 제작과 인벤토리 둘 다 `ItemData` 에서 값을 가져옴
+> - 장점: 단일 소스, 제작과 인벤토리 모듈 간 결합 없음
+> - 단점: 공유 데이터 레이어에 항목이 하나 더 늘어남
+>
+> 대부분의 스튜디오는 아이템 데이터를 다루는 시스템이 2개를 넘어가면 B(공유 리소스)를 선택합니다. 하지만 1인 프로젝트라면 둘 다 유효합니다.
+>
+> `/architecture-decision` 을 실행하면 ADR 형식을 안내받을 수 있고, 이 ADR을 두 GDD와 연결하는 Dependencies 섹션도 포함됩니다.
+
+## 턴 7: 사용자가 마무리
+
+**사용자:**
+> 알겠어요. 이것부터 /architecture-decision 으로 시작할게요.
+
+**에이전트:**
+> 좋은 시작점입니다. ADR 은 결정 사항, 근거, 그리고 이 결정이 다루는 GDD 요구사항을 문서화합니다 — 그러면 몇 달 후 코드를 작성할 때도 그 근거가 그대로 보존됩니다.
+>
+> 단계 게이트가 기록되었습니다. 기술 셋업 단계 동안 언제든 `/help` 를 실행하면 필수 체크리스트 대비 현재 진행 상황을 볼 수 있습니다.
 
 ---
 
-## What This Example Demonstrates
+## 이 예시가 보여주는 것
 
-- **Gate check is automated, not manual**: agent reads artifacts and checks them — user doesn't fill out a form
-- **CONCERNS ≠ FAIL**: the cross-review concern is LOW severity and passes the gate. A FAIL would require resolution before advancing.
-- **Stage.txt is the authority**: the status line, `/help`, and all skills read from `production/stage.txt` — updating it here changes what every subsequent skill sees
-- **Next steps are phase-specific**: the agent doesn't give a generic "good luck" — it gives the ordered checklist for Technical Setup specifically
-- **Gate check surfaces carry-forward work**: the stack size conflict was a cross-review note; the gate check ensures it becomes a concrete ADR rather than getting lost
-- **One advance per gate**: the user confirmed advancement explicitly. The gate doesn't auto-advance; human confirmation is required.
+- **게이트 체크는 자동화되어 있으며, 수동이 아님**: 에이전트가 산출물을 읽고 확인함 — 사용자가 양식을 채우지 않음
+- **CONCERNS ≠ FAIL**: 크로스 리뷰 우려사항은 LOW 심각도이며 게이트를 통과함. FAIL이었다면 진행 전에 해결이 필요했을 것
+- **Stage.txt 가 권위 소스**: 상태줄, `/help`, 그리고 모든 스킬이 `production/stage.txt` 를 읽음 — 여기서 갱신하면 이후의 모든 스킬이 보는 내용이 바뀜
+- **다음 단계는 단계별로 구체적임**: 에이전트는 일반적인 "화이팅"이 아니라 기술 셋업 단계에 특화된 순서형 체크리스트를 제공함
+- **게이트 체크가 이월 작업을 드러냄**: 스택 크기 충돌은 크로스 리뷰 메모였음; 게이트 체크는 이것이 유실되지 않고 구체적인 ADR이 되도록 함
+- **게이트당 한 번의 진행**: 사용자가 명시적으로 진행을 확인했음. 게이트는 자동으로 진행되지 않으며, 사람의 확인이 필요함
+</content>

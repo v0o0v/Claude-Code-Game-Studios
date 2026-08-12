@@ -1,32 +1,32 @@
-# Unity 6.3 — Networking Module Reference
+# Unity 6.3 — 네트워킹 모듈 레퍼런스
 
-**Last verified:** 2026-02-13
-**Knowledge Gap:** Unity 6 uses Netcode for GameObjects (UNet deprecated)
+**최종 확인일:** 2026-02-13
+**지식 공백:** Unity 6은 Netcode for GameObjects를 사용함 (UNet은 deprecated)
 
 ---
 
-## Overview
+## 개요
 
-Unity 6 networking options:
-- **Netcode for GameObjects** (RECOMMENDED): Official Unity multiplayer framework
-- **Mirror**: Community-driven (UNet successor)
-- **Photon**: Third-party service (PUN2)
-- **Custom**: Low-level sockets
+Unity 6 네트워킹 옵션:
+- **Netcode for GameObjects** (권장): Unity 공식 멀티플레이어 프레임워크
+- **Mirror**: 커뮤니티 주도 (UNet 후계)
+- **Photon**: 서드파티 서비스 (PUN2)
+- **Custom**: 저수준 소켓
 
-**UNet (Legacy)**: Deprecated, do not use.
+**UNet (레거시)**: Deprecated, 사용하지 말 것.
 
 ---
 
 ## Netcode for GameObjects
 
-### Installation
+### 설치
 1. `Window > Package Manager`
-2. Search "Netcode for GameObjects"
-3. Install `com.unity.netcode.gameobjects`
+2. "Netcode for GameObjects" 검색
+3. `com.unity.netcode.gameobjects` 설치
 
 ---
 
-## Basic Setup
+## 기본 설정
 
 ### NetworkManager
 
@@ -49,15 +49,15 @@ public class CustomNetworkManager : MonoBehaviour {
 
 ---
 
-## NetworkObject (Networked GameObjects)
+## NetworkObject (네트워크로 연결된 GameObject)
 
-### Mark GameObject as Networked
+### GameObject를 네트워크 오브젝트로 지정
 
-1. Add `NetworkObject` component to GameObject
-2. Must be in root of prefab (not nested)
-3. Register prefab in `NetworkManager > NetworkPrefabs List`
+1. GameObject에 `NetworkObject` 컴포넌트 추가
+2. 프리팹의 루트에 있어야 함 (중첩 불가)
+3. `NetworkManager > NetworkPrefabs List`에 프리팹 등록
 
-### Spawn Network Objects
+### 네트워크 오브젝트 스폰
 
 ```csharp
 using Unity.Netcode;
@@ -75,9 +75,9 @@ public class GameManager : NetworkBehaviour {
 
 ---
 
-## NetworkBehaviour (Networked Scripts)
+## NetworkBehaviour (네트워크 스크립트)
 
-### NetworkBehaviour Base Class
+### NetworkBehaviour 기반 클래스
 
 ```csharp
 using Unity.Netcode;
@@ -110,7 +110,7 @@ public class Player : NetworkBehaviour {
 
 ---
 
-## Network Variables (Synchronized State)
+## 네트워크 변수 (동기화된 상태)
 
 ### NetworkVariable<T>
 
@@ -139,7 +139,7 @@ public class Player : NetworkBehaviour {
 }
 ```
 
-### NetworkVariable Permissions
+### NetworkVariable 권한
 
 ```csharp
 // Server can write, clients read-only (default)
@@ -155,9 +155,9 @@ private NetworkVariable<int> ammo = new NetworkVariable<int>(
 
 ---
 
-## RPCs (Remote Procedure Calls)
+## RPC (원격 프로시저 호출)
 
-### ServerRpc (Client → Server)
+### ServerRpc (클라이언트 → 서버)
 
 ```csharp
 // Client calls, server executes
@@ -173,7 +173,7 @@ if (IsOwner && Input.GetKeyDown(KeyCode.Space)) {
 }
 ```
 
-### ClientRpc (Server → All Clients)
+### ClientRpc (서버 → 모든 클라이언트)
 
 ```csharp
 // Server calls, all clients execute
@@ -194,7 +194,7 @@ void ExplodeServerRpc(Vector3 position) {
 }
 ```
 
-### RPC Parameters
+### RPC 파라미터
 
 ```csharp
 // ✅ Supported: Primitives, structs, strings, arrays
@@ -209,9 +209,9 @@ void UpdateScoresClientRpc(int[] scores) { }
 
 ---
 
-## Network Ownership
+## 네트워크 소유권
 
-### Check Ownership
+### 소유권 확인
 
 ```csharp
 if (IsOwner) {
@@ -231,7 +231,7 @@ if (IsLocalPlayer) {
 }
 ```
 
-### Transfer Ownership
+### 소유권 이전
 
 ```csharp
 // Server transfers ownership
@@ -241,7 +241,7 @@ netObj.ChangeOwnership(newOwnerClientId);
 
 ---
 
-## NetworkObjectReference (Pass GameObjects in RPCs)
+## NetworkObjectReference (RPC로 GameObject 전달)
 
 ```csharp
 using Unity.Netcode;
@@ -261,9 +261,9 @@ AttackTargetServerRpc(targetNetObj);
 
 ---
 
-## Client-Server Architecture
+## 클라이언트-서버 아키텍처
 
-### Server-Authoritative Pattern (RECOMMENDED)
+### 서버 권위 패턴 (권장)
 
 ```csharp
 public class Player : NetworkBehaviour {
@@ -290,9 +290,9 @@ public class Player : NetworkBehaviour {
 
 ---
 
-## Network Transport
+## 네트워크 전송(Transport)
 
-### Unity Transport (Default)
+### Unity Transport (기본값)
 
 ```csharp
 // Configured in NetworkManager:
@@ -301,7 +301,7 @@ public class Player : NetworkBehaviour {
 // - Port: 7777 (default)
 ```
 
-### Connection Events
+### 연결 이벤트
 
 ```csharp
 void Start() {
@@ -320,32 +320,32 @@ void OnClientDisconnected(ulong clientId) {
 
 ---
 
-## Performance Tips
+## 성능 팁
 
-### Reduce Network Traffic
-- Use `NetworkVariable` for state that changes infrequently
-- Batch multiple changes before syncing
-- Use delta compression for large data
+### 네트워크 트래픽 줄이기
+- 자주 바뀌지 않는 상태에는 `NetworkVariable`을 사용
+- 여러 변경 사항을 동기화 전에 배치로 묶기
+- 큰 데이터에는 델타 압축 사용
 
-### Prediction & Reconciliation
-- Run movement locally for responsiveness
-- Reconcile with server authoritative state
-- Use interpolation for smooth movement
+### 예측 및 재조정
+- 반응성을 위해 이동은 로컬에서 실행
+- 서버 권위 상태와 재조정
+- 부드러운 이동을 위해 보간 사용
 
 ---
 
-## Debugging
+## 디버깅
 
 ### Network Profiler
 - `Window > Analysis > Network Profiler`
-- Monitor bandwidth, RPC calls, variable updates
+- 대역폭, RPC 호출, 변수 업데이트 모니터링
 
-### Network Simulator (Test Latency/Packet Loss)
+### Network Simulator (지연/패킷 손실 테스트)
 - `NetworkManager > Network Simulator`
-- Add artificial lag and packet loss for testing
+- 테스트를 위해 인위적인 지연과 패킷 손실 추가
 
 ---
 
-## Sources
+## 출처
 - https://docs-multiplayer.unity3d.com/netcode/current/about/
 - https://docs-multiplayer.unity3d.com/netcode/current/learn/bossroom/

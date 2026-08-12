@@ -1,29 +1,29 @@
-# Unreal Engine 5.7 — Animation Module Reference
+# Unreal Engine 5.7 — 애니메이션 모듈 레퍼런스
 
-**Last verified:** 2026-02-13
-**Knowledge Gap:** UE 5.7 animation authoring improvements, Control Rig 2.0
+**최종 검증일:** 2026-02-13
+**지식 공백:** UE 5.7 애니메이션 저작 개선 사항, Control Rig 2.0
 
 ---
 
-## Overview
+## 개요
 
-UE 5.7 animation systems:
-- **Animation Blueprint**: State machine-based animation logic
-- **Control Rig**: Runtime procedural animation (production-ready in UE5)
-- **IK Rig + Retargeter**: Modern retargeting system
-- **Sequencer**: Cinematic animation
+UE 5.7 애니메이션 시스템:
+- **Animation Blueprint**: 스테이트 머신 기반 애니메이션 로직
+- **Control Rig**: 런타임 프로시저럴 애니메이션(UE5에서 프로덕션 준비 완료)
+- **IK Rig + Retargeter**: 최신 리타겟팅 시스템
+- **Sequencer**: 시네마틱 애니메이션
 
 ---
 
 ## Animation Blueprint
 
-### Create Animation Blueprint
+### Animation Blueprint 생성
 
-1. Content Browser > Right Click > Animation > Animation Blueprint
-2. Select parent class: `AnimInstance`
-3. Select skeleton
+1. Content Browser > 우클릭 > Animation > Animation Blueprint
+2. 부모 클래스 선택: `AnimInstance`
+3. 스켈레톤 선택
 
-### Animation State Machine
+### 애니메이션 스테이트 머신
 
 ```cpp
 // In Animation Blueprint Event Graph:
@@ -37,7 +37,7 @@ AnimInstance->Montage_Play(AttackMontage);
 
 ---
 
-## Play Animation Montages
+## Animation Montage 재생
 
 ### Animation Montage
 
@@ -53,7 +53,7 @@ AnimInstance->Montage_Stop(0.2f, AttackMontage);
 bool bIsPlaying = AnimInstance->Montage_IsPlaying(AttackMontage);
 ```
 
-### Montage Notify Events
+### Montage Notify 이벤트
 
 ```cpp
 // Add notify event in Animation Montage (right-click timeline > Add Notify > New Notify)
@@ -74,9 +74,9 @@ public:
 
 ---
 
-## Blend Spaces
+## Blend Space
 
-### 1D Blend Space (Speed Blending)
+### 1D Blend Space (속도 블렌딩)
 
 ```cpp
 // Create: Content Browser > Animation > Blend Space 1D
@@ -88,7 +88,7 @@ public:
 // - Feed into Blend Space
 ```
 
-### 2D Blend Space (Directional Movement)
+### 2D Blend Space (방향성 이동)
 
 ```cpp
 // Create: Content Browser > Animation > Blend Space
@@ -99,15 +99,15 @@ public:
 
 ---
 
-## Control Rig (Procedural Animation)
+## Control Rig (프로시저럴 애니메이션)
 
-### Create Control Rig
+### Control Rig 생성
 
 1. Content Browser > Animation > Control Rig
-2. Select skeleton
-3. Build rig hierarchy (bones, controls, IK)
+2. 스켈레톤 선택
+3. 리그 계층 구성(본, 컨트롤, IK)
 
-### Use Control Rig in Animation Blueprint
+### Animation Blueprint에서 Control Rig 사용
 
 ```cpp
 // Add "Control Rig" node to Anim Blueprint
@@ -115,7 +115,7 @@ public:
 // Procedurally modify bones at runtime
 ```
 
-### Control Rig in C++
+### C++에서 Control Rig 사용
 
 ```cpp
 // Get control rig component
@@ -127,24 +127,24 @@ ControlRig->SetControlValue<FVector>(TEXT("IK_Hand_R"), TargetLocation);
 
 ---
 
-## IK Rig & Retargeting (UE5)
+## IK Rig & 리타겟팅 (UE5)
 
-### Create IK Rig
+### IK Rig 생성
 
 1. Content Browser > Animation > IK Rig
-2. Select skeleton
-3. Add IK goals (hands, feet)
-4. Set up solver chains
+2. 스켈레톤 선택
+3. IK 골(손, 발) 추가
+4. 솔버 체인 설정
 
-### Retarget Animations
+### 애니메이션 리타겟팅
 
-1. Create IK Rig for source skeleton
-2. Create IK Rig for target skeleton
-3. Create IK Retargeter asset
-4. Assign source and target IK Rigs
-5. Batch retarget animations
+1. 소스 스켈레톤용 IK Rig 생성
+2. 타겟 스켈레톤용 IK Rig 생성
+3. IK Retargeter 에셋 생성
+4. 소스 및 타겟 IK Rig 할당
+5. 애니메이션 일괄 리타겟
 
-### Retargeting in C++
+### C++에서의 리타겟팅
 
 ```cpp
 // Retargeting is primarily editor-based
@@ -153,9 +153,9 @@ ControlRig->SetControlValue<FVector>(TEXT("IK_Hand_R"), TargetLocation);
 
 ---
 
-## Animation Notify States
+## Animation Notify State
 
-### Custom Notify State (Duration-Based Events)
+### 커스텀 Notify State (지속 시간 기반 이벤트)
 
 ```cpp
 UCLASS()
@@ -179,9 +179,9 @@ public:
 
 ---
 
-## Skeletal Mesh & Sockets
+## Skeletal Mesh & Socket
 
-### Attach Objects to Sockets
+### 소켓에 오브젝트 부착
 
 ```cpp
 // Create socket in Skeletal Mesh Editor (Skeleton Tree > Add Socket)
@@ -193,9 +193,9 @@ Weapon->SetupAttachment(GetMesh(), TEXT("hand_r_socket"));
 
 ---
 
-## Animation Curves
+## Animation Curve
 
-### Use Animation Curves
+### Animation Curve 사용
 
 ```cpp
 // Add curve to animation:
@@ -210,7 +210,7 @@ float CurveValue = AnimInstance->GetCurveValue(TEXT("MyCurve"));
 
 ## Root Motion
 
-### Enable Root Motion
+### Root Motion 활성화
 
 ```cpp
 // In Animation Sequence: Asset Details > Root Motion > Enable Root Motion
@@ -221,9 +221,9 @@ GetCharacterMovement()->bAllowPhysicsRotationDuringAnimRootMotion = true;
 
 ---
 
-## Animation Layers (Linked Anim Graphs)
+## Animation Layer (Linked Anim Graph)
 
-### Use Linked Anim Layers
+### Linked Anim Layer 사용
 
 ```cpp
 // Create separate Anim Blueprints for layers (e.g., upper body, lower body)
@@ -236,14 +236,14 @@ AnimInstance->LinkAnimClassLayers(NewLayerClass);
 
 ---
 
-## Sequencer (Cinematic Animation)
+## Sequencer (시네마틱 애니메이션)
 
-### Create Sequence
+### Sequence 생성
 
 1. Content Browser > Cinematics > Level Sequence
-2. Add tracks: Camera, Character, Animation, etc.
+2. 트랙 추가: Camera, Character, Animation 등
 
-### Play Sequence from C++
+### C++에서 Sequence 재생
 
 ```cpp
 #include "LevelSequenceActor.h"
@@ -255,9 +255,9 @@ SequenceActor->GetSequencePlayer()->Play();
 
 ---
 
-## Performance Tips
+## 성능 팁
 
-### Animation Optimization
+### 애니메이션 최적화
 
 ```cpp
 // LOD (Level of Detail) for skeletal meshes
@@ -271,9 +271,9 @@ GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::OnlyT
 
 ---
 
-## Debugging
+## 디버깅
 
-### Animation Debug Visualization
+### 애니메이션 디버그 시각화
 
 ```cpp
 // Console commands:
@@ -286,7 +286,7 @@ DrawDebugCoordinateSystem(GetWorld(), BoneLocation, BoneRotation, 50.0f, false, 
 
 ---
 
-## Sources
+## 출처
 - https://docs.unrealengine.com/5.7/en-US/animation-in-unreal-engine/
 - https://docs.unrealengine.com/5.7/en-US/control-rig-in-unreal-engine/
 - https://docs.unrealengine.com/5.7/en-US/ik-rig-in-unreal-engine/

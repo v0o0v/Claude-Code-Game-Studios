@@ -1,28 +1,28 @@
-# Unreal Engine 5.7 — Navigation Module Reference
+# Unreal Engine 5.7 — 내비게이션 모듈 레퍼런스
 
-**Last verified:** 2026-02-13
-**Knowledge Gap:** UE 5.7 navigation improvements
-
----
-
-## Overview
-
-UE 5.7 navigation systems:
-- **Nav Mesh**: Automatic pathfinding mesh for AI
-- **AI Controller**: Controls AI movement and behavior
-- **Behavior Trees**: AI decision-making (covered in AI module)
+**최종 검증일:** 2026-02-13
+**지식 공백:** UE 5.7 내비게이션 개선 사항
 
 ---
 
-## Nav Mesh Setup
+## 개요
 
-### Add Nav Mesh Bounds Volume
+UE 5.7 내비게이션 시스템:
+- **Nav Mesh**: AI를 위한 자동 경로 탐색 메시
+- **AI Controller**: AI 이동 및 행동 제어
+- **Behavior Trees**: AI 의사결정(AI 모듈에서 다룸)
+
+---
+
+## Nav Mesh 설정
+
+### Nav Mesh Bounds Volume 추가
 
 1. Place Actors > Volumes > Nav Mesh Bounds Volume
-2. Scale to cover walkable areas
-3. Press `P` to toggle Nav Mesh visualization (green overlay)
+2. 이동 가능 영역을 덮도록 스케일 조정
+3. `P` 키를 눌러 Nav Mesh 시각화(녹색 오버레이) 토글
 
-### Nav Mesh Settings
+### Nav Mesh 설정값
 
 ```cpp
 // Project Settings > Engine > Navigation System
@@ -32,9 +32,9 @@ UE 5.7 navigation systems:
 
 ---
 
-## AI Controller & Movement
+## AI Controller & 이동
 
-### Create AI Controller
+### AI Controller 생성
 
 ```cpp
 UCLASS()
@@ -52,7 +52,7 @@ public:
 };
 ```
 
-### Assign AI Controller to Pawn
+### Pawn에 AI Controller 할당
 
 ```cpp
 UCLASS()
@@ -70,9 +70,9 @@ public:
 
 ---
 
-## Basic AI Movement
+## 기본 AI 이동
 
-### Move to Location
+### 위치로 이동
 
 ```cpp
 AAIController* AIController = Cast<AAIController>(GetController());
@@ -86,14 +86,14 @@ if (AIController) {
 }
 ```
 
-### Move to Actor
+### 액터로 이동
 
 ```cpp
 AActor* Target = /* Get target actor */;
 AIController->MoveToActor(Target, 100.0f); // Stop 100 units away
 ```
 
-### Stop Movement
+### 이동 정지
 
 ```cpp
 AIController->StopMovement();
@@ -101,9 +101,9 @@ AIController->StopMovement();
 
 ---
 
-## Path Following Events
+## Path Following 이벤트
 
-### On Move Completed
+### 이동 완료 시
 
 ```cpp
 UCLASS()
@@ -131,9 +131,9 @@ public:
 
 ---
 
-## Pathfinding Queries
+## 경로 탐색 쿼리
 
-### Find Path to Location
+### 위치까지의 경로 찾기
 
 ```cpp
 #include "NavigationSystem.h"
@@ -158,7 +158,7 @@ if (NavSys) {
 }
 ```
 
-### Check if Location is Reachable
+### 위치 도달 가능 여부 확인
 
 ```cpp
 UNavigationSystemV1* NavSys = UNavigationSystemV1::GetCurrent(GetWorld());
@@ -172,18 +172,18 @@ if (bReachable) {
 
 ---
 
-## Nav Mesh Modifiers
+## Nav Mesh Modifier
 
-### Nav Modifier Volume (Block/Allow Areas)
+### Nav Modifier Volume (영역 차단/허용)
 
 1. Place Actors > Volumes > Nav Modifier Volume
-2. Configure Area Class (e.g., NavArea_Null to block, NavArea_LowHeight for crouching)
+2. Area Class 구성(예: 차단용 NavArea_Null, 웅크리기용 NavArea_LowHeight)
 
 ---
 
-## Custom Nav Areas
+## 커스텀 Nav Area
 
-### Create Custom Nav Area
+### 커스텀 Nav Area 생성
 
 ```cpp
 UCLASS()
@@ -198,7 +198,7 @@ public:
 };
 ```
 
-### Use Custom Nav Area
+### 커스텀 Nav Area 사용
 
 ```cpp
 // Assign to Nav Modifier Volume or geometry
@@ -206,16 +206,16 @@ public:
 
 ---
 
-## Nav Mesh Generation
+## Nav Mesh 생성
 
-### Rebuild Nav Mesh at Runtime
+### 런타임에 Nav Mesh 재생성
 
 ```cpp
 UNavigationSystemV1* NavSys = UNavigationSystemV1::GetCurrent(GetWorld());
 NavSys->Build(); // Rebuild entire NavMesh
 ```
 
-### Dynamic Nav Mesh (Moving Obstacles)
+### 동적 Nav Mesh (움직이는 장애물)
 
 ```cpp
 // Enable: Project Settings > Navigation System > Runtime Generation = Dynamic
@@ -228,21 +228,21 @@ Mesh->bDynamicObstacle = true;
 
 ---
 
-## Nav Links (Off-Mesh Connections)
+## Nav Link (Off-Mesh Connection)
 
-### Nav Link Proxy (Jump, Teleport)
+### Nav Link Proxy (점프, 텔레포트)
 
 1. Place Actors > Navigation > Nav Link Proxy
-2. Set up start and end points
-3. Configure:
-   - **Direction**: One-way or bidirectional
-   - **Smart Link**: Animate character during traversal
+2. 시작점과 끝점 설정
+3. 구성:
+   - **Direction**: 단방향 또는 양방향
+   - **Smart Link**: 이동 중 캐릭터 애니메이션 재생
 
 ---
 
-## Crowd Management
+## 군중 관리
 
-### Detour Crowd (Avoid Overlapping)
+### Detour Crowd (겹침 회피)
 
 ```cpp
 // Enable: Character Movement Component > Avoidance Enabled = true
@@ -256,9 +256,9 @@ MoveComp->SetAvoidanceEnabled(true);
 
 ---
 
-## Performance Tips
+## 성능 팁
 
-### Nav Mesh Optimization
+### Nav Mesh 최적화
 
 ```cpp
 // Reduce tile size for large worlds:
@@ -270,9 +270,9 @@ MoveComp->SetAvoidanceEnabled(true);
 
 ---
 
-## Debugging
+## 디버깅
 
-### Visualize Nav Mesh
+### Nav Mesh 시각화
 
 ```cpp
 // Console commands:
@@ -289,9 +289,9 @@ if (NavPath) {
 
 ---
 
-## Common Patterns
+## 일반적인 패턴
 
-### Patrol Between Waypoints
+### 웨이포인트 사이 순찰
 
 ```cpp
 UPROPERTY(EditAnywhere, Category = "AI")
@@ -308,7 +308,7 @@ void OnMoveCompleted(FAIRequestID RequestID, EPathFollowingResult::Type Result) 
 }
 ```
 
-### Chase Player
+### 플레이어 추격
 
 ```cpp
 void Tick(float DeltaTime) {
@@ -333,6 +333,6 @@ void Tick(float DeltaTime) {
 
 ---
 
-## Sources
+## 출처
 - https://docs.unrealengine.com/5.7/en-US/navigation-system-in-unreal-engine/
 - https://docs.unrealengine.com/5.7/en-US/ai-in-unreal-engine/

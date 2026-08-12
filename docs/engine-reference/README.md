@@ -1,63 +1,63 @@
-# Engine Reference Documentation
+# 엔진 레퍼런스 문서
 
-This directory contains curated, version-pinned documentation snapshots for the
-game engine(s) used in this project. These files exist because **LLM knowledge
-has a cutoff date** and game engines update frequently.
+이 디렉터리는 이 프로젝트에서 사용하는 게임 엔진(들)에 대한 정제된,
+버전 고정 문서 스냅샷을 담고 있다. 이 파일들이 존재하는 이유는 **LLM의 지식에는
+컷오프 날짜가 있고** 게임 엔진은 자주 업데이트되기 때문이다.
 
-## Why This Exists
+## 왜 이것이 필요한가
 
-Claude's training data has a knowledge cutoff (currently May 2025). Game engines
-like Godot, Unity, and Unreal ship updates that introduce breaking API changes,
-new features, and deprecated patterns. Without these reference files, agents will
-suggest outdated code.
+Claude의 학습 데이터에는 지식 컷오프(현재 2025년 5월)가 있다. Godot, Unity,
+Unreal 같은 게임 엔진은 API를 깨뜨리는 변경, 신규 기능, 사용 중단 패턴을
+도입하는 업데이트를 계속 배포한다. 이 레퍼런스 파일들이 없다면 에이전트는
+오래된 코드를 제안하게 된다.
 
-## Structure
+## 구조
 
-Each engine gets its own directory:
+각 엔진은 자신만의 디렉터리를 가진다.
 
 ```
 <engine>/
-├── VERSION.md              # Pinned version, verification date, knowledge gap window
-├── breaking-changes.md     # API changes between versions, organized by risk level
-├── deprecated-apis.md      # "Don't use X → Use Y" lookup tables
-├── current-best-practices.md  # New practices not in model training data
-└── modules/                # Per-subsystem quick references (~150 lines max each)
+├── VERSION.md              # 고정된 버전, 검증 날짜, 지식 공백 구간
+├── breaking-changes.md     # 버전 간 API 변경 사항, 위험 수준별 정리
+├── deprecated-apis.md      # "X 대신 Y를 사용하라" 조회 표
+├── current-best-practices.md  # 모델 학습 데이터에 없는 신규 관행
+└── modules/                # 서브시스템별 빠른 레퍼런스(각각 최대 ~150줄)
     ├── rendering.md
     ├── physics.md
     └── ...
 ```
 
-## How Agents Use These Files
+## 에이전트가 이 파일들을 사용하는 방법
 
-Engine-specialist agents are instructed to:
+엔진 전문 에이전트는 다음과 같이 안내받는다.
 
-1. Read `VERSION.md` to confirm the current engine version
-2. Check `deprecated-apis.md` before suggesting any engine API
-3. Consult `breaking-changes.md` for version-specific concerns
-4. Read relevant `modules/*.md` for subsystem-specific work
+1. `VERSION.md`를 읽어 현재 엔진 버전을 확인한다
+2. 어떤 엔진 API를 제안하기 전에도 `deprecated-apis.md`를 확인한다
+3. 버전별 유의사항은 `breaking-changes.md`에서 확인한다
+4. 서브시스템 관련 작업 시 해당하는 `modules/*.md`를 읽는다
 
-## Maintenance
+## 유지보수
 
-### When to Update
+### 언제 업데이트해야 하는가
 
-- After upgrading the engine version
-- When the LLM model is updated (new knowledge cutoff)
-- After running `/refresh-docs` (if available)
-- When you discover an API the model gets wrong
+- 엔진 버전을 업그레이드한 후
+- LLM 모델이 업데이트되었을 때(새로운 지식 컷오프)
+- `/refresh-docs`를 실행한 후(사용 가능한 경우)
+- 모델이 잘못 알고 있는 API를 발견했을 때
 
-### How to Update
+### 업데이트 방법
 
-1. Update `VERSION.md` with the new engine version and date
-2. Add new entries to `breaking-changes.md` for the version transition
-3. Move newly deprecated APIs into `deprecated-apis.md`
-4. Update `current-best-practices.md` with new patterns
-5. Update relevant `modules/*.md` with API changes
-6. Set "Last verified" dates on all modified files
+1. `VERSION.md`를 새 엔진 버전과 날짜로 업데이트한다
+2. 버전 전환에 대한 새 항목을 `breaking-changes.md`에 추가한다
+3. 새로 사용 중단된 API를 `deprecated-apis.md`로 옮긴다
+4. `current-best-practices.md`를 새 패턴으로 업데이트한다
+5. 관련된 `modules/*.md`를 API 변경 사항으로 업데이트한다
+6. 수정한 모든 파일에 "Last verified" 날짜를 설정한다
 
-### Quality Rules
+### 품질 규칙
 
-- Every file must have a "Last verified: YYYY-MM-DD" date
-- Keep module files under 150 lines (context budget)
-- Include code examples showing correct/incorrect patterns
-- Link to official documentation URLs for verification
-- Only document things that differ from the model's training data
+- 모든 파일에는 "Last verified: YYYY-MM-DD" 날짜가 있어야 한다
+- 모듈 파일은 150줄 이내로 유지한다(컨텍스트 예산)
+- 올바른/잘못된 패턴을 보여주는 코드 예시를 포함한다
+- 검증을 위해 공식 문서 URL을 링크한다
+- 모델의 학습 데이터와 다른 내용만 문서화한다

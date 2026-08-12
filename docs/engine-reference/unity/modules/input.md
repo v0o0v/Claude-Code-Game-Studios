@@ -1,57 +1,59 @@
-# Unity 6.3 — Input Module Reference
+# Unity 6.3 — 입력 모듈 레퍼런스
 
-**Last verified:** 2026-02-13
-**Knowledge Gap:** Unity 6 uses new Input System (legacy Input deprecated)
-
----
-
-## Overview
-
-Unity 6 input systems:
-- **Input System Package** (RECOMMENDED): Cross-platform, rebindable, modern
-- **Legacy Input Manager**: Deprecated, avoid for new projects
+**최종 확인일:** 2026-02-13
+**지식 공백:** Unity 6은 새로운 Input System을 사용함(레거시 Input은 지원 중단)
 
 ---
 
-## Key Changes from 2022 LTS
+## 개요
 
-### Legacy Input Deprecated in Unity 6
+Unity 6 입력 시스템:
+- **Input System Package** (권장): 크로스 플랫폼, 리바인딩 가능, 최신 방식
+- **Legacy Input Manager**: 지원 중단, 신규 프로젝트에는 사용 지양
+
+---
+
+## 2022 LTS 대비 주요 변경 사항
+
+### Unity 6에서 Legacy Input 지원 중단
 
 ```csharp
-// ❌ DEPRECATED: Input class
+// ❌ 지원 중단(DEPRECATED): Input 클래스
 if (Input.GetKeyDown(KeyCode.Space)) { }
 
-// ✅ NEW: Input System package
+// ✅ 신규: Input System 패키지
 using UnityEngine.InputSystem;
 if (Keyboard.current.spaceKey.wasPressedThisFrame) { }
 ```
 
-**Migration Required:** Install `com.unity.inputsystem` package.
+**마이그레이션 필요:** `com.unity.inputsystem` 패키지를 설치해야 함.
 
 ---
 
-## Input System Package Setup
+## Input System 패키지 설정
 
-### Installation
+### 설치
+
 1. `Window > Package Manager`
-2. Search "Input System"
-3. Install package
-4. Restart Unity when prompted
+2. "Input System" 검색
+3. 패키지 설치
+4. 안내 시 Unity 재시작
 
-### Enable New Input System
+### 새 Input System 활성화
+
 `Edit > Project Settings > Player > Active Input Handling`:
-- **Input System Package (New)** ✅ Recommended
-- **Both** (for migration period)
+- **Input System Package (New)** ✅ 권장
+- **Both** (마이그레이션 기간에 사용)
 
 ---
 
-## Input Actions (Recommended Pattern)
+## Input Actions (권장 패턴)
 
-### Create Input Actions Asset
+### Input Actions 에셋 생성
 
 1. `Assets > Create > Input Actions`
-2. Name it (e.g., "PlayerControls")
-3. Open asset, define actions:
+2. 이름 지정(예: "PlayerControls")
+3. 에셋을 열고 액션 정의:
 
 ```
 Action Maps:
@@ -63,10 +65,10 @@ Action Maps:
       - Look (Value, Vector2)
 ```
 
-4. **Generate C# Class**: Check "Generate C# Class" in Inspector
-5. Click "Apply"
+4. **C# 클래스 생성**: Inspector에서 "Generate C# Class" 체크
+5. "Apply" 클릭
 
-### Use Generated Input Class
+### 생성된 Input 클래스 사용
 
 ```csharp
 using UnityEngine;
@@ -78,7 +80,7 @@ public class PlayerController : MonoBehaviour {
     void Awake() {
         controls = new PlayerControls();
 
-        // Subscribe to actions
+        // 액션 구독
         controls.Gameplay.Jump.performed += ctx => Jump();
         controls.Gameplay.Fire.performed += ctx => Fire();
     }
@@ -87,12 +89,12 @@ public class PlayerController : MonoBehaviour {
     void OnDisable() => controls.Disable();
 
     void Update() {
-        // Read continuous input
+        // 연속 입력 읽기
         Vector2 move = controls.Gameplay.Move.ReadValue<Vector2>();
         transform.Translate(new Vector3(move.x, 0, move.y) * Time.deltaTime);
 
         Vector2 look = controls.Gameplay.Look.ReadValue<Vector2>();
-        // Apply camera rotation
+        // 카메라 회전 적용
     }
 
     void Jump() {
@@ -107,64 +109,64 @@ public class PlayerController : MonoBehaviour {
 
 ---
 
-## Direct Device Access (Quick & Dirty)
+## 디바이스 직접 접근 (빠르고 간단한 방식)
 
-### Keyboard
+### 키보드
 
 ```csharp
 using UnityEngine.InputSystem;
 
 void Update() {
-    // Current state
+    // 현재 상태
     if (Keyboard.current.spaceKey.isPressed) { }
 
-    // Just pressed this frame
+    // 이번 프레임에 방금 눌림
     if (Keyboard.current.spaceKey.wasPressedThisFrame) { }
 
-    // Just released this frame
+    // 이번 프레임에 방금 떼어짐
     if (Keyboard.current.spaceKey.wasReleasedThisFrame) { }
 }
 ```
 
-### Mouse
+### 마우스
 
 ```csharp
 using UnityEngine.InputSystem;
 
 void Update() {
-    // Mouse position
+    // 마우스 위치
     Vector2 mousePos = Mouse.current.position.ReadValue();
 
-    // Mouse delta (movement)
+    // 마우스 델타(이동량)
     Vector2 mouseDelta = Mouse.current.delta.ReadValue();
 
-    // Mouse buttons
+    // 마우스 버튼
     if (Mouse.current.leftButton.wasPressedThisFrame) { }
     if (Mouse.current.rightButton.isPressed) { }
 
-    // Scroll wheel
+    // 스크롤 휠
     Vector2 scroll = Mouse.current.scroll.ReadValue();
 }
 ```
 
-### Gamepad
+### 게임패드
 
 ```csharp
 using UnityEngine.InputSystem;
 
 void Update() {
     Gamepad gamepad = Gamepad.current;
-    if (gamepad == null) return; // No gamepad connected
+    if (gamepad == null) return; // 연결된 게임패드 없음
 
-    // Buttons
+    // 버튼
     if (gamepad.buttonSouth.wasPressedThisFrame) { } // A/Cross
     if (gamepad.buttonWest.wasPressedThisFrame) { }  // X/Square
 
-    // Sticks
+    // 스틱
     Vector2 leftStick = gamepad.leftStick.ReadValue();
     Vector2 rightStick = gamepad.rightStick.ReadValue();
 
-    // Triggers
+    // 트리거
     float leftTrigger = gamepad.leftTrigger.ReadValue();
     float rightTrigger = gamepad.rightTrigger.ReadValue();
 
@@ -173,7 +175,7 @@ void Update() {
 }
 ```
 
-### Touch (Mobile)
+### 터치 (모바일)
 
 ```csharp
 using UnityEngine.InputSystem;
@@ -192,36 +194,36 @@ void Update() {
 
 ---
 
-## Input Action Callbacks
+## Input Action 콜백
 
-### Action Callbacks (Event-Driven)
+### 액션 콜백 (이벤트 기반)
 
 ```csharp
-// started: Input began (e.g., trigger pressed slightly)
+// started: 입력이 시작됨(예: 트리거가 살짝 눌림)
 controls.Gameplay.Fire.started += ctx => Debug.Log("Fire started");
 
-// performed: Input action triggered (e.g., button fully pressed)
+// performed: 입력 액션이 트리거됨(예: 버튼이 완전히 눌림)
 controls.Gameplay.Fire.performed += ctx => Debug.Log("Fire performed");
 
-// canceled: Input released or interrupted
+// canceled: 입력이 해제되거나 중단됨
 controls.Gameplay.Fire.canceled += ctx => Debug.Log("Fire canceled");
 ```
 
-### Context Data
+### 컨텍스트 데이터
 
 ```csharp
 controls.Gameplay.Move.performed += ctx => {
     Vector2 value = ctx.ReadValue<Vector2>();
-    float duration = ctx.duration; // How long input held
-    InputControl control = ctx.control; // Which device/control triggered it
+    float duration = ctx.duration; // 입력이 유지된 시간
+    InputControl control = ctx.control; // 트리거한 디바이스/컨트롤
 };
 ```
 
 ---
 
-## Control Schemes & Device Switching
+## 컨트롤 스킴 & 디바이스 전환
 
-### Define Control Schemes in Input Actions Asset
+### Input Actions 에셋에서 컨트롤 스킴 정의
 
 ```
 Control Schemes:
@@ -230,7 +232,7 @@ Control Schemes:
   - Touch (Touchscreen)
 ```
 
-### Auto-Switch on Device Change
+### 디바이스 변경 시 자동 전환
 
 ```csharp
 controls.Gameplay.Move.performed += ctx => {
@@ -244,16 +246,16 @@ controls.Gameplay.Move.performed += ctx => {
 
 ---
 
-## Rebinding (Runtime Key Mapping)
+## 리바인딩 (런타임 키 매핑)
 
-### Interactive Rebind
+### 인터랙티브 리바인딩
 
 ```csharp
 using UnityEngine.InputSystem;
 
 public void RebindJumpKey() {
     var rebindOperation = controls.Gameplay.Jump.PerformInteractiveRebinding()
-        .WithControlsExcluding("Mouse") // Exclude mouse bindings
+        .WithControlsExcluding("Mouse") // 마우스 바인딩 제외
         .OnComplete(operation => {
             Debug.Log("Rebind complete");
             operation.Dispose();
@@ -262,75 +264,75 @@ public void RebindJumpKey() {
 }
 ```
 
-### Save/Load Bindings
+### 바인딩 저장/불러오기
 
 ```csharp
-// Save
+// 저장
 string rebinds = controls.SaveBindingOverridesAsJson();
 PlayerPrefs.SetString("InputBindings", rebinds);
 
-// Load
+// 불러오기
 string rebinds = PlayerPrefs.GetString("InputBindings");
 controls.LoadBindingOverridesFromJson(rebinds);
 ```
 
 ---
 
-## Action Types
+## 액션 타입
 
-### Button (Press/Release)
-- Single press/release
-- Example: Jump, Fire
+### Button (누름/뗌)
+- 단일 누름/뗌
+- 예: Jump, Fire
 
-### Value (Continuous)
-- Continuous value (float, Vector2)
-- Example: Move, Look, Aim
+### Value (연속값)
+- 연속적인 값(float, Vector2)
+- 예: Move, Look, Aim
 
-### Pass-Through (Immediate)
-- No processing, immediate value
-- Example: Mouse position
+### Pass-Through (즉시 전달)
+- 별도 처리 없이 즉시 값 전달
+- 예: 마우스 위치
 
 ---
 
-## Processors (Input Modifiers)
+## Processors (입력 보정기)
 
 ### Scale
 
 ```csharp
 // In Input Actions asset: Action > Properties > Processors > Add > Scale
-// Multiply input by value (e.g., invert Y-axis)
+// 입력값에 특정 값을 곱함(예: Y축 반전)
 ```
 
 ### Invert
 
 ```csharp
 // In Input Actions asset: Action > Properties > Processors > Add > Invert
-// Flip input sign
+// 입력 부호 반전
 ```
 
 ### Dead Zone
 
 ```csharp
 // In Input Actions asset: Action > Properties > Processors > Add > Stick Deadzone
-// Ignore small stick movements
+// 작은 스틱 움직임 무시
 ```
 
 ---
 
-## PlayerInput Component (Simplified Setup)
+## PlayerInput 컴포넌트 (간소화된 설정)
 
-### Automatic Input Setup
+### 자동 입력 설정
 
 ```csharp
 // Add Component: Player Input
 // Assign Input Actions asset
 // Behavior: Send Messages / Invoke Unity Events / Invoke C# Events
 
-// Send Messages example:
+// Send Messages 예시:
 public class Player : MonoBehaviour {
     public void OnMove(InputValue value) {
         Vector2 move = value.Get<Vector2>();
-        // Handle movement
+        // 이동 처리
     }
 
     public void OnJump(InputValue value) {
@@ -343,14 +345,14 @@ public class Player : MonoBehaviour {
 
 ---
 
-## Debugging
+## 디버깅
 
 ### Input Debugger
 - `Window > Analysis > Input Debugger`
-- See active devices, input values, action states
+- 활성 디바이스, 입력값, 액션 상태 확인
 
 ---
 
-## Sources
+## 출처
 - https://docs.unity3d.com/Packages/com.unity.inputsystem@1.11/manual/index.html
 - https://docs.unity3d.com/Packages/com.unity.inputsystem@1.11/manual/QuickStartGuide.html

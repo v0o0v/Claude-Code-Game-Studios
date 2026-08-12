@@ -1,32 +1,32 @@
-# Unreal Engine 5.7 — UI Module Reference
+# Unreal Engine 5.7 — UI 모듈 레퍼런스
 
-**Last verified:** 2026-02-13
-**Knowledge Gap:** UE 5.7 UMG and CommonUI improvements
-
----
-
-## Overview
-
-UE 5.7 UI systems:
-- **UMG (Unreal Motion Graphics)**: Visual widget-based UI (RECOMMENDED)
-- **CommonUI**: Cross-platform input-aware UI framework (console/PC)
-- **Slate**: Low-level C++ UI (engine/editor UI)
+**최종 확인일:** 2026-02-13
+**지식 공백:** UE 5.7 UMG 및 CommonUI 개선 사항
 
 ---
 
-## UMG (Unreal Motion Graphics)
+## 개요
 
-### Create Widget Blueprint
-
-1. Content Browser > User Interface > Widget Blueprint
-2. Open Widget Designer
-3. Drag widgets from Palette: Button, Text, Image, ProgressBar, etc.
+UE 5.7 UI 시스템:
+- **UMG(Unreal Motion Graphics)**: 위젯 기반 비주얼 UI(권장)
+- **CommonUI**: 입력 방식을 인식하는 크로스플랫폼 UI 프레임워크(콘솔/PC)
+- **Slate**: 저수준 C++ UI(엔진/에디터 UI)
 
 ---
 
-## Basic UMG Setup in C++
+## UMG(Unreal Motion Graphics)
 
-### Create and Display Widget
+### Widget Blueprint 생성
+
+1. 콘텐츠 브라우저 > User Interface > Widget Blueprint
+2. 위젯 디자이너 열기
+3. Palette에서 위젯을 드래그: Button, Text, Image, ProgressBar 등
+
+---
+
+## C++에서 기본 UMG 설정
+
+### 위젯 생성 및 표시
 
 ```cpp
 #include "Blueprint/UserWidget.h"
@@ -37,15 +37,15 @@ TSubclassOf<UUserWidget> HealthBarWidgetClass;
 void AMyCharacter::BeginPlay() {
     Super::BeginPlay();
 
-    // Create widget
+    // 위젯 생성
     UUserWidget* HealthBarWidget = CreateWidget<UUserWidget>(GetWorld(), HealthBarWidgetClass);
 
-    // Add to viewport
+    // 뷰포트에 추가
     HealthBarWidget->AddToViewport();
 }
 ```
 
-### Remove Widget
+### 위젯 제거
 
 ```cpp
 HealthBarWidget->RemoveFromParent();
@@ -53,9 +53,9 @@ HealthBarWidget->RemoveFromParent();
 
 ---
 
-## Access Widget Elements from C++
+## C++에서 위젯 요소 접근
 
-### Bind to Widget Elements
+### 위젯 요소에 바인딩
 
 ```cpp
 UCLASS()
@@ -63,7 +63,7 @@ class UMyHealthWidget : public UUserWidget {
     GENERATED_BODY()
 
 public:
-    // ✅ Bind to widget elements (must match names in Widget Blueprint)
+    // ✅ 위젯 요소에 바인딩(Widget Blueprint 내 이름과 일치해야 함)
     UPROPERTY(meta = (BindWidget))
     TObjectPtr<UTextBlock> HealthText;
 
@@ -79,7 +79,7 @@ public:
 
 ---
 
-## Common UMG Widgets
+## 자주 쓰는 UMG 위젯
 
 ### Text Block
 
@@ -100,7 +100,7 @@ TObjectPtr<UButton> PlayButton;
 void NativeConstruct() override {
     Super::NativeConstruct();
 
-    // Bind button click
+    // 버튼 클릭 바인딩
     PlayButton->OnClicked.AddDynamic(this, &UMyMenuWidget::OnPlayClicked);
 }
 
@@ -143,12 +143,12 @@ void NativeConstruct() override {
 
 UFUNCTION()
 void OnVolumeChanged(float Value) {
-    // Value is 0.0 - 1.0
+    // Value는 0.0 - 1.0 범위임
     UE_LOG(LogTemp, Warning, TEXT("Volume: %f"), Value);
 }
 ```
 
-### EditableTextBox (Input Field)
+### EditableTextBox(입력 필드)
 
 ```cpp
 UPROPERTY(meta = (BindWidget))
@@ -167,9 +167,9 @@ void OnNameChanged(const FText& Text) {
 
 ---
 
-## UMG Animations
+## UMG 애니메이션
 
-### Play Animation
+### 애니메이션 재생
 
 ```cpp
 UPROPERTY(Transient, meta = (BindWidgetAnim))
@@ -180,7 +180,7 @@ void ShowUI() {
 }
 ```
 
-### Stop Animation
+### 애니메이션 정지
 
 ```cpp
 StopAnimation(FadeInAnimation);
@@ -188,38 +188,38 @@ StopAnimation(FadeInAnimation);
 
 ---
 
-## Canvas Panel (Layout)
+## Canvas Panel(레이아웃)
 
-### Canvas Panel (Absolute Positioning)
+### Canvas Panel(절대 위치 지정)
 
 ```cpp
-// Use in Widget Blueprint for absolute positioning
-// Anchor widgets to corners/edges for responsive UI
+// Widget Blueprint에서 절대 위치 지정에 사용
+// 반응형 UI를 위해 위젯을 모서리/가장자리에 앵커링
 ```
 
-### Vertical Box (Stack Vertically)
+### Vertical Box(수직 스택)
 
 ```cpp
-// Auto-stacks children vertically
+// 자식 위젯을 수직으로 자동 스택
 ```
 
-### Horizontal Box (Stack Horizontally)
+### Horizontal Box(수평 스택)
 
 ```cpp
-// Auto-stacks children horizontally
+// 자식 위젯을 수평으로 자동 스택
 ```
 
-### Grid Panel (Grid Layout)
+### Grid Panel(그리드 레이아웃)
 
 ```cpp
-// Arranges children in a grid
+// 자식 위젯을 그리드로 배치
 ```
 
 ---
 
-## World Space UI (3D UI)
+## World Space UI(3D UI)
 
-### Widget Component (3D UI in World)
+### Widget Component(월드 내 3D UI)
 
 ```cpp
 #include "Components/WidgetComponent.h"
@@ -227,15 +227,15 @@ StopAnimation(FadeInAnimation);
 UWidgetComponent* HealthBarWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBar"));
 HealthBarWidget->SetupAttachment(RootComponent);
 HealthBarWidget->SetWidgetClass(HealthBarWidgetClass);
-HealthBarWidget->SetWidgetSpace(EWidgetSpace::World); // 3D world space
+HealthBarWidget->SetWidgetSpace(EWidgetSpace::World); // 3D 월드 스페이스
 HealthBarWidget->SetDrawSize(FVector2D(200, 50));
 ```
 
 ---
 
-## Input Handling in UMG
+## UMG에서 입력 처리
 
-### Override Keyboard Input
+### 키보드 입력 오버라이드
 
 ```cpp
 UCLASS()
@@ -245,7 +245,7 @@ class UMyWidget : public UUserWidget {
 public:
     virtual FReply NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override {
         if (InKeyEvent.GetKey() == EKeys::Escape) {
-            // Handle Escape key
+            // Escape 키 처리
             CloseMenu();
             return FReply::Handled();
         }
@@ -256,25 +256,25 @@ public:
 
 ---
 
-## CommonUI (Cross-Platform Input)
+## CommonUI(크로스플랫폼 입력)
 
-### Enable CommonUI Plugin
-
-```cpp
-// Enable: Edit > Plugins > CommonUI
-// Restart editor
-```
-
-### Use CommonUI Widgets
+### CommonUI 플러그인 활성화
 
 ```cpp
-// CommonUI widgets:
-// - CommonActivatableWidget: Base for screens/menus
-// - CommonButtonBase: Input-aware button (gamepad + mouse)
-// - CommonTextBlock: Text with styling
+// 활성화: Edit > Plugins > CommonUI
+// 에디터 재시작
 ```
 
-### CommonActivatableWidget Example
+### CommonUI 위젯 사용
+
+```cpp
+// CommonUI 위젯:
+// - CommonActivatableWidget: 화면/메뉴의 기반이 되는 위젯
+// - CommonButtonBase: 입력 방식을 인식하는 버튼(게임패드 + 마우스)
+// - CommonTextBlock: 스타일이 적용된 텍스트
+```
+
+### CommonActivatableWidget 예시
 
 ```cpp
 UCLASS()
@@ -284,21 +284,21 @@ class UMyMenuWidget : public UCommonActivatableWidget {
 public:
     virtual void NativeOnActivated() override {
         Super::NativeOnActivated();
-        // Menu activated (shown)
+        // 메뉴가 활성화됨(표시됨)
     }
 
     virtual void NativeOnDeactivated() override {
         Super::NativeOnDeactivated();
-        // Menu deactivated (hidden)
+        // 메뉴가 비활성화됨(숨겨짐)
     }
 };
 ```
 
 ---
 
-## HUD Class (Alternative to UMG)
+## HUD 클래스(UMG의 대안)
 
-### Create HUD
+### HUD 생성
 
 ```cpp
 UCLASS()
@@ -309,10 +309,10 @@ public:
     virtual void DrawHUD() override {
         Super::DrawHUD();
 
-        // Draw text
+        // 텍스트 그리기
         DrawText(TEXT("Score: 100"), FLinearColor::White, 50, 50);
 
-        // Draw texture
+        // 텍스처 그리기
         DrawTexture(CrosshairTexture, Canvas->SizeX / 2, Canvas->SizeY / 2, 32, 32);
     }
 };
@@ -320,34 +320,34 @@ public:
 
 ---
 
-## Performance Tips
+## 성능 팁
 
-### Optimize UMG
+### UMG 최적화
 
 ```cpp
-// Invalidation boxes: Only redraw when content changes
-// Add "Invalidation Box" widget to Widget Blueprint
+// Invalidation Box: 콘텐츠가 변경될 때만 다시 그림
+// Widget Blueprint에 "Invalidation Box" 위젯을 추가
 
-// Disable tick if not needed
+// 필요하지 않으면 틱(Tick) 비활성화
 bIsFocusable = false;
-SetVisibility(ESlateVisibility::Collapsed); // Collapsed = not rendered
+SetVisibility(ESlateVisibility::Collapsed); // Collapsed = 렌더링되지 않음
 ```
 
 ---
 
-## Debugging
+## 디버깅
 
-### UI Debug Commands
+### UI 디버그 명령어
 
 ```cpp
-// Console commands:
-// widget.debug - Show widget hierarchy
-// Slate.ShowDebugOutlines 1 - Show widget bounds
-// stat slate - Show Slate performance
+// 콘솔 명령어:
+// widget.debug - 위젯 계층 구조 표시
+// Slate.ShowDebugOutlines 1 - 위젯 경계 표시
+// stat slate - Slate 성능 표시
 ```
 
 ---
 
-## Sources
+## 출처
 - https://docs.unrealengine.com/5.7/en-US/umg-ui-designer-for-unreal-engine/
 - https://docs.unrealengine.com/5.7/en-US/commonui-plugin-for-advanced-user-interfaces-in-unreal-engine/

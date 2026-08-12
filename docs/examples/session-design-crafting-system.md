@@ -1,262 +1,263 @@
-# Example Session: Designing the Crafting System
+# 예시 세션: 제작 시스템 설계하기
 
-**Context:** Solo indie dev, week 2 of project, needs to design the crafting system mentioned in the game pillars.
+**맥락:** 1인 인디 개발자, 프로젝트 2주 차, 게임 필러(pillar)에서 언급된 제작 시스템을 설계해야 함.
 
-**Starting State:**
-- Game concept and pillars defined
-- Engine set up (Godot 4.6)
-- Core combat system designed but not implemented yet
-- Pillar 2: "Emergent Discovery Through Experimentation"
+**시작 상태:**
+- 게임 콘셉트와 필러 정의 완료
+- 엔진 세팅 완료 (Godot 4.6)
+- 핵심 전투 시스템은 설계되었으나 아직 구현 전
+- 필러 2: "실험을 통한 발현적 발견(Emergent Discovery Through Experimentation)"
 
-**Session Duration:** ~45 minutes
-**Turns:** 12
-**Outcome:** Complete crafting system GDD ready for implementation
+**세션 소요 시간:** 약 45분
+**턴 수:** 12
+**결과:** 구현 준비가 완료된 제작 시스템 GDD 완성
 
 ---
 
-## Turn 1: User Initiates Design
+## 턴 1: 사용자가 설계를 시작함
 
-**User:**
-> I need to design the crafting system. Pillar 2 is "Emergent Discovery Through Experimentation", so I want players to discover recipes by trying combinations.
+**사용자:**
+> 제작 시스템을 설계해야 해요. 필러 2가 "실험을 통한 발현적 발견"이니까, 플레이어가 조합을 시도하면서 레시피를 발견하게 하고 싶어요.
 
-## Turn 2: Agent Asks Clarifying Questions
+## 턴 2: 에이전트가 명확화 질문을 함
 
-**Agent (game-designer):**
-> I'll help design the crafting system with discovery at its core. Before proposing mechanics, I need to understand your vision:
+**에이전트 (game-designer):**
+> 발견을 핵심으로 하는 제작 시스템 설계를 도와드리겠습니다. 메커니즘을 제안하기 전에 먼저 비전을 이해해야 합니다:
 >
-> 1. **Discovery Method**: Should recipes be pure trial-and-error, or should there be hints/clues to guide players?
-> 2. **Failure Punishment**: When players try an invalid combination, what happens?
->    - Materials completely lost (harsh)
->    - Materials partially refunded (moderate)
->    - No cost to experiment (forgiving)
-> 3. **Progression**: Does crafting skill improve over time? If so, what does higher skill unlock?
-> 4. **Scope**: How central is crafting to the game? Core pillar feature or supporting system?
-> 5. **Reference Games**: Any crafting systems you love or hate? (Minecraft, Terraria, Stardew Valley, Potion Craft?)
+> 1. **발견 방식**: 레시피는 순수한 시행착오여야 하나요, 아니면 힌트/단서로 플레이어를 유도해야 하나요?
+> 2. **실패 페널티**: 플레이어가 유효하지 않은 조합을 시도하면 어떻게 되나요?
+>    - 재료 완전 손실 (가혹함)
+>    - 재료 일부 환급 (중간)
+>    - 실험에 비용 없음 (관대함)
+> 3. **성장**: 제작 스킬이 시간이 지나면서 향상되나요? 그렇다면 높은 스킬은 무엇을 해제하나요?
+> 4. **범위**: 제작이 게임에서 얼마나 중심적인가요? 핵심 필러 기능인가요, 보조 시스템인가요?
+> 5. **참고 게임**: 좋아하거나 싫어하는 제작 시스템이 있나요? (Minecraft, Terraria, Stardew Valley, Potion Craft 등)
 
-## Turn 3: User Provides Context
+## 턴 3: 사용자가 맥락을 제공함
 
-**User:**
-> 1. I want hints that unlock gradually - start with pure discovery, earn hints through skill
-> 2. Moderate punishment - waste materials but gain partial XP
-> 3. Yes, skill unlocks hint system and improves success rates
-> 4. Core feature - one of the three main loops (combat, exploration, crafting)
-> 5. Love Potion Craft's deduction mechanic. Hate Minecraft wikis being mandatory.
+**사용자:**
+> 1. 점진적으로 해제되는 힌트를 원해요 — 순수 발견으로 시작해서, 스킬을 통해 힌트를 획득하는 식으로.
+> 2. 중간 정도 페널티 — 재료는 낭비되지만 부분적인 XP는 얻어요.
+> 3. 네, 스킬이 힌트 시스템을 해제하고 성공률을 향상시켜요.
+> 4. 핵심 기능이에요 — 세 가지 주요 루프(전투, 탐험, 제작) 중 하나예요.
+> 5. Potion Craft의 추론 메커니즘을 정말 좋아해요. Minecraft 위키가 필수처럼 되는 건 싫어요.
 
-## Turn 4: Agent Presents Options
+## 턴 4: 에이전트가 옵션을 제시함
 
-**Agent:**
-> Perfect context! Based on "emergent discovery" + "deduction over wikis" + "Potion Craft inspiration", here are three mechanical approaches:
+**에이전트:**
+> 좋은 맥락이네요! "발현적 발견" + "위키보다 추론" + "Potion Craft 영감"을 바탕으로, 세 가지 메커니즘 접근법을 제안합니다:
 >
-> **Option A: Pure Randomized Discovery**
-> - **Mechanics**: Try any 2-4 ingredient combo, roll for success based on compatibility
-> - **Hint System**: None - players document discoveries manually
-> - **Pros**:
->   - Maximum emergent discovery
->   - Community can share findings without breaking core loop
->   - Aligns strongly with "experimentation" pillar
-> - **Cons**:
->   - High frustration for completionists
->   - Low skill expression (mostly RNG)
->   - Players may feel "wiki is required" despite your intent
-> - **Aligns with Pillars**: ✅✅ Emergent Discovery, ⚠️ Meaningful Choices (randomness reduces agency)
+> **옵션 A: 순수 무작위 발견**
+> - **메커니즘**: 2~4개 재료 조합을 시도하고, 호환성에 기반한 성공 확률 판정
+> - **힌트 시스템**: 없음 — 플레이어가 직접 발견 내용을 기록
+> - **장점**:
+>   - 최대치의 발현적 발견
+>   - 커뮤니티가 핵심 루프를 해치지 않고 결과를 공유 가능
+>   - "실험" 필러와 강하게 부합
+> - **단점**:
+>   - 완주 지향 플레이어에게 높은 좌절감
+>   - 낮은 스킬 표현력 (대부분 RNG)
+>   - 의도와 달리 플레이어가 "위키가 필요하다"고 느낄 수 있음
+> - **필러 부합도**: ✅✅ 발현적 발견, ⚠️ 의미 있는 선택 (무작위성이 주체성을 낮춤)
 >
-> **Option B: Tag-Based Deduction System (Potion Craft-style)**
-> - **Mechanics**: Each ingredient has hidden "tags" (Fire, Water, Healing, Damage, etc.)
->   - Recipes require specific tag combinations
->   - At Skill 0: No tags visible, pure experimentation
->   - At Skill 5: Can inspect items to see 1 tag
->   - At Skill 10: See 2 tags, etc.
-> - **Hint System**: Tags ARE the hint system, unlocked by skill
-> - **Pros**:
->   - Rewards observation and pattern recognition (skill expression!)
->   - Progressive scaffolding - accessible to all player types
->   - Creates "aha!" moments when patterns click
->   - No wiki needed - everything discoverable in-game
-> - **Cons**:
->   - More complex to implement (tag system + UI)
->   - Requires careful tag design to avoid degeneracy
-> - **Aligns with Pillars**: ✅✅ Emergent Discovery, ✅✅ Meaningful Choices
+> **옵션 B: 태그 기반 추론 시스템 (Potion Craft 스타일)**
+> - **메커니즘**: 각 재료는 숨겨진 "태그"를 가짐 (불, 물, 치유, 피해 등)
+>   - 레시피는 특정 태그 조합을 요구
+>   - 스킬 0: 태그 비공개, 순수 실험
+>   - 스킬 5: 아이템을 조사해 태그 1개 확인 가능
+>   - 스킬 10: 태그 2개 확인, 이후 계속 증가
+> - **힌트 시스템**: 태그 자체가 힌트 시스템이며, 스킬로 해제됨
+> - **장점**:
+>   - 관찰력과 패턴 인식에 보상 (스킬 표현력!)
+>   - 점진적 스캐폴딩 — 모든 플레이어 유형에게 접근성 있음
+>   - 패턴이 맞아떨어질 때 "아하!" 순간 발생
+>   - 위키 불필요 — 게임 내에서 모두 발견 가능
+> - **단점**:
+>   - 구현이 더 복잡함 (태그 시스템 + UI)
+>   - 퇴화(degeneracy)를 피하려면 신중한 태그 설계 필요
+> - **필러 부합도**: ✅✅ 발현적 발견, ✅✅ 의미 있는 선택
 >
-> **Option C: Ingredient Compatibility Matrix**
-> - **Mechanics**: Each ingredient pairs well/poorly with others
->   - Success rate = compatibility score
->   - Skill 0: No compatibility shown, ~30% base success
->   - Higher skill: See color-coded compatibility (red/yellow/green)
-> - **Hint System**: Visual compatibility indicators unlock with skill
-> - **Pros**:
->   - Simple to implement and understand
->   - Clear progression arc (skill = more information)
->   - Feels fair (players understand why they failed)
-> - **Cons**:
->   - Less emergent than tag system (more prescriptive)
->   - Optimal recipes more obvious once you have hints
-> - **Aligns with Pillars**: ✅ Emergent Discovery, ✅ Meaningful Choices
+> **옵션 C: 재료 호환성 매트릭스**
+> - **메커니즘**: 각 재료는 다른 재료와 궁합이 좋거나 나쁨
+>   - 성공률 = 호환성 점수
+>   - 스킬 0: 호환성 미표시, 기본 성공률 약 30%
+>   - 높은 스킬: 색상 코드로 호환성 표시 (빨강/노랑/초록)
+> - **힌트 시스템**: 시각적 호환성 표시가 스킬로 해제됨
+> - **장점**:
+>   - 구현과 이해가 단순함
+>   - 명확한 성장 곡선 (스킬 = 더 많은 정보)
+>   - 공정하게 느껴짐 (플레이어가 왜 실패했는지 이해함)
+> - **단점**:
+>   - 태그 시스템보다 발현성이 낮음 (더 지시적)
+>   - 힌트가 생기면 최적 레시피가 더 뻔해짐
+> - **필러 부합도**: ✅ 발현적 발견, ✅ 의미 있는 선택
 >
-> **My Recommendation: Option B (Tag-Based Deduction)**
+> **제 추천: 옵션 B (태그 기반 추론)**
 >
-> **Reasoning:**
-> - It's the only option that creates TRUE emergent discovery through systems interaction
-> - Players develop mastery by learning tag patterns, not memorizing recipes
-> - The progressive reveal (tags unlock with skill) serves both Explorers (discovery) and Achievers (progression)
-> - Potion Craft proved this works and is satisfying
-> - Avoids wiki-dependency because the deduction is solvable in-game
+> **근거:**
+> - 시스템 간 상호작용을 통한 진정한 발현적 발견을 만드는 유일한 옵션입니다
+> - 플레이어는 레시피 암기가 아니라 태그 패턴 학습을 통해 숙련도를 쌓습니다
+> - 점진적 공개(스킬에 따른 태그 해제)는 탐험형(발견)과 성취형(성장) 플레이어 모두에게 맞습니다
+> - Potion Craft가 이 방식이 통한다는 걸 증명했고 만족스러웠습니다
+> - 게임 내에서 추론이 풀 수 있으므로 위키 의존을 피합니다
 >
-> Which option resonates with your vision? Or should I explore a hybrid?
+> 어떤 옵션이 비전에 맞나요? 아니면 하이브리드를 탐색해볼까요?
 
-## Turn 5: User Decides with Modification
+## 턴 5: 사용자가 수정안과 함께 결정함
 
-**User:**
-> Option B feels perfect, but I want to add: failed attempts should give hints about which tags were WRONG, not just which were right. Like "You added Fire, but this recipe needs Water instead."
+**사용자:**
+> 옵션 B가 딱 맞는데, 추가하고 싶은 게 있어요: 실패한 시도는 어떤 태그가 틀렸는지 힌트를 줘야 해요, 맞는 태그만이 아니라요. "불을 넣었지만, 이 레시피는 물이 필요합니다" 같은 식으로요.
 
-## Turn 6: Agent Incorporates Feedback and Drafts
+## 턴 6: 에이전트가 피드백을 반영하고 초안을 작성함
 
-**Agent:**
-> Excellent modification! That adds a deduction game on TOP of the tag discovery. Now failed attempts aren't just "waste" - they're valuable information.
+**에이전트:**
+> 훌륭한 수정안입니다! 태그 발견 위에 추론 게임을 하나 더 얹는 셈이네요. 이제 실패한 시도는 단순한 "낭비"가 아니라 — 가치 있는 정보가 됩니다.
 >
-> Let me draft the **Overview** and **Player Fantasy** sections:
+> **Overview**와 **Player Fantasy** 섹션 초안을 작성하겠습니다:
 >
 > ---
 >
 > ## Overview
 >
-> The crafting system uses a tag-based deduction mechanic where players experiment with ingredient combinations to discover recipes. Each ingredient has 1-3 hidden tags (Fire, Water, Earth, Air, Healing, Damage, Poison, etc.). Recipes require specific tag combinations. Failed attempts waste materials but provide feedback ("This needs Water, not Fire") that teaches players tag patterns. As crafting skill increases, players unlock the ability to inspect ingredients to see their tags directly, transforming pure experimentation into informed deduction.
+> 제작 시스템은 태그 기반 추론 메커니즘을 사용하며, 플레이어는 재료 조합을 실험하여 레시피를 발견합니다. 각 재료는 숨겨진 태그를 1~3개 가지고 있습니다 (불, 물, 대지, 바람, 치유, 피해, 독 등). 레시피는 특정 태그 조합을 요구합니다. 실패한 시도는 재료를 소모하지만 피드백("이건 불이 아니라 물이 필요해요")을 제공하여 플레이어가 태그 패턴을 학습하게 합니다. 제작 스킬이 오를수록 플레이어는 재료를 조사해 태그를 직접 볼 수 있게 되며, 순수한 실험이 정보에 기반한 추론으로 전환됩니다.
 >
 > ## Player Fantasy
 >
-> "I'm an alchemist-scientist discovering nature's hidden patterns. Each failed potion teaches me something new about how elements interact. Over time, I develop intuition - I can look at a mushroom and KNOW it contains Earth and Poison tags before even testing it. I don't need recipes from a wiki; I understand the RULES that generate recipes, and I can create my own solutions."
+> "나는 자연의 숨겨진 패턴을 발견하는 연금술사-과학자다. 실패한 물약 하나하나가 원소들이 어떻게 상호작용하는지 새로운 것을 가르쳐준다. 시간이 지나면 직관이 생긴다 — 버섯을 보기만 해도 실제로 테스트하기 전에 대지와 독 태그가 있다는 걸 알 수 있다. 위키의 레시피가 필요 없다. 나는 레시피를 만들어내는 '규칙'을 이해하고 있으며, 나만의 해법을 창조할 수 있다."
 >
-> **Target MDA Aesthetics**:
-> - Discovery (primary): Uncovering hidden tag patterns
-> - Challenge (secondary): Deduction puzzle
-> - Expression (tertiary): Creating custom recipes once rules are mastered
+> **목표 MDA 미학:**
+> - 발견 (주된 미학): 숨겨진 태그 패턴을 밝혀내기
+> - 도전 (부차적): 추론 퍼즐
+> - 표현 (3차적): 규칙을 숙달한 후 자신만의 레시피 창조
 >
 > ---
 >
-> Does this capture your intent? Should I continue to **Detailed Rules**?
+> 의도에 맞나요? **Detailed Rules**로 계속할까요?
 
-## Turn 7: User Approves and Requests Next Section
+## 턴 7: 사용자가 승인하고 다음 섹션을 요청함
 
-**User:**
-> Yes, that's perfect! Continue to Detailed Rules.
+**사용자:**
+> 네, 완벽해요! Detailed Rules로 계속해주세요.
 
-## Turn 8: Agent Drafts Rules, Asks About Edge Case
+## 턴 8: 에이전트가 규칙 초안을 작성하고 예외 상황을 질문함
 
-**Agent:**
-> Drafting Detailed Rules...
+**에이전트:**
+> Detailed Rules 초안을 작성하겠습니다...
 >
 > ---
 >
 > ## Detailed Rules
 >
-> ### Core Loop
-> 1. Player selects 2-4 ingredients from inventory
-> 2. Player activates crafting station
-> 3. System checks ingredient tags against recipe database
-> 4. **If exact tag match**: Success! Recipe learned, item created, full XP awarded
-> 5. **If partial match** (some tags correct): Failure. Feedback: "Close! This needs [missing tag]." Materials consumed, 40% XP awarded, recipe marked as "Discovered (Incomplete)"
-> 6. **If no match**: Failure. Feedback: "Incompatible. Try replacing [wrong tag] with [needed tag]." Materials consumed, 15% XP awarded
+> ### 핵심 루프
+> 1. 플레이어가 인벤토리에서 재료 2~4개를 선택
+> 2. 플레이어가 제작대를 작동
+> 3. 시스템이 재료 태그를 레시피 데이터베이스와 대조
+> 4. **정확히 태그가 일치하면**: 성공! 레시피 습득, 아이템 생성, 전체 XP 지급
+> 5. **부분적으로 일치하면** (일부 태그만 맞음): 실패. 피드백: "거의 다 왔어요! [누락된 태그]가 필요해요." 재료 소모, XP 40% 지급, 레시피는 "발견됨 (미완성)"으로 표시
+> 6. **전혀 일치하지 않으면**: 실패. 피드백: "호환되지 않아요. [잘못된 태그] 대신 [필요한 태그]로 바꿔보세요." 재료 소모, XP 15% 지급
 >
-> ### Tag System
-> - 12 core tags: Fire, Water, Earth, Air, Healing, Damage, Poison, Light, Dark, Metal, Plant, Magic
-> - Each ingredient has 1-3 tags (simple ingredients have 1, rare ingredients have 3)
-> - Each recipe requires 2-6 total tags (basic potions need 2, advanced need 6)
-> - Tag combinations must be unique (no two recipes with identical tag sets)
+> ### 태그 시스템
+> - 핵심 태그 12종: 불, 물, 대지, 바람, 치유, 피해, 독, 빛, 어둠, 금속, 식물, 마법
+> - 각 재료는 태그를 1~3개 보유 (기본 재료는 1개, 희귀 재료는 3개)
+> - 각 레시피는 총 2~6개 태그를 요구 (기본 물약은 2개, 상급 물약은 6개)
+> - 태그 조합은 고유해야 함 (동일한 태그 세트를 가진 레시피 두 개 불가)
 >
-> ### Skill Progression
-> - Skill 0-4: No inspection ability. Pure experimentation.
-> - Skill 5-9: Can inspect ingredients to see 1 tag
-> - Skill 10-14: Can see 2 tags per ingredient
-> - Skill 15+: Can see all tags per ingredient
+> ### 스킬 성장
+> - 스킬 0~4: 조사 능력 없음. 순수 실험.
+> - 스킬 5~9: 재료를 조사해 태그 1개 확인 가능
+> - 스킬 10~14: 재료당 태그 2개 확인 가능
+> - 스킬 15+: 재료의 모든 태그 확인 가능
 >
-> ### XP Gain
+> ### XP 획득
 > ```
 > success_xp = base_xp * recipe_complexity^1.3
 > failure_xp_partial = success_xp * 0.40
 > failure_xp_none = success_xp * 0.15
 > ```
 >
-> Where `recipe_complexity` = number of unique tags required (2-6)
+> 여기서 `recipe_complexity` = 요구되는 고유 태그 수 (2~6)
 >
 > ---
 >
-> **Question before I continue:** What happens if a player discovers a tag combination that DOESN'T match any recipe in the database? Should we:
-> A) Allow it and create "junk items" (player wasted materials)
-> B) Always provide feedback steering toward valid recipes
-> C) Procedurally generate a minor potion for any valid tag combo not in the DB
+> **계속하기 전 질문:** 플레이어가 데이터베이스의 어떤 레시피와도 일치하지 않는 태그 조합을 발견하면 어떻게 할까요?
+> A) 허용하고 "쓰레기 아이템"을 생성 (플레이어가 재료를 낭비함)
+> B) 항상 유효한 레시피로 유도하는 피드백을 제공
+> C) DB에 없는 유효한 태그 조합에 대해 절차적으로 소소한 물약을 생성
 >
-> This affects the "experimentation" feel - option A is harsh but realistic, option C rewards all experimentation.
+> 이건 "실험" 느낌에 영향을 줍니다 — 옵션 A는 가혹하지만 현실적이고, 옵션 C는 모든 실험에 보상을 줍니다.
 
-## Turn 9: User Resolves Edge Case
+## 턴 9: 사용자가 예외 상황을 결정함
 
-**User:**
-> Option C - let's procedurally generate minor potions. If someone finds Fire+Water (not a designed recipe), give them "Warm Water" that restores 5 HP. Rewards experimentation even when "off the beaten path."
+**사용자:**
+> 옵션 C — 절차적으로 소소한 물약을 생성해요. 누군가 불+물을 발견하면 (설계된 레시피가 아니더라도), HP 5 회복하는 "미지근한 물"을 주는 거예요. "정해진 길을 벗어나도" 실험에 보상을 주는 거죠.
 
-## Turn 10: Agent Completes Remaining Sections
+## 턴 10: 에이전트가 나머지 섹션을 완성함
 
-**Agent:**
-> Perfect! That keeps experimentation always rewarding. Updating rules with that edge case...
+**에이전트:**
+> 좋습니다! 그러면 실험이 항상 보상받게 되겠네요. 이 예외 상황을 반영해 규칙을 업데이트하겠습니다...
 >
-> [Agent continues drafting Formulas, Edge Cases, Dependencies, Tuning Knobs, and Acceptance Criteria sections, showing each and incorporating minor feedback]
+> [에이전트가 Formulas, Edge Cases, Dependencies, Tuning Knobs, Acceptance Criteria 섹션 초안을 계속 작성하고, 각각 보여주며 사소한 피드백을 반영함]
 >
-> [After all sections complete]
+> [모든 섹션 완료 후]
 >
-> Complete crafting system GDD ready. Here's the summary:
+> 완전한 제작 시스템 GDD가 준비되었습니다. 요약은 다음과 같습니다:
 >
-> **8 Required Sections:**
-> ✅ Overview - Tag-based deduction system
-> ✅ Player Fantasy - Alchemist-scientist discovering patterns
-> ✅ Detailed Rules - Core loop with tag matching and feedback system
-> ✅ Formulas - XP curves, success rates, skill thresholds
-> ✅ Edge Cases - Procedural minor potions for non-recipe combos, inventory full, skill at max
-> ✅ Dependencies - Requires inventory system, integrates with progression system
-> ✅ Tuning Knobs - XP rates, skill thresholds, tag count per ingredient, feedback verbosity
-> ✅ Acceptance Criteria - Players discover 10 recipes in 30 minutes without wiki, skill progression feels meaningful
+> **8개 필수 섹션:**
+> ✅ Overview - 태그 기반 추론 시스템
+> ✅ Player Fantasy - 패턴을 발견하는 연금술사-과학자
+> ✅ Detailed Rules - 태그 매칭과 피드백 시스템을 갖춘 핵심 루프
+> ✅ Formulas - XP 곡선, 성공률, 스킬 임계값
+> ✅ Edge Cases - 레시피 외 조합에 대한 절차적 소소한 물약, 인벤토리 가득 참, 스킬 최대치
+> ✅ Dependencies - 인벤토리 시스템 필요, 성장 시스템과 연동
+> ✅ Tuning Knobs - XP 비율, 스킬 임계값, 재료당 태그 수, 피드백 상세도
+> ✅ Acceptance Criteria - 플레이어가 위키 없이 30분 안에 레시피 10개를 발견, 스킬 성장이 의미 있게 느껴짐
 >
-> **Delegations Made:**
-> - Consulted `systems-designer` for XP curve formula validation
-> - Consulted `economy-designer` for material cost balancing
+> **위임한 작업:**
+> - XP 곡선 공식 검증을 위해 `systems-designer` 협의
+> - 재료 비용 밸런싱을 위해 `economy-designer` 협의
 >
-> May I write this to `design/gdd/crafting-system.md`?
+> `design/gdd/crafting-system.md`에 이 내용을 작성해도 될까요?
 
-## Turn 11: User Approves Writing
+## 턴 11: 사용자가 작성을 승인함
 
-**User:**
-> Yes, write it!
+**사용자:**
+> 네, 작성해주세요!
 
-## Turn 12: Agent Writes File and Offers Next Steps
+## 턴 12: 에이전트가 파일을 작성하고 다음 단계를 제안함
 
-**Agent:**
-> ✅ Created `design/gdd/crafting-system.md`
+**에이전트:**
+> ✅ `design/gdd/crafting-system.md` 생성 완료
 >
-> **Next Steps:**
-> 1. Run `/design-review design/gdd/crafting-system.md` to validate against 8-section standard
-> 2. Create data file structure in `assets/data/` for ingredients and recipes
-> 3. When ready to implement, use `/team-combat` pattern but for crafting (game-designer → gameplay-programmer → ui-programmer → qa-tester)
+> **다음 단계:**
+> 1. `/design-review design/gdd/crafting-system.md`를 실행해 8섹션 표준 대비 검증하세요
+> 2. 재료와 레시피를 위한 데이터 파일 구조를 `assets/data/`에 만드세요
+> 3. 구현할 준비가 되면 `/team-combat` 패턴을 제작 버전으로 활용하세요 (game-designer → gameplay-programmer → ui-programmer → qa-tester)
 >
-> Would you like me to run the design review now, or would you prefer to read it first?
+> 지금 설계 리뷰를 실행할까요, 아니면 먼저 읽어보시겠어요?
 
 ---
 
-## Session Summary
+## 세션 요약
 
-**What Worked Well:**
-- Agent asked clarifying questions upfront instead of guessing
-- Presented 3 distinct options with clear pros/cons and pillar alignment
-- User's modification ("wrong tag feedback") was incorporated immediately
-- Edge case (non-recipe combos) was flagged proactively, not assumed
-- Each section was shown for approval before moving to next
-- Explicit permission requested before writing file
+**잘 작동한 점:**
+- 에이전트가 추측 대신 먼저 명확화 질문을 함
+- 명확한 장단점과 필러 부합도를 곁들여 3가지 뚜렷한 옵션을 제시함
+- 사용자의 수정안("틀린 태그 피드백")이 즉시 반영됨
+- 예외 상황(레시피 외 조합)이 가정하지 않고 선제적으로 제기됨
+- 각 섹션이 다음으로 넘어가기 전에 승인을 위해 제시됨
+- 파일 작성 전 명시적 허가 요청
 
-**Key Collaborative Moments:**
-- Turn 2: Agent asked 5 questions to understand vision
-- Turn 4: Agent presented 3 options, made recommendation but deferred to user
-- Turn 5: User modified recommended option, agent incorporated it
-- Turn 8: Agent caught edge case and asked rather than assuming
-- Turn 9: User's choice (procedural potions) changed design direction
-- Turn 10: Agent requested approval before writing file
+**핵심 협업 순간:**
+- 턴 2: 에이전트가 비전을 이해하기 위해 5가지 질문을 함
+- 턴 4: 에이전트가 3가지 옵션을 제시하고 추천했지만 결정은 사용자에게 맡김
+- 턴 5: 사용자가 추천된 옵션을 수정하고, 에이전트가 이를 반영함
+- 턴 8: 에이전트가 예외 상황을 포착하고 가정 대신 질문함
+- 턴 9: 사용자의 선택(절차적 물약)이 설계 방향을 바꿈
+- 턴 10: 에이전트가 파일 작성 전 승인을 요청함
 
-**Files Created:**
-- `design/gdd/crafting-system.md` (complete 8-section GDD)
+**생성된 파일:**
+- `design/gdd/crafting-system.md` (완전한 8섹션 GDD)
 
-**Context Usage:** ~35% (estimated)
-**User Satisfaction:** High - user made all creative decisions, agent provided expert guidance
+**컨텍스트 사용량:** 약 35% (추정치)
+**사용자 만족도:** 높음 — 사용자가 모든 창작 결정을 내렸고, 에이전트는 전문적인 가이드를 제공함
+</content>

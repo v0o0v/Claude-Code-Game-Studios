@@ -1,39 +1,39 @@
-# Unity 6.3 — Animation Module Reference
+# Unity 6.3 — 애니메이션 모듈 레퍼런스
 
-**Last verified:** 2026-02-13
-**Knowledge Gap:** Unity 6 animation improvements, Timeline enhancements
-
----
-
-## Overview
-
-Unity 6.3 animation systems:
-- **Animator Controller (Mecanim)**: State machine-based (RECOMMENDED)
-- **Timeline**: Cinematic sequences, cutscenes
-- **Animation Rigging**: Procedural runtime animation
-- **Legacy Animation**: Deprecated, avoid
+**최종 확인일:** 2026-02-13
+**지식 공백:** Unity 6 애니메이션 개선 사항, Timeline 기능 강화
 
 ---
 
-## Key Changes from 2022 LTS
+## 개요
 
-### Animation Rigging Package (Production-Ready in Unity 6)
+Unity 6.3 애니메이션 시스템:
+- **Animator Controller (Mecanim)**: 상태 머신 기반 (권장)
+- **Timeline**: 시네마틱 시퀀스, 컷신
+- **Animation Rigging**: 런타임 프로시저럴 애니메이션
+- **Legacy Animation**: 지원 중단, 사용 지양
+
+---
+
+## 2022 LTS 대비 주요 변경 사항
+
+### Animation Rigging 패키지 (Unity 6에서 프로덕션 준비 완료)
 
 ```csharp
 // Install: Package Manager > Animation Rigging
 // Runtime IK, aim constraints, procedural animation
 ```
 
-### Timeline Improvements
-- Better performance
-- More track types
-- Improved signal system
+### Timeline 개선 사항
+- 성능 향상
+- 트랙 타입 추가
+- 시그널 시스템 개선
 
 ---
 
 ## Animator Controller (Mecanim)
 
-### Basic Setup
+### 기본 설정
 
 ```csharp
 // Create: Assets > Create > Animator Controller
@@ -41,71 +41,71 @@ Unity 6.3 animation systems:
 // Assign Controller: Animator > Controller = YourAnimatorController
 ```
 
-### State Transitions
+### 상태 전환
 
 ```csharp
 Animator animator = GetComponent<Animator>();
 
-// ✅ Trigger transition
+// ✅ 트리거 전환
 animator.SetTrigger("Jump");
 
-// ✅ Bool parameter
+// ✅ Bool 파라미터
 animator.SetBool("IsRunning", true);
 
-// ✅ Float parameter (blend trees)
+// ✅ Float 파라미터 (블렌드 트리)
 animator.SetFloat("Speed", currentSpeed);
 
-// ✅ Integer parameter
+// ✅ Integer 파라미터
 animator.SetInteger("WeaponType", 2);
 ```
 
-### Animation Layers
-- **Base Layer**: Default animations (locomotion)
-- **Override Layers**: Replace base layer (e.g., weapon swap)
-- **Additive Layers**: Add on top of base (e.g., breathing, aim offset)
+### 애니메이션 레이어
+- **Base Layer**: 기본 애니메이션(로코모션)
+- **Override Layers**: 베이스 레이어를 대체(예: 무기 교체)
+- **Additive Layers**: 베이스 레이어 위에 가산(예: 호흡, 조준 오프셋)
 
 ```csharp
-// Set layer weight (0-1)
-animator.SetLayerWeight(1, 0.5f); // 50% blend
+// 레이어 가중치 설정 (0-1)
+animator.SetLayerWeight(1, 0.5f); // 50% 블렌드
 ```
 
 ---
 
-## Blend Trees
+## 블렌드 트리
 
-### 1D Blend Tree (Speed blending)
+### 1D 블렌드 트리 (속도 블렌딩)
 
 ```csharp
 // Idle (Speed = 0) → Walk (Speed = 0.5) → Run (Speed = 1.0)
 animator.SetFloat("Speed", moveSpeed);
 ```
 
-### 2D Blend Tree (Directional movement)
+### 2D 블렌드 트리 (방향성 이동)
 
 ```csharp
-// X-axis: Strafe (-1 to 1)
-// Y-axis: Forward/Back (-1 to 1)
+// X축: Strafe (-1 to 1)
+// Y축: Forward/Back (-1 to 1)
 animator.SetFloat("MoveX", input.x);
 animator.SetFloat("MoveY", input.y);
 ```
 
 ---
 
-## Animation Events
+## 애니메이션 이벤트
 
-### Trigger Events from Animation Clips
+### 애니메이션 클립에서 이벤트 트리거
 
 ```csharp
 // Add in Animation window: Right-click timeline > Add Animation Event
 // Must have matching method on GameObject:
 
 public void OnFootstep() {
-    // Play footstep sound
+    // 발소리 재생
     AudioSource.PlayClipAtPoint(footstepClip, transform.position);
 }
 
 public void OnAttackHit() {
-    // Deal damage
+    // 데미지 처리
     DealDamageInFrontOfPlayer();
 }
 ```
@@ -114,14 +114,14 @@ public void OnAttackHit() {
 
 ## Root Motion
 
-### Character Movement via Animation
+### 애니메이션을 통한 캐릭터 이동
 
 ```csharp
 Animator animator = GetComponent<Animator>();
-animator.applyRootMotion = true; // Move character based on animation
+animator.applyRootMotion = true; // 애니메이션 기반으로 캐릭터 이동
 
 void OnAnimatorMove() {
-    // Custom root motion handling
+    // 커스텀 root motion 처리
     transform.position += animator.deltaPosition;
     transform.rotation *= animator.deltaRotation;
 }
@@ -131,55 +131,55 @@ void OnAnimatorMove() {
 
 ## Animation Rigging (Unity 6+)
 
-### IK (Inverse Kinematics)
+### IK (역운동학)
 
 ```csharp
 // Install: Package Manager > Animation Rigging
 // Add: Rig Builder component + Rig GameObject
 
-// Two Bone IK (Arm/Leg)
+// Two Bone IK (팔/다리)
 // - Add Two Bone IK Constraint
 // - Assign Tip (hand/foot), Mid (elbow/knee), Root (shoulder/hip)
 // - Set Target (where hand/foot should reach)
 
-// Runtime control:
+// 런타임 제어:
 TwoBoneIKConstraint ikConstraint = rig.GetComponentInChildren<TwoBoneIKConstraint>();
 ikConstraint.data.target = targetTransform;
-ikConstraint.weight = 1f; // 0-1 blend
+ikConstraint.weight = 1f; // 0-1 블렌드
 ```
 
-### Aim Constraint (Look At)
+### Aim Constraint (시선 처리)
 
 ```csharp
-// Character looks at target
+// 캐릭터가 타겟을 바라보게 함
 MultiAimConstraint aimConstraint = rig.GetComponentInChildren<MultiAimConstraint>();
 aimConstraint.data.sourceObjects[0] = new WeightedTransform(targetTransform, 1f);
 ```
 
 ---
 
-## Timeline (Cutscenes)
+## Timeline (컷신)
 
-### Basic Timeline Setup
+### 기본 Timeline 설정
 
 ```csharp
 // Create: Assets > Create > Timeline
 // Add to GameObject: Add Component > Playable Director
 // Assign Timeline: Playable Director > Playable = YourTimeline
 
-// Play from script:
+// 스크립트에서 재생:
 PlayableDirector director = GetComponent<PlayableDirector>();
 director.Play();
 ```
 
-### Timeline Tracks
-- **Activation Track**: Enable/disable GameObjects
-- **Animation Track**: Play animations on Animator
-- **Audio Track**: Synchronized audio playback
-- **Cinemachine Track**: Camera movement
-- **Signal Track**: Trigger events at specific times
+### Timeline 트랙
+- **Activation Track**: GameObject 활성화/비활성화
+- **Animation Track**: Animator에서 애니메이션 재생
+- **Audio Track**: 동기화된 오디오 재생
+- **Cinemachine Track**: 카메라 움직임
+- **Signal Track**: 특정 시점에 이벤트 트리거
 
-### Signal System (Events)
+### 시그널 시스템 (이벤트)
 
 ```csharp
 // Create Signal Asset: Assets > Create > Signals > Signal
@@ -188,42 +188,42 @@ director.Play();
 
 public class CutsceneEvents : MonoBehaviour {
     public void OnDialogueStart() {
-        // Triggered by signal
+        // 시그널에 의해 트리거됨
     }
 }
 ```
 
 ---
 
-## Animation Playback Control
+## 애니메이션 재생 제어
 
-### Play Animation Directly (No State Machine)
+### 상태 머신 없이 애니메이션 직접 재생
 
 ```csharp
-// ✅ CrossFade (smooth transition)
-animator.CrossFade("Attack", 0.2f); // 0.2s transition
+// ✅ CrossFade (부드러운 전환)
+animator.CrossFade("Attack", 0.2f); // 0.2초 전환
 
-// ✅ Play (instant)
+// ✅ Play (즉시 재생)
 animator.Play("Idle");
 
-// ❌ Avoid: Legacy Animation component
-Animation anim = GetComponent<Animation>(); // DEPRECATED
+// ❌ 피할 것: Legacy Animation 컴포넌트
+Animation anim = GetComponent<Animation>(); // 지원 중단(DEPRECATED)
 ```
 
 ---
 
-## Animation Curves
+## 애니메이션 커브
 
-### Custom Property Animation
+### 커스텀 프로퍼티 애니메이션
 
 ```csharp
 // In Animation window: Add Property > Custom Component > Your Script > Your Float
 
 public class WeaponTrail : MonoBehaviour {
-    public float trailIntensity; // Animated by clip
+    public float trailIntensity; // 클립에 의해 애니메이션됨
 
     void Update() {
-        // Intensity controlled by animation curve
+        // 애니메이션 커브로 제어되는 강도
         trailRenderer.startWidth = trailIntensity;
     }
 }
@@ -231,38 +231,40 @@ public class WeaponTrail : MonoBehaviour {
 
 ---
 
-## Performance Optimization
+## 성능 최적화
 
-### Culling
+### 컬링
+
 - `Animator > Culling Mode`:
-  - **Always Animate**: Always update (expensive)
-  - **Cull Update Transforms**: Stop updating bones when off-screen (RECOMMENDED)
-  - **Cull Completely**: Stop all animation when off-screen
+  - **Always Animate**: 항상 업데이트(비용이 큼)
+  - **Cull Update Transforms**: 화면 밖일 때 본 업데이트 중단(권장)
+  - **Cull Completely**: 화면 밖일 때 애니메이션 전체 중단
 
 ### LOD (Level of Detail)
-- Simpler animations for distant characters
-- Reduce skeleton bone count for LOD meshes
+
+- 멀리 있는 캐릭터에는 단순한 애니메이션 사용
+- LOD 메시에서는 스켈레톤 본 개수 감소
 
 ---
 
-## Common Patterns
+## 자주 쓰이는 패턴
 
-### Check if Animation Finished
+### 애니메이션 종료 여부 확인
 
 ```csharp
 AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 if (stateInfo.IsName("Attack") && stateInfo.normalizedTime >= 1.0f) {
-    // Attack animation finished
+    // 공격 애니메이션 종료됨
 }
 ```
 
-### Override Animation Speed
+### 애니메이션 속도 오버라이드
 
 ```csharp
-animator.speed = 1.5f; // 150% speed
+animator.speed = 1.5f; // 150% 속도
 ```
 
-### Get Current Animation Name
+### 현재 애니메이션 이름 가져오기
 
 ```csharp
 AnimatorClipInfo[] clipInfo = animator.GetCurrentAnimatorClipInfo(0);
@@ -271,19 +273,21 @@ string currentClip = clipInfo[0].clip.name;
 
 ---
 
-## Debugging
+## 디버깅
 
-### Animator Window
+### Animator 창
+
 - `Window > Animation > Animator`
-- Visualize state machine, see active state
+- 상태 머신 시각화, 활성 상태 확인
 
-### Animation Window
+### Animation 창
+
 - `Window > Animation > Animation`
-- Edit animation clips, add events
+- 애니메이션 클립 편집, 이벤트 추가
 
 ---
 
-## Sources
+## 출처
 - https://docs.unity3d.com/6000.0/Documentation/Manual/AnimationOverview.html
 - https://docs.unity3d.com/Packages/com.unity.animation.rigging@1.3/manual/index.html
 - https://docs.unity3d.com/Packages/com.unity.timeline@1.8/manual/index.html

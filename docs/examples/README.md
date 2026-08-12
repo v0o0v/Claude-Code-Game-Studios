@@ -1,357 +1,358 @@
-# Collaborative Session Examples
+# 협업 세션 예시
 
-This directory contains realistic, end-to-end session transcripts showing how the Game Studio Agent Architecture works in practice. Each example demonstrates the **collaborative workflow** where agents ask questions, present options, and wait for user approval rather than autonomously generating content.
-
----
-
-## Visual Reference
-
-**New to the system? Start here:**
-[Skill Flow Diagrams](skill-flow-diagrams.md) — visual maps of all 7 phases and how skills chain together.
+이 디렉터리에는 게임 스튜디오 에이전트 아키텍처가 실제로 어떻게 작동하는지 보여주는 사실적인 end-to-end 세션 트랜스크립트가 담겨 있습니다. 각 예시는 에이전트가 자율적으로 콘텐츠를 생성하는 대신 질문하고, 옵션을 제시하고, 사용자 승인을 기다리는 **협업 워크플로**를 보여줍니다.
 
 ---
 
-## 📚 **Available Examples**
+## 시각 자료
 
-### CORE WORKFLOW
-
-### [Skill Flow Diagrams](skill-flow-diagrams.md)
-**Type:** Visual Reference
-**Complexity:** All levels
-
-Full pipeline overview (zero to ship), plus detailed chain diagrams for:
-design-system, story lifecycle, UX pipeline, and brownfield onboarding.
-**Start here if you want to understand how the pieces fit together.**
+**시스템이 처음이신가요? 여기서 시작하세요:**
+[스킬 흐름 다이어그램](skill-flow-diagrams.md) — 7단계 전체와 스킬들이 어떻게 연결되는지 보여주는 시각 지도.
 
 ---
 
-### [Session: Authoring a GDD with /design-system](session-design-system-skill.md)
-**Type:** Design (skill-driven)
-**Skill:** `/design-system`
-**Duration:** ~60 minutes (14 turns)
-**Complexity:** Medium
+## 📚 **예시 목록**
 
-**Scenario:**
-Dev runs `/design-system movement` after `/map-systems` produced the systems index. The skill loads context from the game concept and dependency GDDs, runs a technical feasibility pre-check, then guides through all 8 GDD sections one at a time — drafting, approving, and writing each section to disk before moving to the next.
+### 핵심 워크플로
 
-**Key Moments:**
-- Technical feasibility pre-check flags Jolt physics default change (Godot 4.6)
-- Incremental writing: each section on disk immediately after approval
-- Session crash during section 5 → agent resumes from first empty section
-- Dependency signals (stamina, inventory) surfaced during the Dependencies section
-- Ends with explicit handoff: "run `/design-review` before the next system"
+### [스킬 흐름 다이어그램](skill-flow-diagrams.md)
+**유형:** 시각 자료
+**복잡도:** 전 단계
 
-**Learn:**
-- How `/design-system` is different from asking an agent to "write a GDD"
-- How the section-by-section cycle prevents 30k-token context bloat
-- How incremental file writing survives session crashes
-- How the skill surfaces downstream dependency contracts
+전체 파이프라인 개요(0부터 출시까지)와 다음에 대한 상세 체인 다이어그램:
+design-system, 스토리 생명주기, UX 파이프라인, 브라운필드 온보딩.
+**전체 구조가 어떻게 맞물리는지 이해하고 싶다면 여기서 시작하세요.**
 
 ---
 
-### [Session: Full Story Lifecycle](session-story-lifecycle.md)
-**Type:** Full Workflow
-**Skills:** `/story-readiness` → implementation → `/story-done`
-**Duration:** ~50 minutes (13 turns)
-**Complexity:** Medium
+### [세션: /design-system 으로 GDD 작성하기](session-design-system-skill.md)
+**유형:** 디자인(스킬 주도)
+**스킬:** `/design-system`
+**소요 시간:** 약 60분(14턴)
+**복잡도:** 중간
 
-**Scenario:**
-Dev picks up a story from the sprint backlog. `/story-readiness` catches a roll-direction ambiguity before any code is written. After implementation, `/story-done` verifies 9 acceptance criteria, identifies 2 deferred criteria (inventory not integrated yet), and closes the story with notes.
+**시나리오:**
+개발자가 `/map-systems` 로 시스템 인덱스를 만든 후 `/design-system movement` 를 실행합니다. 스킬은 게임 콘셉트와 의존 GDD에서 컨텍스트를 불러오고, 기술적 실현 가능성 사전 점검을 수행한 다음, GDD의 8개 섹션을 하나씩 안내하며 작성·승인·디스크 저장을 반복합니다.
 
-**Key Moments:**
-- `/story-readiness` catches spec ambiguity in Turn 2 — resolved before implementation starts
-- ADR status check: story would be BLOCKED if ADR was still Proposed
-- Manifest version check: confirms story's guidance hasn't drifted from current architecture
-- Deferred criteria tracked (not lost) when integration not yet possible
-- `sprint-status.yaml` updated at story close, next ready story surfaced automatically
+**핵심 순간:**
+- 기술적 실현 가능성 사전 점검에서 Jolt 물리 기본값 변경(Godot 4.6)이 플래그됨
+- 점진적 작성: 각 섹션이 승인 즉시 디스크에 기록됨
+- 섹션 5 작업 중 세션 크래시 → 에이전트가 첫 번째 빈 섹션부터 재개
+- Dependencies 섹션 작성 중 의존 신호(스태미나, 인벤토리)가 드러남
+- 명시적 인계로 종료: "다음 시스템 작업 전에 `/design-review` 를 실행하세요"
 
-**Learn:**
-- Why `/story-readiness` prevents late-implementation ambiguity
-- How deferred criteria work (COMPLETE WITH NOTES vs. BLOCKED)
-- How TR-ID references prevent false deviation flags
-- The full loop from backlog → implemented → closed
-
----
-
-### [Session: Gate Check and Phase Transition](session-gate-check-phase-transition.md)
-**Type:** Phase Gate
-**Skill:** `/gate-check`
-**Duration:** ~20 minutes (7 turns)
-**Complexity:** Low
-
-**Scenario:**
-Dev completes the Systems Design phase and runs `/gate-check` to advance. The gate finds all 6 MVP GDDs complete, cross-review passed with one low-severity concern. Gate passes, `stage.txt` updated, and the agent provides a specific ordered checklist for Technical Setup.
-
-**Key Moments:**
-- Gate validates artifact presence AND internal completeness (8 sections per GDD)
-- CONCERNS ≠ FAIL: low-severity cross-review note passes the gate
-- stage.txt update changes what `/help`, `/sprint-status`, and all skills see going forward
-- Agent surfaces the cross-review concern as a concrete ADR to write next
-- Next phase checklist is specific and ordered, not generic
-
-**Learn:**
-- What a gate check actually validates (not just "do files exist?")
-- How PASS/CONCERNS/FAIL verdicts work
-- Why stage.txt is the authority for phase tracking
-- What changes after a phase transition
+**배울 점:**
+- `/design-system` 이 에이전트에게 "GDD를 써 줘"라고 요청하는 것과 어떻게 다른지
+- 섹션별 순환 작업이 어떻게 3만 토큰 규모의 컨텍스트 팽창을 막는지
+- 점진적 파일 작성이 세션 크래시에도 어떻게 살아남는지
+- 스킬이 하위 시스템의 의존 계약을 어떻게 드러내는지
 
 ---
 
-### [Session: UX Pipeline — /ux-design → /ux-review → /team-ui](session-ux-pipeline.md)
-**Type:** UX Design Pipeline
-**Skills:** `/ux-design`, `/ux-review`, `/team-ui`
-**Duration:** ~90 minutes (16 turns)
-**Complexity:** Medium-High
+### [세션: 스토리 생명주기 전체](session-story-lifecycle.md)
+**유형:** 전체 워크플로
+**스킬:** `/story-readiness` → 구현 → `/story-done`
+**소요 시간:** 약 50분(13턴)
+**복잡도:** 중간
 
-**Scenario:**
-Dev designs the HUD and inventory screen. `/ux-design` reads the player journey and GDDs to ground decisions in player emotional state. `/ux-review` catches a blocking accessibility gap (no keyboard alternative to drag-drop) and an advisory colorblind issue. After fixes, `/team-ui` accepts the handoff.
+**시나리오:**
+개발자가 스프린트 백로그에서 스토리 하나를 집어듭니다. `/story-readiness` 가 코드 작성 전에 굴림 방향에 대한 모호함을 잡아냅니다. 구현 후 `/story-done` 이 9개 인수 조건을 검증하고, 2개는 보류(인벤토리 미통합)로 식별한 뒤 메모와 함께 스토리를 종료합니다.
 
-**Key Moments:**
-- HUD philosophy choice (diegetic vs. persistent vs. tactical) grounded in survival genre conventions
-- `/ux-review` distinguishes BLOCKING (stops handoff) vs. ADVISORY (can fix in visual pass)
-- Accessibility caught before implementation, not during QA
-- Keyboard alternative added in one turn; review re-runs and passes
-- `/team-ui` checks for a passing `/ux-review` before starting visual design
+**핵심 순간:**
+- 2턴에서 `/story-readiness` 가 스펙 모호함을 발견 — 구현 시작 전에 해결됨
+- ADR 상태 점검: ADR이 아직 Proposed 상태라면 스토리는 BLOCKED가 됨
+- 매니페스트 버전 점검: 스토리의 가이드가 현재 아키텍처에서 벗어나지 않았는지 확인
+- 통합이 아직 불가능할 때 보류 조건이 (유실되지 않고) 추적됨
+- 스토리 종료 시 `sprint-status.yaml` 갱신, 다음 준비된 스토리가 자동으로 드러남
 
-**Learn:**
-- How `/ux-design` uses player journey context to ground UI decisions
-- What `/ux-review` actually checks (not just "does a spec exist?")
-- The difference between HUD doc (`design/ux/hud.md`) and per-screen specs
-- How accessibility issues are handled at design time vs. implementation time
-
----
-
-### [Session: Brownfield Onboarding with /adopt](session-adopt-brownfield.md)
-**Type:** Brownfield Adoption
-**Skill:** `/adopt`
-**Duration:** ~30 minutes (8 turns)
-**Complexity:** Low-Medium
-
-**Scenario:**
-Dev has 3 months of existing code and rough design notes but nothing in the right format. `/adopt` audits format compliance (not just file existence), classifies 4 gaps by severity, builds an ordered 7-step migration plan, and immediately fixes the BLOCKING gap (missing systems index) by inferring it from the codebase.
-
-**Key Moments:**
-- FORMAT audit distinguishes "file exists" from "file has required internal structure"
-- BLOCKING gap identified: missing systems index prevents 4+ skills from running
-- Migration plan is ordered: blocking gaps first, then high, then medium
-- Systems index bootstrapped from code structure — brownfield code contains the answer
-- Retrofit mode vs. new authoring: `/design-system retrofit` fills gaps without overwriting
-
-**Learn:**
-- The difference between `/adopt` and `/project-stage-detect`
-- How format compliance is checked (section detection, not just file presence)
-- How brownfield projects can onboard without losing existing work
-- When to use retrofit mode vs. full authoring
+**배울 점:**
+- `/story-readiness` 가 구현 후반부의 모호함을 왜 미리 막는지
+- 보류 조건이 어떻게 동작하는지(COMPLETE WITH NOTES vs. BLOCKED)
+- TR-ID 참조가 잘못된 편차 플래그를 어떻게 막는지
+- 백로그 → 구현 → 종료로 이어지는 전체 루프
 
 ---
 
-### FOUNDATIONAL EXAMPLES
+### [세션: 게이트 체크와 단계 전환](session-gate-check-phase-transition.md)
+**유형:** 단계 게이트
+**스킬:** `/gate-check`
+**소요 시간:** 약 20분(7턴)
+**복잡도:** 낮음
 
-### [Session: Designing the Crafting System](session-design-crafting-system.md)
-**Type:** Design
-**Agent:** game-designer
-**Duration:** ~45 minutes (12 turns)
-**Complexity:** Medium
+**시나리오:**
+개발자가 시스템 디자인 단계를 마치고 다음 단계로 넘어가기 위해 `/gate-check` 를 실행합니다. 게이트는 MVP GDD 6개가 모두 완료됐고, 크로스 리뷰가 낮은 심각도의 우려 1건과 함께 통과했음을 확인합니다. 게이트가 통과되고 `stage.txt` 가 갱신되며, 에이전트는 기술 셋업 단계를 위한 구체적인 순서형 체크리스트를 제공합니다.
 
-**Scenario:**
-Solo dev needs to design a crafting system that serves Pillar 2 ("Emergent Discovery Through Experimentation"). The agent guides them through question/answer, presents 3 design options with game theory analysis, incorporates user modifications, and iteratively drafts the GDD with approval at each step.
+**핵심 순간:**
+- 게이트는 산출물 존재 여부뿐 아니라 내부 완성도(GDD당 8개 섹션)까지 검증함
+- CONCERNS ≠ FAIL: 낮은 심각도의 크로스 리뷰 메모는 게이트를 통과함
+- stage.txt 갱신은 이후 `/help`, `/sprint-status` 및 모든 스킬이 보는 내용을 바꿈
+- 에이전트가 크로스 리뷰 우려를 다음에 작성할 구체적인 ADR로 제시함
+- 다음 단계 체크리스트는 일반적이지 않고 구체적이며 순서가 정해져 있음
 
-**Key Collaborative Moments:**
-- Agent asks 5 clarifying questions upfront
-- Presents 3 distinct options with pros/cons + MDA alignment
-- User modifies recommended option, agent incorporates immediately
-- Edge case flagged proactively ("what if non-recipe combo?")
-- Each GDD section shown for approval before moving to next
-- Explicit "May I write to [file]?" before creating file
-
-**Learn:**
-- How design agents ask about goals, constraints, references
-- How to present options using game design theory (MDA, SDT, Bartle)
-- How to iterate on drafts section-by-section
-- When to delegate to specialists (systems-designer, economy-designer)
+**배울 점:**
+- 게이트 체크가 실제로 무엇을 검증하는지("파일이 존재하는가?" 그 이상)
+- PASS/CONCERNS/FAIL 판정이 어떻게 동작하는지
+- stage.txt 가 왜 단계 추적의 권위 소스인지
+- 단계 전환 후 무엇이 바뀌는지
 
 ---
 
-### [Session: Implementing Combat Damage Calculation](session-implement-combat-damage.md)
-**Type:** Implementation
-**Agent:** gameplay-programmer
-**Duration:** ~30 minutes (10 turns)
-**Complexity:** Low-Medium
+### [세션: UX 파이프라인 — /ux-design → /ux-review → /team-ui](session-ux-pipeline.md)
+**유형:** UX 디자인 파이프라인
+**스킬:** `/ux-design`, `/ux-review`, `/team-ui`
+**소요 시간:** 약 90분(16턴)
+**복잡도:** 중상
 
-**Scenario:**
-User has a complete design doc and wants the damage calculation implemented. Agent reads the spec, identifies 7 ambiguities/gaps, asks clarifying questions, proposes architecture for approval, implements with rule enforcement, and proactively writes tests.
+**시나리오:**
+개발자가 HUD와 인벤토리 화면을 디자인합니다. `/ux-design` 은 플레이어 여정과 GDD를 읽어 결정을 플레이어의 감정 상태에 근거하도록 만듭니다. `/ux-review` 는 차단급 접근성 결함(드래그 앤 드롭에 대한 키보드 대체 수단 없음)과 권고급 색맹 이슈를 잡아냅니다. 수정 후 `/team-ui` 가 인계를 받아들입니다.
 
-**Key Collaborative Moments:**
-- Agent reads design doc first, identifies 7 spec ambiguities
-- Architecture proposed with code samples BEFORE implementation
-- User requests type safety, agent refines and re-proposes
-- Rules catch issues (hardcoded values), agent fixes transparently
-- Tests written proactively following verification-driven development
-- Agent offers options for next steps rather than assuming
+**핵심 순간:**
+- HUD 철학 선택(다이제틱 vs. 지속형 vs. 전술형)이 생존 장르 관습에 근거함
+- `/ux-review` 는 BLOCKING(인계 중단)과 ADVISORY(비주얼 단계에서 수정 가능)를 구분함
+- 접근성 문제가 QA 중이 아니라 디자인 시점에 잡힘
+- 한 턴 만에 키보드 대체 수단이 추가되고, 리뷰가 재실행되어 통과함
+- `/team-ui` 는 비주얼 디자인을 시작하기 전 `/ux-review` 통과 여부를 확인함
 
-**Learn:**
-- How implementation agents clarify specs before coding
-- How to propose architecture with code samples for approval
-- How rules enforce standards automatically
-- How to handle spec gaps (ask, don't assume)
-- Verification-driven development (tests prove it works)
+**배울 점:**
+- `/ux-design` 이 플레이어 여정 컨텍스트를 UI 결정의 근거로 어떻게 활용하는지
+- `/ux-review` 가 실제로 무엇을 점검하는지("스펙이 존재하는가?" 그 이상)
+- HUD 문서(`design/ux/hud.md`)와 화면별 스펙의 차이
+- 접근성 이슈가 디자인 시점과 구현 시점에서 각각 어떻게 다루어지는지
 
 ---
 
-### [Session: Scope Crisis - Strategic Decision Making](session-scope-crisis-decision.md)
-**Type:** Strategic Decision
-**Agent:** creative-director
-**Duration:** ~25 minutes (8 turns)
-**Complexity:** High
+### [세션: /adopt 로 브라운필드 온보딩하기](session-adopt-brownfield.md)
+**유형:** 브라운필드 도입
+**스킬:** `/adopt`
+**소요 시간:** 약 30분(8턴)
+**복잡도:** 낮음-중간
 
-**Scenario:**
-Solo dev faces crisis: Alpha milestone in 2 weeks, crafting system needs 3 weeks, investor demo is make-or-break. Creative director gathers context, frames the decision, presents 3 strategic options with honest trade-off analysis, makes recommendation but defers to user, then documents decision with ADR and demo script.
+**시나리오:**
+개발자에게는 기존에 작성한 코드 3개월치와 러프한 디자인 노트가 있지만, 올바른 형식으로 된 것은 하나도 없습니다. `/adopt` 는 (단순히 파일 존재 여부가 아닌) 형식 준수를 감사하고, 4개의 격차를 심각도별로 분류하며, 순서가 있는 7단계 마이그레이션 계획을 만들고, 코드베이스로부터 추론하여 BLOCKING 격차(시스템 인덱스 누락)를 즉시 해결합니다.
 
-**Key Collaborative Moments:**
-- Agent reads context docs before proposing solutions
-- Asks 5 questions to understand decision constraints
-- Frames decision properly (what's at stake, evaluation criteria)
-- Presents 3 options with risk analysis and historical precedent
-- Makes strong recommendation but explicitly: "this is your call"
-- Documents decision + provides demo script to support user
+**핵심 순간:**
+- FORMAT 감사는 "파일이 존재한다"와 "파일이 요구되는 내부 구조를 갖췄다"를 구분함
+- BLOCKING 격차 식별: 시스템 인덱스 누락이 4개 이상의 스킬 실행을 막음
+- 마이그레이션 계획은 순서가 있음: BLOCKING 격차 먼저, 그다음 HIGH, 그다음 MEDIUM
+- 시스템 인덱스는 코드 구조로부터 부트스트랩됨 — 브라운필드 코드가 답을 담고 있음
+- 리트로핏 모드 vs. 신규 작성: `/design-system retrofit` 은 기존 내용을 덮어쓰지 않고 격차만 채움
 
-**Learn:**
-- How leadership agents frame strategic decisions
-- How to present options with trade-off analysis
-- How to use game dev precedent and theory in recommendations
-- How to document decisions (ADRs)
-- How to cascade decisions to affected departments
+**배울 점:**
+- `/adopt` 와 `/project-stage-detect` 의 차이
+- 형식 준수가 어떻게 검사되는지(단순 파일 존재가 아닌 섹션 감지)
+- 브라운필드 프로젝트가 기존 작업을 잃지 않고 어떻게 온보딩할 수 있는지
+- 리트로핏 모드와 전체 작성 모드를 언제 사용할지
 
 ---
 
-### [Reverse Documentation Workflow](reverse-document-workflow-example.md)
-**Type:** Brownfield Documentation
-**Agent:** game-designer
-**Duration:** ~20 minutes
-**Complexity:** Low
+### 기초 예시
 
-**Scenario:**
-Developer built a skill tree system but never wrote a design doc. Agent reads the code, infers the design intent, asks clarifying questions about ambiguous decisions, and produces a retroactive GDD.
+### [세션: 제작 시스템 디자인하기](session-design-crafting-system.md)
+**유형:** 디자인
+**에이전트:** game-designer
+**소요 시간:** 약 45분(12턴)
+**복잡도:** 중간
+
+**시나리오:**
+1인 개발자가 필라 2("실험을 통한 창발적 발견")를 뒷받침하는 제작 시스템을 디자인해야 합니다. 에이전트는 질의응답을 통해 사용자를 안내하고, 게임 이론 분석을 곁들인 3가지 디자인 옵션을 제시하며, 사용자의 수정 사항을 반영하고, 각 단계마다 승인을 받으며 GDD를 반복적으로 작성합니다.
+
+**핵심 협업 순간:**
+- 에이전트가 먼저 5가지 확인 질문을 던짐
+- 장단점과 MDA 정합성을 담은 3가지 뚜렷한 옵션을 제시함
+- 사용자가 추천 옵션을 수정하면 에이전트가 즉시 반영함
+- 엣지 케이스가 선제적으로 플래그됨("레시피에 없는 조합이면 어떻게 되나?")
+- GDD의 각 섹션이 다음 단계로 넘어가기 전 승인을 위해 제시됨
+- 파일 생성 전 명시적으로 "[파일]에 작성해도 될까요?"를 물음
+
+**배울 점:**
+- 디자인 에이전트가 목표, 제약, 참고 자료에 대해 어떻게 질문하는지
+- 게임 디자인 이론(MDA, SDT, Bartle)을 활용해 옵션을 제시하는 방법
+- 초안을 섹션 단위로 반복 개선하는 방법
+- 전문 에이전트(systems-designer, economy-designer)에게 언제 위임할지
 
 ---
 
-## 🎯 **What These Examples Demonstrate**
+### [세션: 전투 데미지 계산 구현하기](session-implement-combat-damage.md)
+**유형:** 구현
+**에이전트:** gameplay-programmer
+**소요 시간:** 약 30분(10턴)
+**복잡도:** 낮음-중간
 
-All examples follow the **collaborative workflow pattern:**
+**시나리오:**
+사용자에게 완성된 디자인 문서가 있고 데미지 계산 구현을 원합니다. 에이전트는 스펙을 읽고 7개의 모호함/공백을 찾아내며, 확인 질문을 던지고, 승인을 위한 아키텍처를 제안하며, 규칙을 강제하면서 구현하고, 선제적으로 테스트를 작성합니다.
+
+**핵심 협업 순간:**
+- 에이전트가 먼저 디자인 문서를 읽고 7개의 스펙 모호함을 찾아냄
+- 구현 전에 코드 예시와 함께 아키텍처를 제안함
+- 사용자가 타입 안전성을 요구하자 에이전트가 다듬어 다시 제안함
+- 규칙이 이슈(하드코딩된 값)를 잡아내고, 에이전트가 투명하게 수정함
+- 검증 주도 개발 원칙에 따라 테스트가 선제적으로 작성됨
+- 에이전트가 임의로 추측하지 않고 다음 단계에 대한 선택지를 제시함
+
+**배울 점:**
+- 구현 에이전트가 코딩 전에 스펙을 어떻게 명확히 하는지
+- 승인을 위해 코드 예시와 함께 아키텍처를 제안하는 방법
+- 규칙이 어떻게 표준을 자동으로 강제하는지
+- 스펙 공백을 다루는 방법(추측하지 말고 질문하기)
+- 검증 주도 개발(테스트가 동작을 증명함)
+
+---
+
+### [세션: 스코프 위기 — 전략적 의사결정](session-scope-crisis-decision.md)
+**유형:** 전략적 의사결정
+**에이전트:** creative-director
+**소요 시간:** 약 25분(8턴)
+**복잡도:** 높음
+
+**시나리오:**
+1인 개발자가 위기에 직면합니다: 알파 마일스톤이 2주 남았는데 제작 시스템에는 3주가 필요하고, 투자자 데모가 성패를 가릅니다. 크리에이티브 디렉터가 컨텍스트를 수집하고, 의사결정 프레임을 짠 뒤, 솔직한 트레이드오프 분석과 함께 3가지 전략 옵션을 제시하고, 추천은 하되 최종 결정은 사용자에게 맡긴 다음, ADR과 데모 스크립트로 결정을 문서화합니다.
+
+**핵심 협업 순간:**
+- 에이전트가 해법을 제안하기 전에 컨텍스트 문서를 먼저 읽음
+- 의사결정 제약을 이해하기 위해 5가지 질문을 던짐
+- 의사결정을 제대로 프레임화함(무엇이 걸려 있는지, 평가 기준은 무엇인지)
+- 리스크 분석과 과거 선례를 담은 3가지 옵션을 제시함
+- 강한 추천을 하되 명시적으로 "이건 당신의 결정입니다"라고 말함
+- 결정을 문서화하고 사용자를 지원할 데모 스크립트를 제공함
+
+**배울 점:**
+- 리더십 에이전트가 전략적 의사결정을 어떻게 프레임화하는지
+- 트레이드오프 분석과 함께 옵션을 제시하는 방법
+- 추천에서 게임 개발 선례와 이론을 어떻게 활용하는지
+- 결정을 문서화하는 방법(ADR)
+- 결정을 영향받는 부서로 어떻게 전파하는지
+
+---
+
+### [역방향 문서화 워크플로](reverse-document-workflow-example.md)
+**유형:** 브라운필드 문서화
+**에이전트:** game-designer
+**소요 시간:** 약 20분
+**복잡도:** 낮음
+
+**시나리오:**
+개발자가 스킬 트리 시스템을 만들었지만 디자인 문서를 쓴 적이 없습니다. 에이전트가 코드를 읽고 디자인 의도를 추론한 뒤, 모호한 결정 사항에 대해 확인 질문을 던지고 소급 GDD를 만들어냅니다.
+
+---
+
+## 🎯 **이 예시들이 보여주는 것**
+
+모든 예시는 **협업 워크플로 패턴**을 따릅니다:
 
 ```
-Question → Options → Decision → Draft → Approval
+질문 → 옵션 → 결정 → 초안 → 승인
 ```
 
-> **Note:** These examples show the collaborative pattern as conversational text.
-> In practice, agents now use the `AskUserQuestion` tool at decision points to
-> present structured option pickers (with labels, descriptions, and multi-select).
-> The pattern is **Explain → Capture**: agents explain their analysis in
-> conversation first, then present a structured UI picker for the user's decision.
+> **참고:** 이 예시들은 협업 패턴을 대화형 텍스트로 보여줍니다.
+> 실제로는 에이전트가 의사결정 지점에서 `AskUserQuestion` 도구를 사용해
+> 구조화된 옵션 선택 UI(라벨, 설명, 다중 선택 포함)를 제시합니다.
+> 패턴은 **설명 → 포착**입니다: 에이전트가 먼저 대화 안에서 분석을 설명한 다음,
+> 사용자의 결정을 위한 구조화된 UI 선택지를 제시합니다.
 
-### ✅ **Collaborative Behaviors Shown:**
+### ✅ **드러나는 협업 행동:**
 
-1. **Agents Ask Before Assuming**
-   - Design agents ask about goals, constraints, references
-   - Implementation agents clarify spec ambiguities
-   - Leadership agents gather full context before recommending
+1. **에이전트는 추측하지 않고 먼저 질문함**
+   - 디자인 에이전트는 목표, 제약, 참고 자료에 대해 질문함
+   - 구현 에이전트는 스펙의 모호함을 명확히 함
+   - 리더십 에이전트는 추천 전에 전체 컨텍스트를 수집함
 
-2. **Agents Present Options, Not Dictates**
-   - 2-4 options with pros/cons
-   - Reasoning based on theory, precedent, project pillars
-   - Recommendation made, but user decides
+2. **에이전트는 지시가 아니라 옵션을 제시함**
+   - 장단점을 담은 2~4개의 옵션
+   - 이론, 선례, 프로젝트 필라에 근거한 논리
+   - 추천은 하되 결정은 사용자가 함
 
-3. **Agents Show Work Before Finalizing**
-   - Design drafts shown section-by-section
-   - Architecture proposals shown before implementation
-   - Strategic analysis presented before decisions
+3. **에이전트는 확정 전에 작업물을 보여줌**
+   - 디자인 초안이 섹션 단위로 제시됨
+   - 구현 전에 아키텍처 제안이 제시됨
+   - 결정 전에 전략적 분석이 제시됨
 
-4. **Agents Get Approval Before Writing Files**
-   - Explicit "May I write to [file]?" before using Write/Edit tools
-   - Multi-file changes list all affected files first
-   - User says "Yes" before any file is created
+4. **에이전트는 파일 작성 전 승인을 받음**
+   - Write/Edit 도구 사용 전 명시적으로 "[파일]에 작성해도 될까요?"를 물음
+   - 다중 파일 변경 시 영향받는 모든 파일을 먼저 나열함
+   - 파일이 생성되기 전에 사용자가 "네"라고 답함
 
-5. **Agents Iterate on Feedback**
-   - User modifications incorporated immediately
-   - No defensiveness when user changes recommendations
-   - Celebrate when user improves agent's suggestion
-
----
-
-## 📖 **How to Use These Examples**
-
-### For New Users:
-Read these examples BEFORE your first session. They show realistic expectations for how agents work:
-- Agents are consultants, not autonomous executors
-- You make all creative/strategic decisions
-- Agents provide expert guidance and options
-
-### For Understanding Specific Workflows:
-- **New to the system?** → Read skill-flow-diagrams.md first
-- **Running /design-system for the first time?** → Read session-design-system-skill.md
-- **Picking up a story?** → Read session-story-lifecycle.md
-- **Finishing a phase?** → Read session-gate-check-phase-transition.md
-- **Starting UI work?** → Read session-ux-pipeline.md
-- **Have an existing project?** → Read session-adopt-brownfield.md
-- **Designing a system (agent-driven)?** → Read session-design-crafting-system.md
-- **Implementing code?** → Read session-implement-combat-damage.md
-- **Making strategic decisions?** → Read session-scope-crisis-decision.md
-
-### For Training:
-If you're teaching someone to use this system, walk through one example turn-by-turn to show:
-- What good questions look like
-- How to evaluate presented options
-- When to approve vs. request changes
-- How to maintain creative control while leveraging AI expertise
+5. **에이전트는 피드백을 반영해 반복함**
+   - 사용자의 수정 사항이 즉시 반영됨
+   - 사용자가 추천을 바꿔도 방어적으로 굴지 않음
+   - 사용자가 에이전트의 제안을 개선하면 이를 환영함
 
 ---
 
-## 🔍 **Common Patterns Across All Examples**
+## 📖 **이 예시들을 활용하는 방법**
 
-### Turn 1-2: **Understand Before Acting**
-- Agent reads context (design docs, specs, constraints)
-- Agent asks clarifying questions
-- No assumptions or guesses
+### 신규 사용자용:
+첫 세션 전에 이 예시들을 읽어보세요. 에이전트가 실제로 어떻게 작동하는지에 대한 현실적인 기대치를 보여줍니다:
+- 에이전트는 자율 실행자가 아니라 컨설턴트입니다
+- 모든 창작/전략적 결정은 당신이 내립니다
+- 에이전트는 전문적인 안내와 옵션을 제공합니다
 
-### Turn 3-5: **Present Options with Reasoning**
-- 2-4 distinct approaches
-- Pros/cons for each
-- Theory/precedent supporting the analysis
-- Recommendation made, decision deferred to user
+### 특정 워크플로를 이해하고 싶다면:
+- **시스템이 처음이신가요?** → skill-flow-diagrams.md 를 먼저 읽으세요
+- **/design-system 을 처음 실행하시나요?** → session-design-system-skill.md 를 읽으세요
+- **스토리를 하나 집어드시나요?** → session-story-lifecycle.md 를 읽으세요
+- **단계를 마무리하시나요?** → session-gate-check-phase-transition.md 를 읽으세요
+- **UI 작업을 시작하시나요?** → session-ux-pipeline.md 를 읽으세요
+- **기존 프로젝트가 있으신가요?** → session-adopt-brownfield.md 를 읽으세요
+- **시스템을 디자인하시나요(에이전트 주도)?** → session-design-crafting-system.md 를 읽으세요
+- **코드를 구현하시나요?** → session-implement-combat-damage.md 를 읽으세요
+- **전략적 결정을 내리시나요?** → session-scope-crisis-decision.md 를 읽으세요
 
-### Turn 6-8: **Iterate on Drafts**
-- Show work incrementally
-- Incorporate feedback immediately
-- Flag edge cases or ambiguities proactively
-
-### Turn 9-10: **Approval and Completion**
-- "May I write to [file]?"
-- User: "Yes"
-- Agent writes files
-- Agent offers next steps (tests, review, integration)
-
----
-
-## 🚀 **Try It Yourself**
-
-After reading these examples, try this exercise:
-
-1. Pick one of your game systems (combat, inventory, progression, etc.)
-2. Ask the relevant agent to design or implement it
-3. Notice if the agent:
-   - ✅ Asks clarifying questions upfront
-   - ✅ Presents options with reasoning
-   - ✅ Shows drafts before finalizing
-   - ✅ Requests approval before writing files
-
-If the agent skips any of these, remind it:
-> "Please follow the collaborative protocol from docs/COLLABORATIVE-DESIGN-PRINCIPLE.md"
+### 교육용:
+누군가에게 이 시스템 사용법을 가르치신다면, 예시 하나를 턴별로 함께 살펴보며 다음을 보여주세요:
+- 좋은 질문이란 어떤 것인지
+- 제시된 옵션을 어떻게 평가하는지
+- 언제 승인하고 언제 수정을 요청할지
+- AI의 전문성을 활용하면서도 창작 통제권을 어떻게 유지할지
 
 ---
 
-## 📝 **Additional Resources**
+## 🔍 **모든 예시에서 공통되는 패턴**
 
-- **Full Principle Documentation:** [docs/COLLABORATIVE-DESIGN-PRINCIPLE.md](../COLLABORATIVE-DESIGN-PRINCIPLE.md)
-- **Workflow Guide:** [docs/WORKFLOW-GUIDE.md](../WORKFLOW-GUIDE.md)
-- **Agent Roster:** [.claude/docs/agent-roster.md](../../.claude/docs/agent-roster.md)
-- **CLAUDE.md (Collaboration Protocol):** [CLAUDE.md](../../CLAUDE.md#collaboration-protocol)
+### 1~2턴: **행동하기 전에 이해하기**
+- 에이전트가 컨텍스트(디자인 문서, 스펙, 제약)를 읽음
+- 에이전트가 확인 질문을 던짐
+- 추측이나 짐작 없음
+
+### 3~5턴: **논리와 함께 옵션 제시하기**
+- 2~4가지 뚜렷한 접근 방식
+- 각각의 장단점
+- 분석을 뒷받침하는 이론/선례
+- 추천은 하되 결정은 사용자에게 맡김
+
+### 6~8턴: **초안 반복하기**
+- 작업물을 점진적으로 보여줌
+- 피드백을 즉시 반영함
+- 엣지 케이스나 모호함을 선제적으로 플래그함
+
+### 9~10턴: **승인과 완료**
+- "[파일]에 작성해도 될까요?"
+- 사용자: "네"
+- 에이전트가 파일을 작성함
+- 에이전트가 다음 단계(테스트, 리뷰, 통합)를 제안함
+
+---
+
+## 🚀 **직접 해보기**
+
+이 예시들을 읽은 후, 다음 연습을 해보세요:
+
+1. 자신의 게임 시스템(전투, 인벤토리, 성장 등) 중 하나를 고르세요
+2. 관련 에이전트에게 이를 디자인하거나 구현하도록 요청하세요
+3. 에이전트가 다음을 하는지 확인하세요:
+   - ✅ 먼저 확인 질문을 던지는지
+   - ✅ 논리와 함께 옵션을 제시하는지
+   - ✅ 확정 전에 초안을 보여주는지
+   - ✅ 파일 작성 전에 승인을 요청하는지
+
+에이전트가 이 중 하나라도 건너뛴다면, 이렇게 알려주세요:
+> "docs/COLLABORATIVE-DESIGN-PRINCIPLE.md 의 협업 프로토콜을 따라주세요"
+
+---
+
+## 📝 **추가 자료**
+
+- **전체 원칙 문서:** [docs/COLLABORATIVE-DESIGN-PRINCIPLE.md](../COLLABORATIVE-DESIGN-PRINCIPLE.md)
+- **워크플로 가이드:** [docs/WORKFLOW-GUIDE.md](../WORKFLOW-GUIDE.md)
+- **에이전트 명단:** [.claude/docs/agent-roster.md](../../.claude/docs/agent-roster.md)
+- **CLAUDE.md (협업 프로토콜):** [CLAUDE.md](../../CLAUDE.md#collaboration-protocol)
+</content>

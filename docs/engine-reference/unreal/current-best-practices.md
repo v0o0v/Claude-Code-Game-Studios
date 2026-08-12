@@ -1,29 +1,29 @@
-# Unreal Engine 5.7 — Current Best Practices
+# Unreal Engine 5.7 — 현재 모범 사례
 
-**Last verified:** 2026-02-13
+**최종 확인일:** 2026-02-13
 
-Modern UE5 patterns that may not be in the LLM's training data.
-These are production-ready recommendations as of UE 5.7.
-
----
-
-## Project Setup
-
-### Use UE 5.7 for New Projects
-- Latest features: Megalights, production-ready Substrate and PCG
-- Better performance and stability
-
-### Choose the Right Rendering Features
-- **Lumen**: Real-time global illumination (RECOMMENDED for most projects)
-- **Nanite**: Virtualized geometry for high-poly meshes (RECOMMENDED for detailed environments)
-- **Megalights**: Millions of dynamic lights (RECOMMENDED for complex lighting)
-- **Substrate**: Modular material system (RECOMMENDED for new projects)
+LLM의 학습 데이터에 없을 수 있는 최신 UE5 패턴 모음이다.
+아래는 UE 5.7 기준 프로덕션 준비가 완료된 권장 사항이다.
 
 ---
 
-## C++ Coding
+## 프로젝트 설정
 
-### Use Modern C++ Features (C++20 in UE5.7)
+### 신규 프로젝트에는 UE 5.7 사용
+- 최신 기능: Megalights, 프로덕션 준비가 완료된 Substrate 및 PCG
+- 더 나은 성능과 안정성
+
+### 적합한 렌더링 기능 선택
+- **Lumen**: 실시간 전역 조명(대부분의 프로젝트에 권장)
+- **Nanite**: 고폴리곤 메시를 위한 가상화 지오메트리(정교한 환경에 권장)
+- **Megalights**: 수백만 개의 다이내믹 광원(복잡한 조명에 권장)
+- **Substrate**: 모듈형 머티리얼 시스템(신규 프로젝트에 권장)
+
+---
+
+## C++ 코딩
+
+### 최신 C++ 기능 사용(UE5.7의 C++20)
 
 ```cpp
 // ✅ Use TObjectPtr<T> (UE5 type-safe pointers)
@@ -42,7 +42,7 @@ concept Damageable = requires(T t, float damage) {
 };
 ```
 
-### Use UPROPERTY() for Garbage Collection
+### 가비지 컬렉션을 위해 UPROPERTY() 사용
 
 ```cpp
 // ✅ UPROPERTY ensures GC doesn't delete this
@@ -53,7 +53,7 @@ TObjectPtr<AActor> MyActor;
 AActor* MyActor; // Dangerous! May be garbage collected
 ```
 
-### Use UFUNCTION() for Blueprint Exposure
+### 블루프린트 노출을 위해 UFUNCTION() 사용
 
 ```cpp
 // ✅ Callable from Blueprint
@@ -67,14 +67,14 @@ void OnDeath();
 
 ---
 
-## Blueprint Best Practices
+## 블루프린트 모범 사례
 
-### Use Blueprint vs C++
+### 블루프린트 vs C++ 선택 기준
 
-- **C++**: Core gameplay systems, performance-critical code, low-level engine interaction
-- **Blueprint**: Rapid prototyping, content creation, data-driven logic, designer workflows
+- **C++**: 핵심 게임플레이 시스템, 성능이 중요한 코드, 저수준 엔진 상호작용
+- **블루프린트**: 빠른 프로토타이핑, 콘텐츠 제작, 데이터 기반 로직, 디자이너 워크플로
 
-### Blueprint Performance Tips
+### 블루프린트 성능 팁
 
 ```cpp
 // ✅ Use Event Tick sparingly (expensive)
@@ -89,30 +89,30 @@ void OnDeath();
 
 ---
 
-## Rendering (UE 5.7)
+## 렌더링(UE 5.7)
 
-### Use Lumen for Global Illumination
+### 전역 조명에는 Lumen 사용
 
 ```cpp
 // Enable: Project Settings > Engine > Rendering > Dynamic Global Illumination Method = Lumen
 // Real-time GI, no lightmap baking needed (RECOMMENDED)
 ```
 
-### Use Nanite for High-Poly Meshes
+### 고폴리곤 메시에는 Nanite 사용
 
 ```cpp
 // Enable on Static Mesh: Details > Nanite Settings > Enable Nanite Support
 // Automatically LODs millions of triangles (RECOMMENDED for detailed meshes)
 ```
 
-### Use Megalights for Complex Lighting (UE 5.5+)
+### 복잡한 조명에는 Megalights 사용(UE 5.5 이상)
 
 ```cpp
 // Enable: Project Settings > Engine > Rendering > Megalights = Enabled
 // Supports millions of dynamic lights with minimal cost
 ```
 
-### Use Substrate Materials (Production-Ready in 5.7)
+### Substrate 머티리얼 사용(5.7에서 프로덕션 준비 완료)
 
 ```cpp
 // Enable: Project Settings > Engine > Substrate > Enable Substrate
@@ -121,9 +121,9 @@ void OnDeath();
 
 ---
 
-## Enhanced Input System
+## Enhanced Input 시스템
 
-### Setup Enhanced Input
+### Enhanced Input 설정
 
 ```cpp
 // 1. Create Input Action (IA_Jump)
@@ -160,9 +160,9 @@ void AMyCharacter::Move(const FInputActionValue& Value) {
 
 ---
 
-## Gameplay Ability System (GAS)
+## Gameplay Ability System(GAS)
 
-### Use GAS for Complex Gameplay
+### 복잡한 게임플레이에는 GAS 사용
 
 ```cpp
 // ✅ Use GAS for: Abilities, buffs, damage calculation, cooldowns
@@ -186,9 +186,9 @@ public:
 
 ---
 
-## World Partition (Large Worlds)
+## World Partition(대규모 월드)
 
-### Use World Partition for Open Worlds
+### 오픈 월드에는 World Partition 사용
 
 ```cpp
 // Enable: World Settings > Enable World Partition
@@ -200,9 +200,9 @@ public:
 
 ---
 
-## Niagara (VFX)
+## Niagara(VFX)
 
-### Use Niagara (Not Cascade)
+### Niagara 사용(Cascade 대신)
 
 ```cpp
 // Create: Content Browser > Right Click > FX > Niagara System
@@ -218,9 +218,9 @@ UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
 
 ---
 
-## MetaSounds (Audio)
+## MetaSounds(오디오)
 
-### Use MetaSounds for Procedural Audio
+### 절차적 오디오에는 MetaSounds 사용
 
 ```cpp
 // Create: Content Browser > Right Click > Sounds > MetaSound Source
@@ -235,9 +235,9 @@ UAudioComponent* AudioComp = UGameplayStatics::SpawnSound2D(
 
 ---
 
-## Replication (Multiplayer)
+## 리플리케이션(멀티플레이어)
 
-### Server-Authoritative Pattern
+### 서버 권한(Server-Authoritative) 패턴
 
 ```cpp
 // ✅ Client sends input, server validates and replicates
@@ -261,9 +261,9 @@ void AMyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLife
 
 ---
 
-## Performance Optimization
+## 성능 최적화
 
-### Use Object Pooling
+### 오브젝트 풀링 사용
 
 ```cpp
 // ✅ Reuse objects instead of Spawn/Destroy
@@ -281,7 +281,7 @@ AActor* GetPooledProjectile() {
 }
 ```
 
-### Use Instanced Static Meshes
+### Instanced Static Mesh 사용
 
 ```cpp
 // ✅ Hierarchical Instanced Static Mesh Component (HISM)
@@ -294,9 +294,9 @@ for (int i = 0; i < 1000; i++) {
 
 ---
 
-## Debugging
+## 디버깅
 
-### Use Logging
+### 로깅 사용
 
 ```cpp
 // ✅ Structured logging
@@ -308,7 +308,7 @@ DEFINE_LOG_CATEGORY(LogMyGame);
 UE_LOG(LogMyGame, Error, TEXT("Critical error!"));
 ```
 
-### Use Visual Logger
+### Visual Logger 사용
 
 ```cpp
 // ✅ Visual debugging
@@ -320,21 +320,21 @@ UE_VLOG_LOCATION(this, LogTemp, Log, TargetLocation, 50.f, FColor::Green, TEXT("
 
 ---
 
-## Summary: UE 5.7 Recommended Stack
+## 요약: UE 5.7 권장 스택
 
-| Feature | Use This (2026) | Notes |
+| 기능 | 이것을 사용할 것(2026) | 비고 |
 |---------|------------------|-------|
-| **Lighting** | Lumen + Megalights | Real-time GI, millions of lights |
-| **Geometry** | Nanite | High-poly meshes, automatic LOD |
-| **Materials** | Substrate | Modular, physically accurate |
-| **Input** | Enhanced Input | Rebindable, modular |
-| **VFX** | Niagara | GPU-accelerated |
-| **Audio** | MetaSounds | Procedural audio |
-| **World Streaming** | World Partition | Large open worlds |
-| **Gameplay** | Gameplay Ability System | Complex abilities, buffs |
+| **조명** | Lumen + Megalights | 실시간 GI, 수백만 개의 광원 |
+| **지오메트리** | Nanite | 고폴리곤 메시, 자동 LOD |
+| **머티리얼** | Substrate | 모듈형, 물리적으로 정확함 |
+| **입력** | Enhanced Input | 리바인딩 가능, 모듈형 |
+| **VFX** | Niagara | GPU 가속 |
+| **오디오** | MetaSounds | 절차적 오디오 |
+| **월드 스트리밍** | World Partition | 대규모 오픈 월드 |
+| **게임플레이** | Gameplay Ability System | 복잡한 어빌리티, 버프 |
 
 ---
 
-**Sources:**
+**출처:**
 - https://docs.unrealengine.com/5.7/en-US/
 - https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-5-7-release-notes

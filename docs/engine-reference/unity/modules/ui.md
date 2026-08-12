@@ -1,34 +1,34 @@
-# Unity 6.3 — UI Module Reference
+# Unity 6.3 — UI 모듈 레퍼런스
 
-**Last verified:** 2026-02-13
-**Knowledge Gap:** Unity 6 UI Toolkit is production-ready for runtime UI
-
----
-
-## Overview
-
-Unity 6 UI systems:
-- **UI Toolkit** (RECOMMENDED): Modern, performant, HTML/CSS-like (production-ready in Unity 6)
-- **UGUI (Canvas)**: Legacy system, still supported but not recommended for new projects
-- **IMGUI**: Editor-only, deprecated for runtime UI
+**최종 확인일:** 2026-02-13
+**지식 공백:** Unity 6의 UI Toolkit은 런타임 UI에서 프로덕션 준비가 완료됨
 
 ---
 
-## UI Toolkit (Modern UI)
+## 개요
 
-### Setup UI Document
+Unity 6 UI 시스템:
+- **UI Toolkit** (권장): 최신, 고성능, HTML/CSS와 유사한 방식 (Unity 6에서 프로덕션 준비 완료)
+- **UGUI (Canvas)**: 레거시 시스템, 여전히 지원되지만 신규 프로젝트에는 권장하지 않음
+- **IMGUI**: 에디터 전용, 런타임 UI에는 deprecated
 
-1. Create UXML (UI structure):
+---
+
+## UI Toolkit (모던 UI)
+
+### UI Document 설정
+
+1. UXML 생성 (UI 구조):
    - `Assets > Create > UI Toolkit > UI Document`
-2. Create USS (styling):
+2. USS 생성 (스타일링):
    - `Assets > Create > UI Toolkit > StyleSheet`
-3. Add to scene:
+3. 씬에 추가:
    - `GameObject > UI Toolkit > UI Document`
-   - Assign UXML to `UIDocument > Source Asset`
+   - UXML을 `UIDocument > Source Asset`에 할당
 
 ---
 
-### UXML (UI Structure)
+### UXML (UI 구조)
 
 ```xml
 <!-- MainMenu.uxml -->
@@ -44,7 +44,7 @@ Unity 6 UI systems:
 
 ---
 
-### USS (Styling)
+### USS (스타일링)
 
 ```css
 /* MainMenu.uss */
@@ -77,7 +77,7 @@ Button:hover {
 
 ---
 
-### C# Scripting (UI Toolkit)
+### C# 스크립팅 (UI Toolkit)
 
 ```csharp
 using UnityEngine;
@@ -112,7 +112,7 @@ public class MainMenu : MonoBehaviour {
 
 ---
 
-### Common UI Elements
+### 자주 쓰이는 UI 요소
 
 ```csharp
 // Label (text display)
@@ -143,7 +143,7 @@ dropdown.value = "Normal";
 
 ---
 
-### Dynamic UI Creation (No UXML)
+### 동적 UI 생성 (UXML 없이)
 
 ```csharp
 void CreateUI() {
@@ -164,7 +164,7 @@ void CreateUI() {
 
 ---
 
-### USS Flexbox Layout
+### USS Flexbox 레이아웃
 
 ```css
 /* Horizontal layout */
@@ -191,9 +191,9 @@ void CreateUI() {
 
 ---
 
-## UGUI (Legacy Canvas UI)
+## UGUI (레거시 Canvas UI)
 
-### Basic Setup (Still Works in Unity 6)
+### 기본 설정 (Unity 6에서도 여전히 동작)
 
 ```csharp
 // GameObject > UI > Canvas (creates Canvas, EventSystem)
@@ -209,7 +209,7 @@ void CreateUI() {
 
 ---
 
-### UGUI Scripting
+### UGUI 스크립팅
 
 ```csharp
 using UnityEngine;
@@ -244,7 +244,7 @@ public class LegacyUI : MonoBehaviour {
 
 ---
 
-### TextMeshPro (Better Text Rendering)
+### TextMeshPro (더 나은 텍스트 렌더링)
 
 ```csharp
 // Install: Window > TextMeshPro > Import TMP Essential Resources
@@ -260,9 +260,9 @@ tmpText.color = Color.white;
 
 ---
 
-## Canvas Settings (UGUI)
+## Canvas 설정 (UGUI)
 
-### Render Modes
+### 렌더 모드
 
 ```csharp
 // Screen Space - Overlay: UI rendered on top of everything (no camera needed)
@@ -270,7 +270,7 @@ tmpText.color = Color.white;
 // World Space: UI in 3D world (e.g., floating health bars)
 ```
 
-### Canvas Scaler (Responsive UI)
+### Canvas Scaler (반응형 UI)
 
 ```csharp
 // UI Scale Mode:
@@ -285,7 +285,7 @@ tmpText.color = Color.white;
 
 ---
 
-## Layout Groups (UGUI)
+## 레이아웃 그룹 (UGUI)
 
 ### Horizontal Layout Group
 
@@ -308,31 +308,31 @@ tmpText.color = Color.white;
 
 ---
 
-## Performance (UI Toolkit vs UGUI)
+## 성능 (UI Toolkit vs UGUI)
 
-### UI Toolkit Advantages
-- ✅ Faster rendering (retained mode)
-- ✅ Better for complex UIs with many elements
-- ✅ Easier styling (CSS-like)
-- ✅ Better for dynamic UIs
+### UI Toolkit의 장점
+- ✅ 더 빠른 렌더링 (retained mode)
+- ✅ 요소가 많은 복잡한 UI에 더 적합
+- ✅ 더 쉬운 스타일링 (CSS와 유사)
+- ✅ 동적 UI에 더 적합
 
-### UGUI Advantages
-- ✅ More mature, widely documented
-- ✅ Better integration with Unity Editor
-- ✅ Easier for beginners
+### UGUI의 장점
+- ✅ 더 성숙하고 문서화가 풍부함
+- ✅ Unity 에디터와의 통합이 더 우수함
+- ✅ 초보자에게 더 쉬움
 
 ---
 
-## Common Patterns
+## 자주 쓰이는 패턴
 
-### Health Bar (UI Toolkit)
+### 체력바 (UI Toolkit)
 
 ```csharp
 var healthBar = root.Q<VisualElement>("health-bar");
 healthBar.style.width = new StyleLength(new Length(healthPercent, LengthUnit.Percent));
 ```
 
-### Health Bar (UGUI)
+### 체력바 (UGUI)
 
 ```csharp
 public Image healthBarImage;
@@ -344,7 +344,7 @@ void UpdateHealth(float percent) {
 
 ---
 
-### Fade In/Out (UI Toolkit)
+### 페이드 인/아웃 (UI Toolkit)
 
 ```csharp
 IEnumerator FadeIn(VisualElement element, float duration) {
@@ -359,19 +359,19 @@ IEnumerator FadeIn(VisualElement element, float duration) {
 
 ---
 
-## Debugging
+## 디버깅
 
 ### UI Toolkit Debugger
 - `Window > UI Toolkit > Debugger`
-- Inspect element hierarchy, styles, layout
+- 요소 계층, 스타일, 레이아웃을 검사
 
 ### UGUI Event System Debugger
-- Select EventSystem in Hierarchy
-- Inspector shows active input module, raycast info
+- Hierarchy에서 EventSystem 선택
+- Inspector에 활성 입력 모듈, 레이캐스트 정보 표시
 
 ---
 
-## Sources
+## 출처
 - https://docs.unity3d.com/6000.0/Documentation/Manual/UIElements.html
 - https://docs.unity3d.com/Packages/com.unity.ui@2.0/manual/index.html
 - https://docs.unity3d.com/Packages/com.unity.ugui@2.0/manual/index.html

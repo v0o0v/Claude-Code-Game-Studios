@@ -1,121 +1,122 @@
-# Reverse Documentation Workflow Example
+# 역방향 문서화 워크플로 예시
 
-## Scenario
-Developer built a working skill tree system but never wrote a design doc.
-Code exists in `src/gameplay/skills/`, but `design/gdd/` has no skill-system.md.
+## 시나리오
+개발자가 동작하는 스킬 트리 시스템을 만들었지만 디자인 문서를 쓴 적이 없습니다.
+코드는 `src/gameplay/skills/` 에 있지만, `design/gdd/` 에는 skill-system.md 가 없습니다.
 
 ---
 
-## Session Transcript
+## 세션 트랜스크립트
 
-**User:**
+**사용자:**
 ```
-I have a working skill tree system in src/gameplay/skills/ with about 1200 lines
-of code. I never wrote a design doc. Can we create one from the implementation?
-```
-
-**Game-Designer (reads code, analyzes):**
-```
-I've analyzed your skill tree implementation. Here's what I found:
-
-STRUCTURE:
-- 3 skill trees: Combat, Survival, Tech
-- 5 tiers per tree (unlock via level + prerequisites)
-- Total 45 skills (15 per tree)
-- Cost: skill points (1 per level, can respec for gold)
-
-MECHANICS:
-- Passive skills (stat bonuses)
-- Active skills (abilities with cooldowns)
-- Synergy bonuses (cross-tree unlocks at tier 4+)
-
-IMPLEMENTATION DETAILS:
-- Data-driven (JSON files in assets/data/skills/)
-- Save-compatible (skill state serialized)
-- UI shows locked/unlocked/available states
-
-QUESTIONS before I draft the design doc:
-
-1. **Design Intent:** Was the 3-tree structure meant to represent player archetypes
-   (fighter/survivor/engineer) or playstyle flexibility?
-
-2. **Respec Cost:** Respec costs gold - is this meant to:
-   - Discourage frequent respecs (commitment to builds)?
-   - Create a gold sink (economy balance)?
-   - Or should it be free (experimentation encouraged)?
-
-3. **Synergy System:** Cross-tree synergies appear at tier 4. Was this:
-   - Intentional (reward hybrid builds late-game)?
-   - Or emergent (accidentally creates hybrid meta)?
-
-4. **Balance Philosophy:** I see some skills are clearly better (tier-5 passive
-   is +50% damage). Is this:
-   - Power fantasy (late-game should feel OP)?
-   - Or unbalanced (needs tuning)?
+src/gameplay/skills/ 에 약 1200줄짜리 동작하는 스킬 트리 시스템이 있어요.
+디자인 문서는 쓴 적이 없고요. 구현물로부터 하나 만들 수 있을까요?
 ```
 
-**User:**
+**Game-Designer (코드를 읽고 분석):**
 ```
-Good questions! Here's the intent:
+스킬 트리 구현을 분석했습니다. 발견한 내용은 다음과 같습니다:
 
-1. Yes, the 3 trees are archetypes but I want flexibility
-2. Respec should be cheap - I want experimentation
-3. Synergies were intentional - hybrid builds are a feature
-4. Yeah, tier 5 is meant to be powerful, but +50% might be too much
+구조:
+- 3개의 스킬 트리: Combat, Survival, Tech
+- 트리당 5개 티어(레벨 + 선행 조건으로 해제)
+- 총 45개 스킬(트리당 15개)
+- 비용: 스킬 포인트(레벨당 1개, 골드로 재분배 가능)
+
+메커니즘:
+- 패시브 스킬(스탯 보너스)
+- 액티브 스킬(쿨다운이 있는 능력)
+- 시너지 보너스(4티어 이상에서 크로스 트리 해제)
+
+구현 세부사항:
+- 데이터 주도 방식(assets/data/skills/ 안의 JSON 파일)
+- 저장 호환(스킬 상태가 직렬화됨)
+- UI가 잠김/해제됨/사용 가능 상태를 표시
+
+디자인 문서를 작성하기 전에 몇 가지 질문드립니다:
+
+1. **디자인 의도:** 3개 트리 구조는 플레이어 아키타입(전사/생존자/엔지니어)을
+   나타내려는 의도였나요, 아니면 플레이스타일의 유연성을 위한 것이었나요?
+
+2. **재분배 비용:** 재분배는 골드가 드는데, 이는 다음 중 어떤 의도인가요:
+   - 잦은 재분배를 억제(빌드에 대한 확신 유도)?
+   - 골드 소모처 마련(경제 밸런스)?
+   - 아니면 무료여야 하나요(실험 장려)?
+
+3. **시너지 시스템:** 크로스 트리 시너지는 4티어에서 나타납니다. 이것은:
+   - 의도된 것(후반 하이브리드 빌드에 대한 보상)이었나요?
+   - 아니면 창발적으로(우연히 하이브리드 메타를 만들어냄) 생긴 것인가요?
+
+4. **밸런스 철학:** 일부 스킬이 명백히 더 강력해 보입니다(5티어 패시브가
+   데미지 +50%). 이것은:
+   - 파워 판타지(후반부는 압도적으로 느껴져야 함)인가요?
+   - 아니면 불균형(조정이 필요함)인가요?
+```
+
+**사용자:**
+```
+좋은 질문들이네요! 의도는 이렇습니다:
+
+1. 맞아요, 3개 트리는 아키타입이지만 유연성을 원해요
+2. 재분배는 저렴해야 해요 - 실험을 원하거든요
+3. 시너지는 의도적이었어요 - 하이브리드 빌드가 하나의 특징이에요
+4. 네, 5티어는 강력해야 하는 게 맞는데 +50%는 좀 과할 수도 있어요
 ```
 
 **Game-Designer:**
 ```
-Perfect, that clarifies the vision. Let me draft the design doc:
+좋습니다, 그러면 방향이 명확해지네요. 디자인 문서를 작성해볼게요:
 
-[Shows draft of design/gdd/skill-system.md]
+[design/gdd/skill-system.md 초안 표시]
 
-SECTIONS:
-1. Overview (3-tree system, hybrid-friendly, respec-encouraged)
+섹션:
+1. Overview (3개 트리 시스템, 하이브리드 친화적, 재분배 장려)
 2. Design Pillars:
-   - Archetype clarity (each tree has identity)
-   - Build flexibility (no lock-in, cheap respec)
-   - Synergy rewards (cross-tree combinations viable)
-3. Detailed Design (tree structure, unlock rules, respec)
-4. Balance Framework (tier power curve, synergy limits)
-5. Edge Cases (respec during combat? max skills? cap?)
-6. Dependencies (UI, save system, tutorial)
-7. Acceptance Criteria (all trees viable, 10+ hybrid builds, clear tooltips)
+   - 아키타입 명확성(각 트리마다 정체성이 있음)
+   - 빌드 유연성(고착 없음, 저렴한 재분배)
+   - 시너지 보상(크로스 트리 조합이 유효한 선택지)
+3. Detailed Design (트리 구조, 해제 규칙, 재분배)
+4. Balance Framework (티어 파워 곡선, 시너지 상한)
+5. Edge Cases (전투 중 재분배는? 최대 스킬 수는? 상한선은?)
+6. Dependencies (UI, 세이브 시스템, 튜토리얼)
+7. Acceptance Criteria (모든 트리가 유효한 선택지, 10개 이상의 하이브리드 빌드, 명확한 툴팁)
 8. Open Questions:
-   - Should respec cost scale with level or stay flat?
-   - Tier 5 damage bonus: tune to +30% or keep +50%?
+   - 재분배 비용은 레벨에 따라 증가해야 하나요, 고정이어야 하나요?
+   - 5티어 데미지 보너스: +30%로 조정할까요, +50%를 유지할까요?
 
-**May I write this to design/gdd/skill-system.md?**
+**design/gdd/skill-system.md 에 이 내용을 작성해도 될까요?**
 ```
 
-**User:**
+**사용자:**
 ```
-Yes, write it. But let's tune tier 5 to +30% and make respec cost scale.
+네, 작성하세요. 근데 5티어는 +30%로 조정하고 재분배 비용은 증가하는 방식으로 해주세요.
 ```
 
 **Game-Designer:**
 ```
-✅ Written to design/gdd/skill-system.md
-✅ Marked as [REVERSE-DOCUMENTED FROM IMPLEMENTATION]
-✅ Added TODO: Update tier-5 passive to +30% in assets/data/skills/combat-tree.json
-✅ Added TODO: Implement scaling respec cost formula
+✅ design/gdd/skill-system.md 에 작성 완료
+✅ [구현물로부터 역방향 문서화됨]으로 표시
+✅ TODO 추가: assets/data/skills/combat-tree.json 의 5티어 패시브를 +30%로 갱신
+✅ TODO 추가: 증가형 재분배 비용 공식 구현
 
-Next steps:
-- Run /balance-check to validate skill tree progression curve?
-- Create ADR documenting why 3 trees instead of 5?
-- Update tutorial to explain hybrid synergies?
+다음 단계:
+- /balance-check 를 실행해 스킬 트리 성장 곡선을 검증할까요?
+- 왜 5개가 아닌 3개 트리인지 문서화하는 ADR을 만들까요?
+- 하이브리드 시너지를 설명하도록 튜토리얼을 업데이트할까요?
 ```
 
 ---
 
-## Key Observations
+## 핵심 관찰 사항
 
-1. **Agent asked clarifying questions** - didn't just describe code
-2. **Separated intent from implementation** - user corrected "accidental" imbalance
-3. **Design doc captures "why"** - not just "what the code does"
-4. **Identified missing pieces** - edge cases not in code
-5. **Flagged follow-up work** - balance tuning, ADRs, tutorial
+1. **에이전트가 확인 질문을 던짐** - 그냥 코드를 설명하는 데 그치지 않음
+2. **의도와 구현을 분리함** - 사용자가 "우발적인" 불균형을 바로잡음
+3. **디자인 문서가 "왜"를 담아냄** - "코드가 무엇을 하는지"에 그치지 않음
+4. **누락된 부분을 식별함** - 코드에는 없는 엣지 케이스
+5. **후속 작업을 플래그함** - 밸런스 조정, ADR, 튜토리얼
 
-## Outcome
+## 결과
 
-The design doc now exists and **matches reality** while also capturing the **intended vision**. Future changes will reference this doc, and new team members understand the *why* behind decisions.
+이제 디자인 문서가 존재하며 실제 구현과 **일치**함과 동시에 **의도된 비전**도 담아냅니다. 앞으로의 변경은 이 문서를 참조하게 되고, 새로 합류하는 팀원도 결정 뒤에 있는 *이유*를 이해할 수 있습니다.
+</content>

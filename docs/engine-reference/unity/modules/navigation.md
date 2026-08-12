@@ -1,43 +1,43 @@
-# Unity 6.3 — Navigation Module Reference
+# Unity 6.3 — 내비게이션 모듈 레퍼런스
 
-**Last verified:** 2026-02-13
-**Knowledge Gap:** Unity 6 NavMesh improvements
-
----
-
-## Overview
-
-Unity 6 navigation systems:
-- **NavMesh**: Built-in pathfinding for AI agents
-- **NavMeshComponents**: Package for runtime NavMesh building
+**최종 확인일:** 2026-02-13
+**지식 공백:** Unity 6 NavMesh 개선 사항
 
 ---
 
-## NavMesh Basics
+## 개요
 
-### Bake Navigation Mesh
+Unity 6 내비게이션 시스템:
+- **NavMesh**: AI 에이전트용 내장 경로 탐색
+- **NavMeshComponents**: 런타임 NavMesh 빌드용 패키지
 
-1. Mark walkable surfaces:
-   - Select GameObject (floor/terrain)
-   - Inspector > Navigation > Object tab
-   - Check "Navigation Static"
+---
 
-2. Bake NavMesh:
+## NavMesh 기초
+
+### 내비게이션 메시 베이크
+
+1. 이동 가능한 표면 표시:
+   - GameObject 선택(바닥/지형)
+   - Inspector > Navigation > Object 탭
+   - "Navigation Static" 체크
+
+2. NavMesh 베이크:
    - `Window > AI > Navigation`
-   - Bake tab
-   - Click "Bake"
+   - Bake 탭
+   - "Bake" 클릭
 
-3. Configure settings:
-   - **Agent Radius**: How wide the agent is (0.5m default)
-   - **Agent Height**: How tall the agent is (2m default)
-   - **Max Slope**: Maximum walkable slope (45° default)
-   - **Step Height**: Maximum climbable step (0.4m default)
+3. 설정 구성:
+   - **Agent Radius**: 에이전트의 너비(기본값 0.5m)
+   - **Agent Height**: 에이전트의 높이(기본값 2m)
+   - **Max Slope**: 이동 가능한 최대 경사(기본값 45°)
+   - **Step Height**: 오를 수 있는 최대 단차(기본값 0.4m)
 
 ---
 
-## NavMeshAgent (AI Movement)
+## NavMeshAgent (AI 이동)
 
-### Basic Agent Setup
+### 기본 에이전트 설정
 
 ```csharp
 using UnityEngine;
@@ -52,7 +52,7 @@ public class Enemy : MonoBehaviour {
     }
 
     void Update() {
-        // ✅ Move to target
+        // ✅ 타겟으로 이동
         agent.SetDestination(target.position);
     }
 }
@@ -60,41 +60,41 @@ public class Enemy : MonoBehaviour {
 
 ---
 
-### NavMeshAgent Properties
+### NavMeshAgent 프로퍼티
 
 ```csharp
 NavMeshAgent agent = GetComponent<NavMeshAgent>();
 
-// Speed
+// 속도
 agent.speed = 3.5f;
 
-// Acceleration
+// 가속도
 agent.acceleration = 8f;
 
-// Stopping distance
-agent.stoppingDistance = 2f; // Stop 2m before destination
+// 정지 거리
+agent.stoppingDistance = 2f; // 목적지 2m 전에 정지
 
-// Auto-braking (slow down at destination)
+// 자동 감속(목적지에서 속도를 줄임)
 agent.autoBraking = true;
 
-// Rotation speed
-agent.angularSpeed = 120f; // Degrees per second
+// 회전 속도
+agent.angularSpeed = 120f; // 초당 각도
 
-// Obstacle avoidance
+// 장애물 회피
 agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
 ```
 
 ---
 
-### Check Path Status
+### 경로 상태 확인
 
 ```csharp
 void Update() {
     agent.SetDestination(target.position);
 
-    // Check if agent has a path
+    // 에이전트가 경로를 가지고 있는지 확인
     if (agent.hasPath) {
-        // Check if path is complete
+        // 경로가 완전한지 확인
         if (agent.pathStatus == NavMeshPathStatus.PathComplete) {
             Debug.Log("Valid path");
         } else if (agent.pathStatus == NavMeshPathStatus.PathPartial) {
@@ -104,7 +104,7 @@ void Update() {
         }
     }
 
-    // Check if agent reached destination
+    // 에이전트가 목적지에 도달했는지 확인
     if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance) {
         Debug.Log("Reached destination");
     }
@@ -113,79 +113,79 @@ void Update() {
 
 ---
 
-### Calculate Path (Don't Move Yet)
+### 경로 계산 (아직 이동하지 않음)
 
 ```csharp
 NavMeshPath path = new NavMeshPath();
 agent.CalculatePath(targetPosition, path);
 
 if (path.status == NavMeshPathStatus.PathComplete) {
-    // Valid path exists
-    agent.SetPath(path); // Apply the path
+    // 유효한 경로가 존재함
+    agent.SetPath(path); // 경로 적용
 }
 ```
 
 ---
 
-## NavMesh Areas (Walkable Costs)
+## NavMesh 영역 (이동 비용)
 
-### Define Areas
+### 영역 정의
 `Window > AI > Navigation > Areas tab`
-- **Walkable**: Cost 1 (default)
-- **Not Walkable**: Unwalkable
-- **Jump**: Cost 2 (prefer other routes)
-- **Custom**: Define your own
+- **Walkable**: 비용 1(기본값)
+- **Not Walkable**: 이동 불가
+- **Jump**: 비용 2(다른 경로를 우선함)
+- **Custom**: 직접 정의
 
-### Assign Area Costs
+### 영역 비용 할당
 
 ```csharp
-// Prefer shorter paths over low-cost paths
-agent.areaMask = NavMesh.AllAreas; // Walk on all areas
+// 저비용 경로보다 더 짧은 경로를 우선
+agent.areaMask = NavMesh.AllAreas; // 모든 영역에서 이동
 
-// Only walk on "Walkable" area (avoid "Jump")
+// "Walkable" 영역에서만 이동("Jump"는 회피)
 agent.areaMask = 1 << NavMesh.GetAreaFromName("Walkable");
 ```
 
 ---
 
-## NavMesh Obstacles (Dynamic Obstacles)
+## NavMesh 장애물 (동적 장애물)
 
-### NavMeshObstacle Component
+### NavMeshObstacle 컴포넌트
 
 ```csharp
 // Add: GameObject > Add Component > NavMesh Obstacle
 
-// Carve: Create hole in NavMesh (agents avoid)
-// Don't Carve: Agent pushes through (local avoidance)
+// Carve: NavMesh에 구멍을 생성(에이전트가 회피함)
+// Don't Carve: 에이전트가 통과함(로컬 회피)
 ```
 
-### Dynamic Carving (Moving Obstacles)
+### 동적 카빙 (움직이는 장애물)
 
 ```csharp
 NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
-obstacle.carving = true; // Create dynamic hole in NavMesh
+obstacle.carving = true; // NavMesh에 동적으로 구멍 생성
 ```
 
 ---
 
-## Off-Mesh Links (Jumps, Teleports)
+## Off-Mesh Link (점프, 텔레포트)
 
-### Create Off-Mesh Link
+### Off-Mesh Link 생성
 
-1. `GameObject > Create Empty` (at jump start)
-2. Add `Off Mesh Link` component
-3. Set Start/End transforms
-4. Configure:
-   - **Bi-Directional**: Can traverse both ways
-   - **Cost Override**: Path cost for this link
+1. `GameObject > Create Empty` (점프 시작 지점)
+2. `Off Mesh Link` 컴포넌트 추가
+3. 시작/끝 Transform 설정
+4. 구성:
+   - **Bi-Directional**: 양방향 이동 가능
+   - **Cost Override**: 이 링크의 경로 비용
 
-### Detect Off-Mesh Link Traversal
+### Off-Mesh Link 통과 감지
 
 ```csharp
 void Update() {
-    // Check if agent is on an off-mesh link
+    // 에이전트가 off-mesh link 위에 있는지 확인
     if (agent.isOnOffMeshLink) {
-        // Manually traverse (e.g., play jump animation)
+        // 수동으로 통과 처리(예: 점프 애니메이션 재생)
         StartCoroutine(TraverseOffMeshLink());
     }
 }
@@ -204,19 +204,20 @@ IEnumerator TraverseOffMeshLink() {
         yield return null;
     }
 
-    agent.CompleteOffMeshLink(); // Resume normal pathfinding
+    agent.CompleteOffMeshLink(); // 일반 경로 탐색 재개
 }
 ```
 
 ---
 
-## NavMeshComponents Package (Runtime Baking)
+## NavMeshComponents 패키지 (런타임 베이킹)
 
-### Installation
+### 설치
+
 1. `Window > Package Manager`
-2. Add from Git URL: `com.unity.ai.navigation`
+2. Git URL로 추가: `com.unity.ai.navigation`
 
-### Runtime NavMesh Baking
+### 런타임 NavMesh 베이킹
 
 ```csharp
 using Unity.AI.Navigation;
@@ -225,12 +226,12 @@ public class NavMeshBuilder : MonoBehaviour {
     public NavMeshSurface surface;
 
     void Start() {
-        // Bake NavMesh at runtime
+        // 런타임에 NavMesh 베이크
         surface.BuildNavMesh();
     }
 
     void UpdateNavMesh() {
-        // Update NavMesh after terrain changes
+        // 지형 변경 후 NavMesh 업데이트
         surface.UpdateNavMesh(surface.navMeshData);
     }
 }
@@ -238,9 +239,9 @@ public class NavMeshBuilder : MonoBehaviour {
 
 ---
 
-## Common Patterns
+## 자주 쓰이는 패턴
 
-### Patrol Between Waypoints
+### 웨이포인트 사이 순찰
 
 ```csharp
 public Transform[] waypoints;
@@ -248,14 +249,14 @@ private int currentWaypoint = 0;
 
 void Update() {
     if (!agent.pathPending && agent.remainingDistance < 0.5f) {
-        // Reached waypoint, move to next
+        // 웨이포인트 도달, 다음으로 이동
         currentWaypoint = (currentWaypoint + 1) % waypoints.Length;
         agent.SetDestination(waypoints[currentWaypoint].position);
     }
 }
 ```
 
-### Chase Player
+### 플레이어 추적
 
 ```csharp
 public Transform player;
@@ -267,12 +268,12 @@ void Update() {
     if (distance <= chaseRange) {
         agent.SetDestination(player.position);
     } else {
-        agent.ResetPath(); // Stop moving
+        agent.ResetPath(); // 이동 정지
     }
 }
 ```
 
-### Flee from Player
+### 플레이어로부터 도주
 
 ```csharp
 public Transform player;
@@ -282,7 +283,7 @@ void Update() {
     float distance = Vector3.Distance(transform.position, player.position);
 
     if (distance <= fleeRange) {
-        // Run away from player
+        // 플레이어로부터 도망
         Vector3 fleeDirection = transform.position - player.position;
         Vector3 fleeTarget = transform.position + fleeDirection.normalized * 10f;
 
@@ -293,13 +294,13 @@ void Update() {
 
 ---
 
-## Debugging
+## 디버깅
 
-### NavMesh Visualization
+### NavMesh 시각화
 - `Window > AI > Navigation > Bake tab`
-- Check "Show NavMesh" to visualize walkable areas
+- "Show NavMesh" 체크로 이동 가능 영역 시각화
 
-### Agent Path Gizmos
+### 에이전트 경로 기즈모
 
 ```csharp
 void OnDrawGizmos() {
@@ -316,15 +317,15 @@ void OnDrawGizmos() {
 
 ---
 
-## Performance Tips
+## 성능 팁
 
-- **Limit Obstacle Avoidance Quality**: Use `LowQualityObstacleAvoidance` for distant agents
-- **Update Frequency**: Don't call `SetDestination()` every frame if target hasn't moved
-- **Area Masks**: Limit walkable areas to reduce pathfinding search space
-- **NavMesh Tiles**: Use tiled NavMesh for large worlds (NavMeshComponents package)
+- **장애물 회피 품질 제한**: 멀리 있는 에이전트에는 `LowQualityObstacleAvoidance` 사용
+- **업데이트 빈도**: 타겟이 움직이지 않았다면 매 프레임 `SetDestination()`을 호출하지 말 것
+- **영역 마스크**: 경로 탐색 검색 범위를 줄이기 위해 이동 가능 영역을 제한
+- **NavMesh 타일**: 대규모 월드에는 타일 기반 NavMesh 사용(NavMeshComponents 패키지)
 
 ---
 
-## Sources
+## 출처
 - https://docs.unity3d.com/6000.0/Documentation/Manual/Navigation.html
 - https://docs.unity3d.com/Packages/com.unity.ai.navigation@2.0/manual/index.html

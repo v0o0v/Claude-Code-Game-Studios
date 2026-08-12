@@ -1,23 +1,23 @@
-# Unity 6.3 — Rendering Module Reference
+# Unity 6.3 — 렌더링 모듈 레퍼런스
 
-**Last verified:** 2026-02-13
-**Knowledge Gap:** LLM trained on Unity 2022 LTS; Unity 6 has major rendering changes
-
----
-
-## Overview
-
-Unity 6.3 LTS uses **Scriptable Render Pipelines (SRP)** as the modern rendering architecture:
-- **URP (Universal Render Pipeline)**: Cross-platform, mobile-friendly (RECOMMENDED)
-- **HDRP (High Definition Render Pipeline)**: High-end PC/console, photorealistic
-- **Built-in Pipeline**: Deprecated, avoid for new projects
+**최종 확인일:** 2026-02-13
+**지식 공백:** LLM은 Unity 2022 LTS로 학습되었으며, Unity 6에는 대규모 렌더링 변경 사항이 있음
 
 ---
 
-## Key Changes from 2022 LTS
+## 개요
+
+Unity 6.3 LTS는 최신 렌더링 아키텍처로 **Scriptable Render Pipeline(SRP)**을 사용합니다:
+- **URP (Universal Render Pipeline)**: 크로스 플랫폼, 모바일 친화적 (권장)
+- **HDRP (High Definition Render Pipeline)**: 고사양 PC/콘솔용, 포토리얼리스틱
+- **Built-in Pipeline**: Deprecated, 신규 프로젝트에는 사용하지 말 것
+
+---
+
+## 2022 LTS 대비 주요 변경 사항
 
 ### RenderGraph API (Unity 6+)
-Custom render passes now use RenderGraph instead of CommandBuffer:
+커스텀 렌더 패스는 이제 CommandBuffer 대신 RenderGraph를 사용합니다:
 
 ```csharp
 // ✅ Unity 6+ (RenderGraph)
@@ -33,7 +33,7 @@ public override void Execute(ScriptableRenderContext context, ref RenderingData 
 ```
 
 ### GPU Resident Drawer (Unity 6+)
-Automatic batching for massive draw call reduction:
+대규모 드로우 콜 절감을 위한 자동 배칭:
 
 ```csharp
 // Enable in URP Asset settings:
@@ -43,14 +43,14 @@ Automatic batching for massive draw call reduction:
 
 ---
 
-## URP Quick Reference
+## URP 빠른 참조
 
-### Creating a URP Asset
+### URP Asset 생성
 1. `Assets > Create > Rendering > URP Asset (with Universal Renderer)`
-2. Assign to `Project Settings > Graphics > Scriptable Render Pipeline Settings`
+2. `Project Settings > Graphics > Scriptable Render Pipeline Settings`에 할당
 
 ### URP Renderer Features
-Add custom render passes:
+커스텀 렌더 패스 추가:
 
 ```csharp
 using UnityEngine.Rendering.Universal;
@@ -70,17 +70,17 @@ public class OutlineRendererFeature : ScriptableRendererFeature {
 
 ---
 
-## Materials & Shaders
+## 머티리얼 & 셰이더
 
-### Shader Graph (Visual Shader Editor)
-Unity 6 Shader Graph is production-ready for all shader types:
+### Shader Graph (비주얼 셰이더 에디터)
+Unity 6의 Shader Graph는 모든 셰이더 타입에 대해 프로덕션 준비가 완료되었습니다:
 
 ```csharp
 // Create: Assets > Create > Shader Graph > URP > Lit Shader Graph
 // No code needed, visual node-based editing
 ```
 
-### HLSL Custom Shaders (URP)
+### HLSL 커스텀 셰이더 (URP)
 
 ```hlsl
 // URP Lit shader template
@@ -125,16 +125,16 @@ Shader "Custom/URPLit" {
 
 ---
 
-## Lighting
+## 라이팅
 
-### Baked Lighting (Unity 6 Progressive Lightmapper)
+### 베이크드 라이팅 (Unity 6 Progressive Lightmapper)
 
 ```csharp
 // Mark objects as static: Inspector > Static > Contribute GI
 // Bake: Window > Rendering > Lighting > Generate Lighting
 ```
 
-### Real-Time Lights (URP)
+### 실시간 라이트 (URP)
 
 ```csharp
 // Main Light (Directional): Auto-handled by URP
@@ -146,9 +146,9 @@ int lightCount = GetAdditionalLightsCount();
 
 ---
 
-## Post-Processing
+## 포스트 프로세싱
 
-### Volume System (Unity 6+)
+### Volume 시스템 (Unity 6+)
 
 ```csharp
 using UnityEngine.Rendering;
@@ -167,16 +167,16 @@ if (volume.profile.TryGet<Bloom>(out var bloom)) {
 
 ---
 
-## Performance
+## 성능
 
-### SRP Batcher (Auto-batching)
+### SRP Batcher (자동 배칭)
 
 ```csharp
 // Enable: URP Asset > Advanced > SRP Batcher = Enabled
 // Batches draws with same shader variant (minimal CPU overhead)
 ```
 
-### GPU Instancing
+### GPU 인스턴싱
 
 ```csharp
 // Material: Enable "Enable GPU Instancing" checkbox
@@ -190,7 +190,7 @@ Graphics.RenderMeshInstanced(
 );
 ```
 
-### Occlusion Culling
+### 오클루전 컬링
 
 ```csharp
 // Window > Rendering > Occlusion Culling
@@ -199,9 +199,9 @@ Graphics.RenderMeshInstanced(
 
 ---
 
-## Common Patterns
+## 자주 쓰이는 패턴
 
-### Custom Camera Rendering
+### 커스텀 카메라 렌더링
 
 ```csharp
 // Get URP camera data
@@ -212,7 +212,7 @@ var camera = cameraData.camera;
 var colorTarget = cameraData.renderer.cameraColorTargetHandle;
 ```
 
-### Screen-Space Effects
+### 스크린 스페이스 이펙트
 
 ```csharp
 // Create ScriptableRendererFeature
@@ -221,18 +221,18 @@ var colorTarget = cameraData.renderer.cameraColorTargetHandle;
 
 ---
 
-## Debugging
+## 디버깅
 
 ### Frame Debugger
 - `Window > Analysis > Frame Debugger`
-- Step through draw calls, inspect state
+- 드로우 콜을 단계별로 확인하고 상태를 검사
 
 ### Rendering Debugger (Unity 6+)
 - `Window > Analysis > Rendering Debugger`
-- Live view of URP settings, overdraw, lighting
+- URP 설정, 오버드로우, 라이팅을 실시간으로 확인
 
 ---
 
-## Sources
+## 출처
 - https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@17.0/manual/index.html
 - https://docs.unity3d.com/6000.0/Documentation/Manual/render-pipelines.html
