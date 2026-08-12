@@ -54,6 +54,9 @@ AI와 함께 혼자 게임을 만드는 것은 강력하지만, 단일 채팅 �
 | **훅** | 12 | 커밋, 푸시, 에셋 변경, 세션 라이프사이클, 에이전트 감사 추적, 갭 감지에 대한 자동 검증 |
 | **규칙** | 11 | 게임플레이, 엔진, AI, UI, 네트워크 코드 등을 편집할 때 적용되는 경로 기반 코딩 표준 |
 | **템플릿** | 41 | GDD, UX 명세, ADR, 스프린트 계획, HUD 디자인, 접근성 등을 위한 문서 템플릿 |
+| **엔진 레퍼런스** | 4팩 / 58문서 | Godot·Unity·Unreal·Web 버전 고정 스냅샷 — `/setup-engine`(플러그인: `/ccgs:setup-engine`)이 선택한 엔진팩만 프로젝트로 복사 |
+
+> 위 표는 `.claude/` 템플릿 기준 개수입니다. **플러그인**(`ccgs`, 아래 "시작하기 → 방법 A")으로 설치하면 여기에 부트스트랩용 `init` 스킬이 하나 더 추가되어 스킬 74개가 됩니다.
 
 ## 스튜디오 계층구조
 
@@ -198,6 +201,8 @@ claude
 
 ## 프로젝트 구조
 
+**방법 B(템플릿 클론)**로 시작한 프로젝트의 구조입니다 — 에이전트·스킬·훅이 전부 리포 안 `.claude/`에 파일로 존재합니다:
+
 ```
 CLAUDE.md                           # Master configuration
 .claude/
@@ -218,6 +223,19 @@ tests/                              # Test suites (unit, integration, performanc
 tools/                              # Build and pipeline tools
 prototypes/                         # Throwaway prototypes (isolated from src/)
 production/                         # Sprint plans, milestones, release tracking
+```
+
+**방법 A(플러그인)**로 시작한 프로젝트는 더 가볍습니다 — 에이전트·스킬·규칙·엔진 레퍼런스 원본은
+플러그인 캐시에 있고, `/ccgs:init`이 프로젝트에는 필요한 것만 만듭니다:
+
+```
+CLAUDE.md                           # Technology Stack placeholder + CCGS 관리 블록
+.claude/
+  docs/                             # 정적 참조 문서 5종 (플러그인에서 복사) + technical-preferences.md
+  rules/                            # 11 path-scoped coding standards (플러그인에서 복사)
+.ccgs/config.yaml                   # 초기화 마커 (버전, 초기화 날짜, 리뷰 모드)
+docs/engine-reference/<engine>/     # /ccgs:setup-engine 이 선택한 엔진팩만 복사
+src/ design/ docs/ tests/ tools/ prototypes/ production/   # 방법 B와 동일한 레이아웃
 ```
 
 ## 작동 방식
@@ -327,12 +345,12 @@ Web 세트는 공유된 TypeScript/Vite/WebGPU 스택 위에서 **PixiJS**(2D), 
 
 ## 커뮤니티
 
-- **Discussions** — 질문, 아이디어 공유, 완성한 결과물 소개를 위한 [GitHub Discussions](https://github.com/Donchitos/Claude-Code-Game-Studios/discussions)
-- **Issues** — [버그 리포트 및 기능 요청](https://github.com/Donchitos/Claude-Code-Game-Studios/issues)
+- **Discussions** — 질문, 아이디어 공유, 완성한 결과물 소개를 위한 [GitHub Discussions](https://github.com/v0o0v/Claude-Code-Game-Studios/discussions)
+- **Issues** — [버그 리포트 및 기능 요청](https://github.com/v0o0v/Claude-Code-Game-Studios/issues)
 
 ---
 
-*Claude Code를 위해 제작되었습니다. 지속적으로 유지보수 및 확장되고 있으며 — [GitHub Discussions](https://github.com/Donchitos/Claude-Code-Game-Studios/discussions)를 통한 기여를 환영합니다.*
+*Claude Code를 위해 제작되었습니다. 지속적으로 유지보수 및 확장되고 있으며 — [GitHub Discussions](https://github.com/v0o0v/Claude-Code-Game-Studios/discussions)를 통한 기여를 환영합니다.*
 
 ## 라이선스
 
