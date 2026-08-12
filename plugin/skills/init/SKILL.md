@@ -45,7 +45,9 @@ assets/
 - `CLAUDE.md` — a `<!-- CCGS:BEGIN --><!-- CCGS:END -->` marked block will be
   added (or replaced, if it already exists) containing the collaboration
   protocol and directory/doc pointers. Content outside the markers is never
-  touched.
+  touched. If the file has no `## Technology Stack` section yet, a
+  placeholder one is also added outside the markers — `/ccgs:setup-engine`
+  fills it in later.
 - `.claude/docs/coordination-rules.md`, `.claude/docs/coding-standards.md`,
   `.claude/docs/context-management.md`, `.claude/docs/directory-structure.md` —
   copied from the plugin's bundled reference docs (`${CLAUDE_PLUGIN_ROOT}/docs/`)
@@ -55,6 +57,15 @@ assets/
   template only if missing (this file is meant to be filled in by
   `/ccgs:setup-engine` later — never overwritten if it already exists, even
   with `--force`, to avoid clobbering configured preferences).
+- `.claude/rules/*.md` (11 files: ai-code, data-files, design-docs,
+  engine-code, gameplay-code, narrative, network-code, prototype-code,
+  shader-code, test-standards, ui-code) — copied from the plugin's bundled
+  rules (`${CLAUDE_PLUGIN_ROOT}/rules/`) into the project's `.claude/rules/`,
+  one file at a time, skipping any that already exist (same never-overwritten
+  policy as the reference docs above, unless `--force`). These are Claude
+  Code auto-apply rules (matched by the `paths:` frontmatter glob in each
+  file against files being edited) — they are not a plugin component type, so
+  they must live in the project's own `.claude/rules/` to take effect.
 - `production/review-mode.txt` — written with content `lean` if missing (the
   default review mode; user can change to `full`, `lean`, or `solo` any time).
 - `.ccgs/config.yaml` — the project marker. Contains: `version` (plugin
@@ -67,11 +78,20 @@ assets/
   block). If `.claude/settings.json` doesn't exist, offer to create it fresh.
   If it exists, show a diff-style summary of exactly what would be added —
   never remove or change existing keys.
-  - **Not included yet**: a custom `statusLine` command. Plugins cannot ship
-    a project statusLine directly, and whether `${CLAUDE_PLUGIN_ROOT}` resolves
-    correctly inside a command written into the *project's* `settings.json`
-    (as opposed to a plugin-declared hook) is unverified. Skip this for now;
-    tell the user they can wire a statusLine manually if they want one.
+  - **Not included, by design**: a custom `statusLine` command. Checked and
+    ruled out: `${CLAUDE_PLUGIN_ROOT}` substitution only applies to commands
+    declared *inside a plugin's own manifest* (e.g. this plugin's
+    `hooks/hooks.json`, where the harness knows which plugin owns the hook it
+    is about to run). A project's `.claude/settings.json` is not part of any
+    plugin manifest, so a `statusLine.command` string written there has no
+    such context — the harness runs it as a plain shell command, and a
+    literal `${CLAUDE_PLUGIN_ROOT}` in it resolves to an empty/unset
+    variable, not the plugin's cache path. There is no reliable way for
+    `/ccgs:init` to write a working statusLine that reads plugin-bundled
+    files. Tell the user they can wire a statusLine manually if they want
+    one, pointing it at project-relative files only (e.g.
+    `production/session-state/active.md`), not at anything under the plugin
+    cache.
 
 If this is not a git repository, add a note: "This isn't a git repo — the
 `git push --force` / `git reset --hard` denials in part C still apply to any
@@ -96,10 +116,35 @@ If `[D]`: stop, no writes.
 Only after approval. Create the directories from Phase 2A (each with a
 `.gitkeep` if it would otherwise be empty).
 
-Write the CLAUDE.md block. If `CLAUDE.md` doesn't exist, create it with just
-the block. If it exists and has no `<!-- CCGS:BEGIN -->` marker, append the
-block at the end with a blank line before it. If the markers already exist
-(re-sync case), replace only the content between them.
+Write the CLAUDE.md block. If `CLAUDE.md` doesn't exist, create it with a
+`## Technology Stack` placeholder section first, then the block below it. If
+it exists and has no `<!-- CCGS:BEGIN -->` marker, append the block at the
+end with a blank line before it — and if it also has no `## Technology
+Stack` section anywhere, insert the placeholder section right before the
+appended block. If the markers already exist (re-sync case), replace only
+the content between them and leave everything else in the file — including
+any `## Technology Stack` section — untouched.
+
+**Why Technology Stack lives outside the markers**: `/ccgs:setup-engine`
+edits this section in place (replacing `[CHOOSE]` placeholders with the
+chosen engine/language, later updating it on `upgrade`). If it lived inside
+the CCGS-managed block, a re-sync (`/ccgs:init --force`) would blow away
+whatever engine was configured. Never add a Technology Stack section inside
+the markers, and never overwrite an existing one.
+
+Technology Stack placeholder (only written when the section doesn't already
+exist — never overwrite a configured one):
+```markdown
+## Technology Stack
+
+- **Engine**: [CHOOSE: Godot 4 / Unity / Unreal Engine 5 / Web (PixiJS / Three.js)]
+- **Language**: [CHOOSE: GDScript / C# / C++ / Blueprint / TypeScript]
+- **Version Control**: Git with trunk-based development
+- **Build System**: [SPECIFY after choosing engine]
+- **Asset Pipeline**: [SPECIFY after choosing engine]
+
+> Run `/ccgs:setup-engine` to fill in this section.
+```
 
 Block content:
 ```markdown
@@ -150,11 +195,17 @@ Copy the reference docs from `${CLAUDE_PLUGIN_ROOT}/docs/` into
 Do the same for the `technical-preferences.md` blank template — but check
 existence first and never touch it if present, `--force` or not.
 
+Copy each of the 11 rule files from `${CLAUDE_PLUGIN_ROOT}/rules/` into
+`.claude/rules/` (create the directory if missing), skipping any file that
+already exists at the destination.
+
 Write `production/review-mode.txt` with `lean` if missing.
 
-Write `.ccgs/config.yaml`:
+Write `.ccgs/config.yaml`, using the plugin's actual installed version (read it
+from `${CLAUDE_PLUGIN_ROOT}/.claude-plugin/plugin.json`'s `version` field —
+do not hardcode a version number):
 ```yaml
-version: "0.1.0"
+version: "[plugin.json version, e.g. 1.0.0]"
 initialized: "[today's date, YYYY-MM-DD]"
 review_mode: "lean"
 ```
@@ -183,6 +234,8 @@ Report what was created, what was skipped (already existed), and what's next:
 > Next steps:
 > 1. Run `/ccgs:setup-engine` to configure your engine (not required to start brainstorming)
 > 2. Run `/ccgs:brainstorm` to start from a game concept, or `/ccgs:map-systems` if you already have one at `design/gdd/game-concept.md`
+>
+> The 4-line summary of the collaboration protocol is now always loaded via your `CLAUDE.md`. For the full philosophy with worked examples (why this model, what "good" looks like in a real exchange), see `${CLAUDE_PLUGIN_ROOT}/docs/collaborative-design-principle.md` — optional reading, not copied into your project.
 
 If the marker already existed and this was a re-sync: report only what was
 recovered (missing dirs/files restored) — do not re-print the full next-steps

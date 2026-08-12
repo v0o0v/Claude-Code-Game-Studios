@@ -7,8 +7,8 @@
     {
       "name": "ccgs",
       "displayName": "Claude Code Game Studios",
-      "description": "Turn a Claude Code session into a coordinated game development studio. Vertical-slice preview build.",
-      "version": "0.1.0",
+      "description": "Turn a Claude Code session into a coordinated game development studio: directors, specialists, and a phase-gated pipeline from brainstorm to release.",
+      "version": "1.0.0",
       "source": "./plugin"
     }
   ]

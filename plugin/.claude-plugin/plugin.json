@@ -1,8 +1,8 @@
 {
   "name": "ccgs",
   "displayName": "Claude Code Game Studios",
-  "version": "0.1.0",
-  "description": "Turn a Claude Code session into a coordinated game development studio: directors, specialists, and a phase-gated pipeline from brainstorm to release. This is a vertical-slice preview (3 skills, 4 agents, 1 hook) validating the plugin conversion before the full 56-agent/73-skill rollout.",
+  "version": "1.0.0",
+  "description": "Turn a Claude Code session into a coordinated game development studio: 56 directors and specialists, 74 phase-gated skills from brainstorm to release, 11 auto-apply coding rules, and curated engine reference packs for Godot, Unity, Unreal, and Web.",
   "author": {
     "name": "v0o0v"
   },

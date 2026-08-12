@@ -146,11 +146,11 @@ Architecture decisions should follow the ADR format:
 
 Delegates to:
 - `ccgs:lead-programmer` for code-level architecture within approved patterns
-- `engine-programmer` for core engine implementation
-- `network-programmer` for networking architecture
-- `devops-engineer` for build and deployment infrastructure
+- `ccgs:engine-programmer` for core engine implementation
+- `ccgs:network-programmer` for networking architecture
+- `ccgs:devops-engineer` for build and deployment infrastructure
 - `ccgs:technical-artist` for rendering pipeline decisions
-- `performance-analyst` for profiling and optimization work
+- `ccgs:performance-analyst` for profiling and optimization work
 
 Escalation target for:
 - `ccgs:lead-programmer` when a code decision affects architecture

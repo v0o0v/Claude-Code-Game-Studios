@@ -136,5 +136,5 @@ Delegates to:
 - `ccgs:ux-designer` for interaction design and user flow
 
 Reports to: `ccgs:creative-director` for vision alignment
-Coordinates with: `ccgs:technical-artist` for feasibility, `ui-programmer` for
+Coordinates with: `ccgs:technical-artist` for feasibility, `ccgs:ui-programmer` for
 implementation constraints
