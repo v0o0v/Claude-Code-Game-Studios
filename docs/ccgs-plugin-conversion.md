@@ -157,3 +157,50 @@ sed -i 's|`\.claude/docs/director-gates\.md`|`${CLAUDE_PLUGIN_ROOT}/docs/directo
 `plugin/`, `.claude-plugin/`은 현재 `main` 브랜치에 **커밋되지 않은 상태**로 존재한다(작업 보존을
 위해 별도 브랜치로 옮길 예정). 테스트로 설치한 `ccgs@ccgs-marketplace`는 이 머신의 user 스코프에
 계속 활성화되어 있다(요청에 따라 유지 — 무관한 프로젝트를 열어도 마커 없으면 훅이 한 줄 안내만 함).
+
+## 7. 전체 롤아웃 완료 보고 (2026-08-13, 후속 세션)
+
+5절의 남은 작업 7개 전부 완료, `feat/ccgs-plugin-conversion` 브랜치에 커밋·push 완료
+(커밋 `f8b475a`). main으로의 PR은 사용자 승인 대기 중.
+
+**최종 구성**: 에이전트 56개, 스킬 74개(원본 73 + 신규 `init`), 규칙 11개(플러그인 번들 →
+`/ccgs:init`이 프로젝트로 복사), 엔진 레퍼런스 4팩 58문서(플러그인 번들 →
+`/ccgs:setup-engine`이 선택한 엔진팩만 프로젝트로 복사). `claude plugin details`가 보고하는
+상시 컨텍스트 비용은 실측 **~11,481 토큰**(3절의 "1만~1.5만 토큰 추정"과 일치).
+
+**§4 규칙 적용 중 새로 발견/수정한 것** (다음에 유사 작업할 때 참고):
+- 위임 목록이 백틱(`` `name` ``)뿐 아니라 **볼드**(`**name**`)로도 쓰이는 에이전트 파일이 다수
+  있었다 — 특히 엔진 전문가 에이전트의 "## Coordination" 섹션과 `team-*` 스킬의 위임 목록.
+  같은 흔한 영단어(`writer`, `world-builder`, `producer` 등) 오탐 방지 원칙을 볼드 패턴에도
+  동일하게 적용해야 한다.
+- 슬래시 커맨드 치환 정규식이 파일 경로까지 오탐한 사례 다수 발생
+  (`production/sprint-status.yaml`, `design/art/art-bible.md`, `tests/regression-suite.md` 등 —
+  스킬명과 동일한 어간을 가진 프로젝트 상대경로 파일명). 좌측 경계를 "단어문자가 아님"으로만
+  제한해도 `]`, `)` 등 다른 구두점으로 안전장치가 뚫린다 — 최종적으로는 전체 트리에 대해
+  `[a-zA-Z0-9_)\]-]/ccgs:` 패턴으로 오염 여부를 재검사해서 잡았다.
+- `.claude/docs/templates/*.md` 외에도 `.claude/docs/workflow-catalog.yaml`(YAML, `.md`가 아님)과
+  `.claude/agents/`(에이전트 정의 자체를 가리키는 경로) 참조가 스킬 본문에 있었다 — 전자는
+  `${CLAUDE_PLUGIN_ROOT}/docs/`로, 후자는 `${CLAUDE_PLUGIN_ROOT}/agents/`로 매핑.
+- **statusLine 갭 해소(검증 결과)**: `${CLAUDE_PLUGIN_ROOT}` 치환은 플러그인 자체 매니페스트에
+  선언된 컴포넌트(예: `hooks/hooks.json`의 `command`)에만 적용되고, 프로젝트 `settings.json`처럼
+  플러그인 매니페스트 밖에 있는 필드에는 적용되지 않는다(하네스가 "어느 플러그인이 이 커맨드를
+  실행하는지"를 알 방법이 없음). → `/ccgs:init`은 statusLine을 계속 다루지 않기로 확정.
+- **CLAUDE.md Technology Stack 플레이스홀더 누락**: `/ccgs:setup-engine` Section 4는
+  `CLAUDE.md`에 `[CHOOSE]` 플레이스홀더가 있는 `## Technology Stack` 섹션이 이미 있다고 가정하는데,
+  `/ccgs:init`의 스캐폴드에는 그 섹션이 없었다(실제 설치 테스트로 발견). CCGS 마커 블록 **밖**에
+  플레이스홀더 섹션을 추가하도록 수정 — 마커 안에 두면 재동기화(`--force`)가 설정된 엔진을 지워버림.
+
+**실제 설치로 검증한 것** (전부 통과):
+1. `claude plugin install`로 로컬 재설치 — `claude plugin details`가 74스킬/56에이전트/1훅 정상 인식
+2. `/ccgs:init` 전체 실행 — 디렉터리 11개, `.claude/docs/` 5개, **`.claude/rules/` 11개**(신규),
+   `production/review-mode.txt`, `.ccgs/config.yaml`, CLAUDE.md 블록 + Technology Stack
+   플레이스홀더 전부 정상 생성
+3. `/ccgs:setup-engine godot 4.6` 전체 실행 — 번들 godot 팩이 `docs/engine-reference/godot/`로
+   byte-for-byte 복사됨(WebSearch 미사용, 버전 일치로 스킵 경로 확인), unity/unreal/web 팩은
+   복사되지 않음(선택한 엔진만 복사 로직 확인)
+4. **원격 설치 검증**: `claude plugin marketplace add https://github.com/v0o0v/Claude-Code-Game-Studios.git#feat/ccgs-plugin-conversion` →
+   설치 → `claude plugin details` 결과가 로컬 설치와 동일(74/56/1). main 머지 후에는
+   브랜치 지정 없이 `claude plugin marketplace add v0o0v/Claude-Code-Game-Studios`로 동일하게 동작.
+
+**전체 트리 최종 검증**: 이중 접두(`ccgs:ccgs:`) 0건, 미변환 슬래시/백틱/볼드 참조 0건,
+파일 경로 오염 0건, CRLF 오염 0건(130개 파일 전수 스캔).
