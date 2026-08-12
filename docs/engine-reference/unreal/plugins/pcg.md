@@ -1,80 +1,80 @@
-# Unreal Engine 5.7 — PCG (Procedural Content Generation)
+# Unreal Engine 5.7 — PCG(Procedural Content Generation)
 
-**Last verified:** 2026-02-13
-**Status:** Production-Ready (as of UE 5.7)
-**Plugin:** `PCG` (built-in, enable in Plugins)
-
----
-
-## Overview
-
-**Procedural Content Generation (PCG)** is Unreal's node-based framework for generating
-procedural content at massive scale. It's designed for populating large open worlds with
-foliage, rocks, props, buildings, and other environmental detail.
-
-**Use PCG for:**
-- Procedural foliage placement (trees, grass, rocks)
-- Biome-based environment generation
-- Road/path generation
-- Building/structure placement
-- World detail population (props, clutter)
-
-**DON'T use PCG for:**
-- Gameplay logic (use Blueprints/C++)
-- One-off manual placement (use editor tools)
-
-**⚠️ Note:** PCG was experimental in UE 5.0-5.6, became production-ready in UE 5.7.
+**최종 확인일:** 2026-02-13
+**상태:** 프로덕션 레디(UE 5.7 기준)
+**플러그인:** `PCG` (기본 내장, Plugins에서 활성화)
 
 ---
 
-## Core Concepts
+## 개요
+
+**Procedural Content Generation(PCG)**은 대규모로 프로시저럴 콘텐츠를 생성하기 위한
+Unreal의 노드 기반 프레임워크다. 대형 오픈 월드에 식생, 바위, 소품, 건물 및 기타
+환경 디테일을 채워 넣기 위해 설계되었다.
+
+**PCG를 사용해야 하는 경우:**
+- 프로시저럴 식생 배치(나무, 잔디, 바위)
+- 바이옴 기반 환경 생성
+- 도로/경로 생성
+- 건물/구조물 배치
+- 월드 디테일 채우기(소품, 잡동사니)
+
+**PCG를 사용하지 말아야 하는 경우:**
+- 게임플레이 로직(Blueprint/C++를 사용할 것)
+- 일회성 수동 배치(에디터 도구를 사용할 것)
+
+**⚠️ 참고:** PCG는 UE 5.0~5.6에서 실험적 단계였으며, UE 5.7에서 프로덕션 레디가 되었다.
+
+---
+
+## 핵심 개념
 
 ### 1. **PCG Graph**
-- Node-based graph (similar to Material Editor)
-- Defines generation rules
+- 노드 기반 그래프(Material Editor와 유사)
+- 생성 규칙을 정의
 
 ### 2. **PCG Component**
-- Placed in level, executes PCG Graph
-- Generates content in defined volume
+- 레벨에 배치되어 PCG Graph를 실행
+- 정의된 볼륨 내에서 콘텐츠를 생성
 
 ### 3. **PCG Data**
-- Point data (positions, rotations, scales)
-- Spline data (paths, roads, rivers)
-- Volume data (density, biome masks)
+- 포인트 데이터(위치, 회전, 스케일)
+- 스플라인 데이터(경로, 도로, 강)
+- 볼륨 데이터(밀도, 바이옴 마스크)
 
 ### 4. **Nodes**
-- **Samplers**: Generate points (Grid, Poisson, Surface)
-- **Filters**: Remove points based on rules (Density, Tag, Bounds)
-- **Modifiers**: Transform points (Offset, Rotate, Scale)
-- **Spawners**: Instantiate meshes/actors at points
+- **Samplers**: 포인트를 생성(Grid, Poisson, Surface)
+- **Filters**: 규칙에 따라 포인트를 제거(Density, Tag, Bounds)
+- **Modifiers**: 포인트를 변형(Offset, Rotate, Scale)
+- **Spawners**: 포인트 위치에 메시/액터를 인스턴스화
 
 ---
 
-## Setup
+## 설정
 
-### 1. Enable Plugin
+### 1. 플러그인 활성화
 
 `Edit > Plugins > PCG > Enabled > Restart`
 
-### 2. Create PCG Volume
+### 2. PCG Volume 생성
 
 1. Place Actors > Volumes > PCG Volume
-2. Scale volume to desired generation area
+2. 원하는 생성 영역에 맞게 볼륨 크기를 조정
 
-### 3. Create PCG Graph
+### 3. PCG Graph 생성
 
 1. Content Browser > PCG > PCG Graph
-2. Open PCG Graph Editor
+2. PCG Graph 에디터를 연다
 
 ---
 
-## Basic Workflow
+## 기본 워크플로
 
-### Example: Forest Generation
+### 예시: 숲 생성
 
-#### 1. Create PCG Graph
+#### 1. PCG Graph 생성
 
-**Node Setup:**
+**노드 구성:**
 ```
 Input (Volume)
   ↓
@@ -87,105 +87,105 @@ Static Mesh Spawner (tree meshes)
 Output
 ```
 
-#### 2. Assign Graph to Volume
+#### 2. Volume에 그래프 할당
 
-1. Select PCG Volume
-2. Details Panel > PCG Component > Graph = Your PCG Graph
-3. Click "Generate" button
+1. PCG Volume을 선택
+2. Details Panel > PCG Component > Graph = 작성한 PCG Graph
+3. "Generate" 버튼 클릭
 
 ---
 
-## Key Node Types
+## 주요 노드 유형
 
-### Samplers (Point Generation)
+### Samplers(포인트 생성)
 
 #### Grid Sampler
-- Regular grid of points
-- Configure:
-  - **Grid Size**: Distance between points
-  - **Offset**: Random offset per point
+- 규칙적인 격자 형태의 포인트
+- 구성 항목:
+  - **Grid Size**: 포인트 간 거리
+  - **Offset**: 포인트별 랜덤 오프셋
 
 #### Poisson Disk Sampler
-- Random points with minimum distance
-- Configure:
-  - **Points Per m²**: Density
-  - **Min Distance**: Spacing between points
+- 최소 거리를 유지하는 랜덤 포인트
+- 구성 항목:
+  - **Points Per m²**: 밀도
+  - **Min Distance**: 포인트 간 간격
 
 #### Surface Sampler
-- Points on mesh surfaces or landscape
-- Configure:
-  - **Points Per m²**: Density
-  - **Surface Only**: Only surface, not volume
+- 메시 표면 또는 랜드스케이프 위의 포인트
+- 구성 항목:
+  - **Points Per m²**: 밀도
+  - **Surface Only**: 볼륨이 아닌 표면에만 적용
 
 ---
 
-### Filters (Point Removal)
+### Filters(포인트 제거)
 
 #### Density Filter
-- Remove points based on density value
-- Input: Texture or noise
-- Use for: Biome masks, clearings, paths
+- 밀도 값에 따라 포인트를 제거
+- 입력: 텍스처 또는 노이즈
+- 용도: 바이옴 마스크, 공터, 경로
 
 #### Tag Filter
-- Filter points by tag
-- Use for: Conditional spawning
+- 태그를 기준으로 포인트를 필터링
+- 용도: 조건부 스폰
 
 #### Bounds Filter
-- Keep only points within bounds
-- Use for: Limiting generation to specific areas
+- 경계 내부의 포인트만 유지
+- 용도: 특정 영역으로 생성 범위 제한
 
 ---
 
-### Modifiers (Point Transformation)
+### Modifiers(포인트 변형)
 
 #### Rotate
-- Randomize point rotation
-- Configure:
-  - **Min/Max Rotation**: Rotation range per axis
+- 포인트 회전을 무작위화
+- 구성 항목:
+  - **Min/Max Rotation**: 축별 회전 범위
 
 #### Scale
-- Randomize point scale
-- Configure:
-  - **Min/Max Scale**: Scale range
+- 포인트 스케일을 무작위화
+- 구성 항목:
+  - **Min/Max Scale**: 스케일 범위
 
 #### Project to Ground
-- Snap points to landscape surface
+- 포인트를 랜드스케이프 표면에 스냅
 
 ---
 
-### Spawners (Mesh/Actor Instantiation)
+### Spawners(메시/액터 인스턴스화)
 
 #### Static Mesh Spawner
-- Spawn static meshes at points
-- Configure:
-  - **Mesh List**: Array of meshes (random selection)
-  - **Culling Distance**: LOD/culling settings
+- 포인트 위치에 스태틱 메시를 스폰
+- 구성 항목:
+  - **Mesh List**: 메시 배열(무작위 선택)
+  - **Culling Distance**: LOD/컬링 설정
 
 #### Actor Spawner
-- Spawn Blueprint actors at points
-- Use for: Gameplay actors, interactive objects
+- 포인트 위치에 Blueprint 액터를 스폰
+- 용도: 게임플레이 액터, 상호작용 오브젝트
 
 ---
 
-## Data Sources
+## 데이터 소스
 
 ### Landscape
-- Use landscape as input for sampling
-- Automatically projects to landscape height
+- 랜드스케이프를 샘플링 입력으로 사용
+- 랜드스케이프 높이에 자동으로 투영
 
 ### Splines
-- Generate content along splines (roads, rivers, paths)
-- Example: Trees along path
+- 스플라인을 따라 콘텐츠를 생성(도로, 강, 경로)
+- 예시: 경로를 따라 배치되는 나무
 
 ### Textures
-- Use textures as density masks
-- Paint biomes, clearings, areas
+- 텍스처를 밀도 마스크로 사용
+- 바이옴, 공터, 영역을 페인팅
 
 ---
 
-## Biome Example (Mixed Forest)
+## 바이옴 예시(혼합림)
 
-### Graph Setup
+### 그래프 구성
 
 ```
 Input (Landscape)
@@ -206,9 +206,9 @@ Output
 
 ---
 
-## Spline-Based Generation (Road with Trees)
+## 스플라인 기반 생성(가로수가 있는 도로)
 
-### 1. Create PCG Graph
+### 1. PCG Graph 생성
 
 ```
 Spline Input
@@ -222,17 +222,17 @@ Tree Spawner
 Output
 ```
 
-### 2. Add Spline Component to PCG Volume
+### 2. PCG Volume에 Spline Component 추가
 
 1. PCG Volume > Add Component > Spline
-2. Draw spline path
-3. PCG Graph reads spline data
+2. 스플라인 경로를 그린다
+3. PCG Graph가 스플라인 데이터를 읽는다
 
 ---
 
-## Runtime Generation
+## 런타임 생성
 
-### Trigger Generation from C++
+### C++에서 생성 트리거
 
 ```cpp
 #include "PCGComponent.h"
@@ -241,23 +241,23 @@ UPCGComponent* PCGComp = /* Get PCG Component */;
 PCGComp->Generate(); // Execute PCG graph
 ```
 
-### Stream Generation (Large Worlds)
+### 스트리밍 생성(대형 월드)
 
-- PCG automatically streams with World Partition
-- Only generates content in loaded cells
+- PCG는 World Partition과 함께 자동으로 스트리밍된다
+- 로드된 셀 내부에서만 콘텐츠를 생성한다
 
 ---
 
-## Performance
+## 성능
 
-### Optimization Tips
+### 최적화 팁
 
-- Use **culling distance** on spawned meshes (LOD)
-- Limit **density** (fewer points = better performance)
-- Use **Hierarchical Instanced Static Meshes (HISM)** for repeated meshes
-- Enable **streaming** for large worlds
+- 스폰된 메시에 **culling distance**(LOD)를 사용한다
+- **밀도**를 제한한다(포인트 수가 적을수록 성능이 좋다)
+- 반복되는 메시에는 **Hierarchical Instanced Static Meshes(HISM)**를 사용한다
+- 대형 월드에서는 **streaming**을 활성화한다
 
-### Debug Performance
+### 성능 디버깅
 
 ```cpp
 // Console commands:
@@ -267,9 +267,9 @@ PCGComp->Generate(); // Execute PCG graph
 
 ---
 
-## Common Patterns
+## 일반적인 패턴
 
-### Forest with Clearings
+### 공터가 있는 숲
 
 ```
 Surface Sampler
@@ -281,7 +281,7 @@ Tree Spawner (pine, oak, birch)
 
 ---
 
-### Rocks on Steep Slopes
+### 급경사면의 바위
 
 ```
 Landscape Input
@@ -295,7 +295,7 @@ Rock Spawner
 
 ---
 
-### Props Along Road
+### 도로변 소품
 
 ```
 Spline Input (road spline)
@@ -309,9 +309,9 @@ Street Light Spawner
 
 ---
 
-## Debugging
+## 디버깅
 
-### PCG Debug Visualization
+### PCG 디버그 시각화
 
 ```cpp
 // Console commands:
@@ -319,16 +319,16 @@ Street Light Spawner
 // pcg.debug.colormode points - Color-code points
 ```
 
-### Graph Debugging
+### 그래프 디버깅
 
 - PCG Graph Editor > Debug > Show Debug Points
-- Visualize points at each node in the graph
+- 그래프의 각 노드에서 포인트를 시각화
 
 ---
 
-## Migration from UE 5.6 (Experimental) to 5.7 (Production)
+## UE 5.6(실험적)에서 5.7(프로덕션)로 마이그레이션
 
-### API Changes
+### API 변경 사항
 
 ```cpp
 // ❌ OLD (5.6 experimental API):
@@ -338,19 +338,19 @@ Street Light Spawner
 // Stable node types, documented API
 ```
 
-**Migration:** Rebuild PCG graphs using stable 5.7 nodes. Test thoroughly.
+**마이그레이션:** 안정화된 5.7 노드를 사용해 PCG 그래프를 재구성할 것. 충분히 테스트할 것.
 
 ---
 
-## Limitations
+## 제약 사항
 
-- **Not for gameplay logic**: Use Blueprints/C++ for game rules
-- **Large graphs can be slow**: Optimize with filters and density reduction
-- **Runtime generation overhead**: Pre-generate when possible
+- **게임플레이 로직에는 사용 불가**: 게임 규칙에는 Blueprint/C++를 사용할 것
+- **큰 그래프는 느려질 수 있음**: 필터와 밀도 축소로 최적화할 것
+- **런타임 생성 오버헤드**: 가능하면 사전 생성(pre-generate)할 것
 
 ---
 
-## Sources
+## 출처
 - https://docs.unrealengine.com/5.7/en-US/procedural-content-generation-in-unreal-engine/
 - https://docs.unrealengine.com/5.7/en-US/pcg-quick-start-in-unreal-engine/
-- UE 5.7 Release Notes (PCG Production-Ready announcement)
+- UE 5.7 릴리스 노트(PCG 프로덕션 레디 발표)

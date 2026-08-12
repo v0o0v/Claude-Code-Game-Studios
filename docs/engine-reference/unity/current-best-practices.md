@@ -1,28 +1,28 @@
-# Unity 6.3 LTS — Current Best Practices
+# Unity 6.3 LTS — 현재의 모범 사례
 
-**Last verified:** 2026-02-13
+**최종 확인일:** 2026-02-13
 
-Modern Unity 6 patterns that may not be in the LLM's training data.
-These are production-ready recommendations as of Unity 6.3 LTS.
-
----
-
-## Project Setup
-
-### Use Unity 6.3 LTS for Production
-- **Tech Stream** (6.4+): Latest features, less stable
-- **LTS** (6.3): Production-ready, 2-year support (until Dec 2027)
-
-### Choose the Right Render Pipeline
-- **URP (Universal)**: Mobile, cross-platform, good performance ✅ Recommended for most games
-- **HDRP (High Definition)**: High-end PC/console, photorealistic
-- **Built-in**: Deprecated, avoid for new projects
+LLM의 학습 데이터에 없을 수 있는 현대적인 Unity 6 패턴들이다.
+Unity 6.3 LTS 기준으로 프로덕션에 적합한 권장 사항들이다.
 
 ---
 
-## Scripting
+## 프로젝트 설정
 
-### Use C# 9+ Features (Unity 6 Supports C# 9)
+### 프로덕션에는 Unity 6.3 LTS를 사용할 것
+- **테크 스트림**(6.4+): 최신 기능, 안정성은 낮음
+- **LTS**(6.3): 프로덕션에 적합, 2년 지원(2027년 12월까지)
+
+### 적절한 렌더 파이프라인을 선택할 것
+- **URP(Universal)**: 모바일, 크로스플랫폼, 좋은 성능 ✅ 대부분의 게임에 권장
+- **HDRP(High Definition)**: 하이엔드 PC/콘솔, 포토리얼리스틱
+- **Built-in**: 폐기 예정, 신규 프로젝트에는 피할 것
+
+---
+
+## 스크립팅
+
+### C# 9+ 기능을 사용할 것(Unity 6은 C# 9를 지원)
 
 ```csharp
 // ✅ Record types for data
@@ -41,7 +41,7 @@ var result = enemy switch {
 };
 ```
 
-### Async/Await for Asset Loading
+### 에셋 로딩에는 Async/Await를 사용할 것
 
 ```csharp
 // ✅ Modern async pattern
@@ -51,7 +51,7 @@ public async Task<GameObject> LoadEnemyAsync(string key) {
 }
 ```
 
-### Use Source Generators for Serialization (Unity 6+)
+### 직렬화에는 소스 생성기를 사용할 것(Unity 6+)
 
 ```csharp
 // ✅ Source-generated serialization (faster, less reflection)
@@ -64,9 +64,9 @@ public partial struct PlayerStats : IComponentData {
 
 ---
 
-## DOTS/ECS (Production-Ready in Unity 6.3 LTS)
+## DOTS/ECS(Unity 6.3 LTS에서 프로덕션 준비 완료)
 
-### Use ISystem (Not ComponentSystem)
+### ComponentSystem이 아닌 ISystem을 사용할 것
 
 ```csharp
 // ✅ Modern unmanaged ISystem (Burst-compatible)
@@ -82,7 +82,7 @@ public partial struct MovementSystem : ISystem {
 }
 ```
 
-### Use IJobEntity for Parallel Jobs
+### 병렬 잡에는 IJobEntity를 사용할 것
 
 ```csharp
 // ✅ IJobEntity (replaces IJobForEach)
@@ -102,9 +102,9 @@ job.ScheduleParallel();
 
 ---
 
-## Input
+## 입력
 
-### Use Input System Package (Not Legacy Input)
+### (레거시 Input이 아닌) Input System 패키지를 사용할 것
 
 ```csharp
 // ✅ Input Actions (rebindable, cross-platform)
@@ -123,13 +123,13 @@ public class PlayerInput : MonoBehaviour {
 }
 ```
 
-Create Input Actions asset in editor, generate C# class via inspector.
+에디터에서 Input Actions 에셋을 생성하고, 인스펙터를 통해 C# 클래스를 생성한다.
 
 ---
 
 ## UI
 
-### Use UI Toolkit for Runtime UI (Production-Ready in Unity 6)
+### 런타임 UI에는 UI Toolkit을 사용할 것(Unity 6에서 프로덕션 준비 완료)
 
 ```csharp
 // ✅ UI Toolkit (replaces UGUI for new projects)
@@ -148,13 +148,13 @@ public class MainMenu : MonoBehaviour {
 }
 ```
 
-**UXML** (UI structure) + **USS** (styling) = HTML/CSS-like workflow.
+**UXML**(UI 구조) + **USS**(스타일링) = HTML/CSS와 유사한 워크플로.
 
 ---
 
-## Asset Management
+## 에셋 관리
 
-### Use Addressables (Not Resources)
+### (Resources가 아닌) Addressables를 사용할 것
 
 ```csharp
 // ✅ Addressables (async, memory-efficient)
@@ -169,13 +169,13 @@ public async Task SpawnEnemyAsync(string enemyKey) {
 }
 ```
 
-**Benefits:** Async loading, remote content delivery, better memory control.
+**이점:** 비동기 로딩, 원격 콘텐츠 전달, 더 나은 메모리 제어.
 
 ---
 
-## Rendering
+## 렌더링
 
-### Use RenderGraph API for Custom Passes (URP/HDRP)
+### 커스텀 패스에는 RenderGraph API를 사용할 것(URP/HDRP)
 
 ```csharp
 // ✅ RenderGraph API (Unity 6+)
@@ -189,13 +189,13 @@ public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer
 }
 ```
 
-**Replaces:** Old `CommandBuffer.Execute()` pattern.
+**대체 대상:** 기존의 `CommandBuffer.Execute()` 패턴.
 
 ---
 
-## Performance
+## 성능
 
-### Use Burst Compiler + Jobs System
+### Burst 컴파일러 + Jobs 시스템을 사용할 것
 
 ```csharp
 // ✅ Burst-compiled job (massive performance gain)
@@ -219,11 +219,11 @@ var job = new ParticleUpdateJob {
 job.Schedule(positions.Length, 64).Complete();
 ```
 
-**20-100x faster** than equivalent C# code.
+동등한 C# 코드보다 **20~100배 더 빠르다.**
 
 ---
 
-### Use GPU Instancing for Repeated Objects
+### 반복되는 오브젝트에는 GPU 인스턴싱을 사용할 것
 
 ```csharp
 // ✅ GPU Instancing (thousands of objects, minimal draw calls)
@@ -237,9 +237,9 @@ Graphics.RenderMeshInstanced(
 
 ---
 
-## Memory Management
+## 메모리 관리
 
-### Use NativeContainers (Not Managed Arrays in Jobs)
+### (잡 안에서 관리형 배열이 아닌) NativeContainer를 사용할 것
 
 ```csharp
 // ✅ NativeArray (no GC, Burst-compatible)
@@ -254,9 +254,9 @@ using var data = new NativeArray<int>(1000, Allocator.TempJob);
 
 ---
 
-## Multiplayer
+## 멀티플레이어
 
-### Use Netcode for GameObjects (Official)
+### (공식) Netcode for GameObjects를 사용할 것
 
 ```csharp
 // ✅ Unity's official netcode
@@ -272,13 +272,13 @@ public class Player : NetworkBehaviour {
 }
 ```
 
-**Replaces:** UNet (deprecated), MLAPI (renamed to Netcode for GameObjects).
+**대체 대상:** UNet(폐기 예정), MLAPI(Netcode for GameObjects로 명칭 변경됨).
 
 ---
 
-## Testing
+## 테스트
 
-### Use Unity Test Framework (NUnit-based)
+### Unity Test Framework(NUnit 기반)를 사용할 것
 
 ```csharp
 // ✅ Play Mode Test
@@ -296,9 +296,9 @@ public IEnumerator Player_TakesDamage_HealthDecreases() {
 
 ---
 
-## Debugging
+## 디버깅
 
-### Use Logging Best Practices
+### 로깅 모범 사례를 따를 것
 
 ```csharp
 // ✅ Structured logging (Unity 6+)
@@ -314,21 +314,21 @@ Debug.Log($"Player {playerName} scored {score} points");
 
 ---
 
-## Summary: Unity 6 Tech Stack
+## 요약: Unity 6 기술 스택
 
-| Feature | Use This (2026) | Avoid This (Legacy) |
+| 기능 | 이것을 사용(2026년 기준) | 이것은 피할 것(레거시) |
 |---------|------------------|----------------------|
-| **Input** | Input System package | `Input` class |
-| **UI** | UI Toolkit | UGUI (Canvas) |
+| **입력** | Input System 패키지 | `Input` 클래스 |
+| **UI** | UI Toolkit | UGUI(Canvas) |
 | **ECS** | ISystem + IJobEntity | ComponentSystem |
-| **Rendering** | URP + RenderGraph | Built-in pipeline |
-| **Assets** | Addressables | Resources |
-| **Jobs** | Burst + IJobParallelFor | Coroutines for heavy work |
-| **Multiplayer** | Netcode for GameObjects | UNet |
+| **렌더링** | URP + RenderGraph | Built-in 파이프라인 |
+| **에셋** | Addressables | Resources |
+| **잡** | Burst + IJobParallelFor | 무거운 작업에 코루틴 사용 |
+| **멀티플레이어** | Netcode for GameObjects | UNet |
 
 ---
 
-**Sources:**
+**출처:**
 - https://docs.unity3d.com/6000.0/Documentation/Manual/BestPracticeGuides.html
 - https://docs.unity3d.com/Packages/com.unity.entities@1.3/manual/index.html
 - https://docs.unity3d.com/Packages/com.unity.inputsystem@1.11/manual/index.html

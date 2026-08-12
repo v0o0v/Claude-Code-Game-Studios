@@ -1,57 +1,57 @@
-# Unreal Engine 5.7 — Gameplay Ability System (GAS)
+# Unreal Engine 5.7 — Gameplay Ability System(GAS)
 
-**Last verified:** 2026-02-13
-**Status:** Production-Ready
-**Plugin:** `GameplayAbilities` (built-in, enable in Plugins)
-
----
-
-## Overview
-
-**Gameplay Ability System (GAS)** is a modular framework for building abilities, attributes,
-effects, and gameplay mechanics. It's the standard for RPGs, MOBAs, shooters with abilities,
-and any game with complex ability systems.
-
-**Use GAS for:**
-- Character abilities (spells, skills, attacks)
-- Attributes (health, mana, stamina, stats)
-- Buffs/debuffs (temporary effects)
-- Cooldowns and costs
-- Damage calculation
-- Multiplayer-ready ability replication
+**최종 확인일:** 2026-02-13
+**상태:** 프로덕션 레디
+**플러그인:** `GameplayAbilities` (기본 내장, Plugins에서 활성화)
 
 ---
 
-## Core Concepts
+## 개요
 
-### 1. **Ability System Component** (ASC)
-- The main component that owns abilities, attributes, and effects
-- Added to Characters or PlayerStates
+**Gameplay Ability System(GAS)**은 어빌리티, 속성(attribute), 이펙트, 게임플레이
+메커니즘을 구축하기 위한 모듈형 프레임워크다. RPG, MOBA, 어빌리티가 있는 슈터,
+그리고 복잡한 어빌리티 시스템을 가진 모든 게임의 표준으로 자리 잡고 있다.
+
+**GAS를 사용해야 하는 경우:**
+- 캐릭터 어빌리티(스펠, 스킬, 공격)
+- 속성(체력, 마나, 스태미나, 스탯)
+- 버프/디버프(일시적 이펙트)
+- 쿨다운 및 소모 비용
+- 데미지 계산
+- 멀티플레이어 대응 어빌리티 복제
+
+---
+
+## 핵심 개념
+
+### 1. **Ability System Component**(ASC)
+- 어빌리티, 속성, 이펙트를 소유하는 메인 컴포넌트
+- Character 또는 PlayerState에 추가
 
 ### 2. **Gameplay Abilities**
-- Individual skills/actions (fireball, heal, dash, etc.)
-- Activated, committed (cost/cooldown), and can be cancelled
+- 개별 스킬/액션(파이어볼, 힐, 대시 등)
+- 활성화(activate), 커밋(commit, 비용/쿨다운 처리)되며 취소도 가능
 
-### 3. **Attributes & Attribute Sets**
-- Stats that can be modified (Health, Mana, Stamina, Strength, etc.)
-- Stored in Attribute Sets
+### 3. **속성 & 속성 세트(Attribute Sets)**
+- 수정 가능한 스탯(체력, 마나, 스태미나, 힘 등)
+- Attribute Set에 저장
 
 ### 4. **Gameplay Effects**
-- Modify attributes (damage, healing, buffs, debuffs)
-- Can be instant, duration-based, or infinite
+- 속성을 수정(데미지, 회복, 버프, 디버프)
+- 즉시 적용, 지속시간 기반, 또는 무한 지속 방식으로 동작 가능
 
 ### 5. **Gameplay Tags**
-- Hierarchical tags for ability logic (e.g., `Ability.Attack.Melee`, `Status.Stunned`)
+- 어빌리티 로직을 위한 계층적 태그(예: `Ability.Attack.Melee`, `Status.Stunned`)
 
 ---
 
-## Setup
+## 설정
 
-### 1. Enable Plugin
+### 1. 플러그인 활성화
 
 `Edit > Plugins > Gameplay Abilities > Enabled > Restart`
 
-### 2. Add Ability System Component
+### 2. Ability System Component 추가
 
 ```cpp
 #include "AbilitySystemComponent.h"
@@ -81,7 +81,7 @@ protected:
 };
 ```
 
-### 3. Initialize ASC (Important for Multiplayer)
+### 3. ASC 초기화(멀티플레이어에서 중요)
 
 ```cpp
 void AMyCharacter::PossessedBy(AController* NewController) {
@@ -106,9 +106,9 @@ void AMyCharacter::OnRep_PlayerState() {
 
 ---
 
-## Attributes & Attribute Sets
+## 속성 & 속성 세트
 
-### Create Attribute Set
+### 속성 세트 생성
 
 ```cpp
 #include "AttributeSet.h"
@@ -149,7 +149,7 @@ protected:
 };
 ```
 
-### Implement Attribute Set
+### 속성 세트 구현
 
 ```cpp
 #include "Net/UnrealNetwork.h"
@@ -180,7 +180,7 @@ void UMyAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) {
 
 ## Gameplay Abilities
 
-### Create Gameplay Ability
+### Gameplay Ability 생성
 
 ```cpp
 #include "Abilities/GameplayAbility.h"
@@ -221,7 +221,7 @@ public:
 };
 ```
 
-### Grant Abilities to Character
+### 캐릭터에 어빌리티 부여
 
 ```cpp
 void AMyCharacter::GiveDefaultAbilities() {
@@ -233,7 +233,7 @@ void AMyCharacter::GiveDefaultAbilities() {
 }
 ```
 
-### Activate Ability
+### 어빌리티 활성화
 
 ```cpp
 // Activate by class
@@ -249,7 +249,7 @@ AbilitySystemComponent->TryActivateAbilitiesByTag(TagContainer);
 
 ## Gameplay Effects
 
-### Create Gameplay Effect (Damage)
+### Gameplay Effect 생성(데미지)
 
 ```cpp
 // Create Blueprint: Content Browser > Gameplay > Gameplay Effect
@@ -275,7 +275,7 @@ public:
 };
 ```
 
-### Apply Gameplay Effect
+### Gameplay Effect 적용
 
 ```cpp
 // Apply damage to target
@@ -296,11 +296,11 @@ if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbil
 
 ## Gameplay Tags
 
-### Define Tags
+### 태그 정의
 
 `Project Settings > Project > Gameplay Tags > Gameplay Tag List`
 
-Example hierarchy:
+계층 구조 예시:
 ```
 Ability
   ├─ Ability.Attack
@@ -315,7 +315,7 @@ Status
   └─ Status.Silenced
 ```
 
-### Use Tags in Abilities
+### 어빌리티에서 태그 사용
 
 ```cpp
 UCLASS()
@@ -341,9 +341,9 @@ public:
 
 ---
 
-## Cooldowns & Costs
+## 쿨다운 & 소모 비용
 
-### Add Cooldown
+### 쿨다운 추가
 
 ```cpp
 // In Ability Blueprint or C++:
@@ -351,7 +351,7 @@ public:
 // Assign to Ability > Cooldown Gameplay Effect Class
 ```
 
-### Add Cost (Mana)
+### 소모 비용 추가(마나)
 
 ```cpp
 // Create Gameplay Effect that reduces Mana
@@ -360,15 +360,15 @@ public:
 
 ---
 
-## Common Patterns
+## 일반적인 패턴
 
-### Get Current Attribute Value
+### 현재 속성 값 가져오기
 
 ```cpp
 float CurrentHealth = AbilitySystemComponent->GetNumericAttribute(UMyAttributeSet::GetHealthAttribute());
 ```
 
-### Listen for Attribute Changes
+### 속성 변경 리스닝
 
 ```cpp
 AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UMyAttributeSet::GetHealthAttribute())
@@ -381,6 +381,6 @@ void AMyCharacter::OnHealthChanged(const FOnAttributeChangeData& Data) {
 
 ---
 
-## Sources
+## 출처
 - https://docs.unrealengine.com/5.7/en-US/gameplay-ability-system-for-unreal-engine/
-- https://github.com/tranek/GASDocumentation (community guide)
+- https://github.com/tranek/GASDocumentation (커뮤니티 가이드)

@@ -1,52 +1,52 @@
 # Unreal Engine 5.7 — Gameplay Camera System
 
-**Last verified:** 2026-02-13
-**Status:** ⚠️ Experimental (introduced in UE 5.5)
-**Plugin:** `GameplayCameras` (built-in, enable in Plugins)
+**최종 확인일:** 2026-02-13
+**상태:** ⚠️ 실험적(UE 5.5에서 도입)
+**플러그인:** `GameplayCameras` (기본 내장, Plugins에서 활성화)
 
 ---
 
-## Overview
+## 개요
 
-**Gameplay Camera System** is a modular camera management framework introduced in UE 5.5.
-It replaces traditional camera setups with a flexible, node-based system that handles
-camera modes, blending, and context-aware camera behavior.
+**Gameplay Camera System**은 UE 5.5에서 도입된 모듈형 카메라 관리 프레임워크다.
+전통적인 카메라 구성 방식을 대체하며, 카메라 모드, 블렌딩, 상황 인지형 카메라
+동작을 처리하는 유연한 노드 기반 시스템이다.
 
-**Use Gameplay Cameras for:**
-- Dynamic camera behavior (3rd person, aiming, vehicles, cinematic)
-- Context-aware camera switching (combat, exploration, dialogue)
-- Smooth camera blending between modes
-- Procedural camera motion (camera shake, lag, offset)
+**Gameplay Cameras를 사용해야 하는 경우:**
+- 동적 카메라 동작(3인칭, 조준, 차량, 시네마틱)
+- 상황 인지형 카메라 전환(전투, 탐험, 대화)
+- 모드 간 부드러운 카메라 블렌딩
+- 프로시저럴 카메라 모션(카메라 셰이크, 랙, 오프셋)
 
-**⚠️ Warning:** This plugin is experimental in UE 5.5-5.7. Expect API changes in future versions.
+**⚠️ 주의:** 이 플러그인은 UE 5.5~5.7에서 실험적 단계다. 향후 버전에서 API 변경이 있을 수 있다.
 
 ---
 
-## Core Concepts
+## 핵심 개념
 
 ### 1. **Camera Rig**
-- Defines camera configuration (position, rotation, FOV, etc.)
-- Modular node graph (similar to Material Editor)
+- 카메라 구성(위치, 회전, FOV 등)을 정의
+- 모듈형 노드 그래프(Material Editor와 유사)
 
 ### 2. **Camera Director**
-- Manages which camera rig is active
-- Handles blending between camera rigs
+- 현재 활성화된 카메라 리그를 관리
+- 카메라 리그 간 블렌딩을 처리
 
 ### 3. **Camera Nodes**
-- Building blocks for camera behavior:
-  - **Position Nodes**: Orbit, Follow, Fixed Position
-  - **Rotation Nodes**: Look At, Match Actor Rotation
-  - **Modifiers**: Camera Shake, Lag, Offset
+- 카메라 동작을 구성하는 빌딩 블록:
+  - **Position Nodes**: 오빗(Orbit), 팔로우(Follow), 고정 위치(Fixed Position)
+  - **Rotation Nodes**: Look At, 액터 회전 매칭
+  - **Modifiers**: 카메라 셰이크, 랙, 오프셋
 
 ---
 
-## Setup
+## 설정
 
-### 1. Enable Plugin
+### 1. 플러그인 활성화
 
 `Edit > Plugins > Gameplay Cameras > Enabled > Restart`
 
-### 2. Add Camera Component
+### 2. Camera Component 추가
 
 ```cpp
 #include "GameplayCameras/Public/GameplayCameraComponent.h"
@@ -70,16 +70,16 @@ protected:
 
 ---
 
-## Create Camera Rig
+## Camera Rig 생성
 
-### 1. Create Camera Rig Asset
+### 1. Camera Rig 애셋 생성
 
 1. Content Browser > Gameplay > Gameplay Camera Rig
-2. Open Camera Rig Editor (node-based graph)
+2. Camera Rig 에디터(노드 기반 그래프)를 연다
 
-### 2. Build Camera Rig (Example: Third Person)
+### 2. Camera Rig 구성(예시: 3인칭)
 
-**Node Setup:**
+**노드 구성:**
 ```
 Actor Position (Character)
   ↓
@@ -98,60 +98,60 @@ Camera Output
 
 ### Position Nodes
 
-#### Orbit Node (Third Person)
-- Orbits around target actor
-- Configure:
-  - **Orbit Distance**: Distance from target (e.g., 300 units)
-  - **Pitch Range**: Min/Max pitch angles
-  - **Yaw Range**: Min/Max yaw angles
+#### Orbit Node(3인칭)
+- 대상 액터를 중심으로 궤도 회전
+- 구성 항목:
+  - **Orbit Distance**: 대상과의 거리(예: 300 유닛)
+  - **Pitch Range**: 최소/최대 피치 각도
+  - **Yaw Range**: 최소/최대 요 각도
 
-#### Follow Node (Smooth Follow)
-- Follows target with lag
-- Configure:
-  - **Lag Speed**: How quickly camera catches up
-  - **Offset**: Fixed offset from target
+#### Follow Node(부드러운 추적)
+- 랙(lag)을 적용해 대상을 따라감
+- 구성 항목:
+  - **Lag Speed**: 카메라가 대상을 따라잡는 속도
+  - **Offset**: 대상으로부터의 고정 오프셋
 
 #### Fixed Position Node
-- Static camera position in world space
+- 월드 공간상의 고정된 카메라 위치
 
 ---
 
 ### Rotation Nodes
 
 #### Look At Node
-- Points camera at target
-- Configure:
-  - **Target**: Actor or component to look at
-  - **Offset**: Look-at offset (e.g., aim at head instead of feet)
+- 카메라를 대상 쪽으로 향하게 함
+- 구성 항목:
+  - **Target**: 바라볼 액터 또는 컴포넌트
+  - **Offset**: Look-at 오프셋(예: 발이 아닌 머리를 조준)
 
 #### Match Actor Rotation
-- Matches target actor's rotation
-- Useful for first-person or vehicle cameras
+- 대상 액터의 회전값을 그대로 따름
+- 1인칭 또는 차량 카메라에 유용
 
 ---
 
 ### Modifier Nodes
 
 #### Camera Shake
-- Adds procedural shake (e.g., footsteps, explosions)
-- Configure:
-  - **Shake Pattern**: Perlin noise, sine wave, custom
-  - **Amplitude**: Shake strength
+- 프로시저럴 셰이크를 추가(예: 발소리, 폭발)
+- 구성 항목:
+  - **Shake Pattern**: 펄린 노이즈, 사인파, 커스텀
+  - **Amplitude**: 셰이크 강도
 
 #### Camera Lag
-- Smooth dampening of camera movement
-- Configure:
-  - **Lag Speed**: Damping factor (0 = instant, higher = more lag)
+- 카메라 움직임을 부드럽게 감쇠
+- 구성 항목:
+  - **Lag Speed**: 감쇠 계수(0 = 즉시 반응, 값이 클수록 랙이 커짐)
 
 #### Offset Node
-- Static offset from calculated position
-- Useful for shoulder camera offset
+- 계산된 위치로부터의 고정 오프셋
+- 숄더 카메라 오프셋에 유용
 
 ---
 
-## Camera Director (Switching Between Rigs)
+## Camera Director(리그 간 전환)
 
-### Assign Camera Rig
+### Camera Rig 할당
 
 ```cpp
 #include "GameplayCameras/Public/GameplayCameraComponent.h"
@@ -163,7 +163,7 @@ void AMyCharacter::SetCameraMode(UGameplayCameraRig* NewRig) {
 }
 ```
 
-### Blend Between Camera Rigs
+### Camera Rig 간 블렌딩
 
 ```cpp
 // Blend to aiming camera over 0.5 seconds
@@ -172,21 +172,21 @@ CameraComponent->BlendToCameraRig(AimingCameraRig, 0.5f);
 
 ---
 
-## Example: Third Person + Aiming
+## 예시: 3인칭 + 조준
 
-### 1. Create Two Camera Rigs
+### 1. 두 개의 Camera Rig 생성
 
-**Third Person Rig:**
+**3인칭 리그:**
 ```
 Actor Position → Orbit (distance: 300) → Look At → Output
 ```
 
-**Aiming Rig:**
+**조준 리그:**
 ```
 Actor Position → Orbit (distance: 150) → Offset (shoulder) → Look At → Output
 ```
 
-### 2. Switch on Aim
+### 2. 조준 시 전환
 
 ```cpp
 UPROPERTY(EditAnywhere, Category = "Camera")
@@ -206,9 +206,9 @@ void StopAiming() {
 
 ---
 
-## Common Patterns
+## 일반적인 패턴
 
-### Over-the-Shoulder Camera
+### 오버 더 숄더 카메라
 
 ```
 Actor Position
@@ -224,7 +224,7 @@ Output
 
 ---
 
-### Vehicle Camera
+### 차량 카메라
 
 ```
 Vehicle Position
@@ -240,7 +240,7 @@ Output
 
 ---
 
-### First Person Camera
+### 1인칭 카메라
 
 ```
 Character Head Socket
@@ -252,9 +252,9 @@ Output
 
 ---
 
-## Camera Shake
+## 카메라 셰이크
 
-### Trigger Camera Shake
+### 카메라 셰이크 트리거
 
 ```cpp
 #include "GameplayCameras/Public/GameplayCameraShake.h"
@@ -270,17 +270,17 @@ void TriggerExplosionShake() {
 
 ---
 
-## Performance Tips
+## 성능 팁
 
-- Limit camera shake frequency (don't trigger every frame)
-- Use camera lag sparingly (expensive for high lag values)
-- Cache camera rig references (don't search every frame)
+- 카메라 셰이크 발생 빈도를 제한한다(매 프레임 트리거하지 않는다)
+- 카메라 랙은 절제해서 사용한다(랙 값이 크면 비용이 많이 든다)
+- 카메라 리그 참조를 캐싱한다(매 프레임 검색하지 않는다)
 
 ---
 
-## Debugging
+## 디버깅
 
-### Camera Debug Visualization
+### 카메라 디버그 시각화
 
 ```cpp
 // Console commands:
@@ -290,9 +290,9 @@ void TriggerExplosionShake() {
 
 ---
 
-## Migration from Legacy Cameras
+## 레거시 카메라에서 마이그레이션
 
-### Old Spring Arm + Camera Component
+### 기존 Spring Arm + Camera Component
 
 ```cpp
 // ❌ OLD: Spring Arm Component
@@ -306,16 +306,16 @@ UGameplayCameraComponent* CameraComponent;
 
 ---
 
-## Limitations (Experimental Status)
+## 제약 사항(실험적 상태)
 
-- **API Instability**: Expect breaking changes in UE 5.8+
-- **Limited Documentation**: Official docs still evolving
-- **Blueprint Support**: Primarily C++ focused (Blueprint support improving)
-- **Production Risk**: Test thoroughly before shipping
+- **API 불안정성**: UE 5.8 이상에서 호환성이 깨지는 변경이 있을 수 있음
+- **제한적인 문서**: 공식 문서가 아직 발전 중
+- **Blueprint 지원**: 주로 C++ 중심(Blueprint 지원은 개선 중)
+- **프로덕션 리스크**: 출시 전 충분한 테스트 필요
 
 ---
 
-## Sources
+## 출처
 - https://docs.unrealengine.com/5.7/en-US/gameplay-cameras-in-unreal-engine/
-- UE 5.5+ Release Notes
-- **Note:** This system is experimental. Always check latest official docs for API changes.
+- UE 5.5+ 릴리스 노트
+- **참고:** 이 시스템은 실험적 단계다. API 변경 사항은 항상 최신 공식 문서를 확인할 것.

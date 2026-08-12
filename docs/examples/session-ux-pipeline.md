@@ -1,68 +1,68 @@
-# Example Session: UX Pipeline — /ux-design → /ux-review → /team-ui
+# 예제 세션: UX 파이프라인 — /ux-design → /ux-review → /team-ui
 
-**Context:** Solo indie dev, Pre-Production phase. The HUD and inventory screen are the first UI to design. The game has a player journey doc and GDDs for inventory and combat.
+**맥락:** 1인 인디 개발자, 프리프로덕션 단계. HUD와 인벤토리 화면이 첫 UI 설계 대상. 게임에는 플레이어 여정 문서와 인벤토리·전투 GDD가 있음.
 
-**Starting State:**
-- `design/gdd/inventory-system.md` — complete
-- `design/gdd/combat-system.md` — complete
-- `design/player-journey.md` — complete (6-phase arc defined)
-- No UX specs yet
-- `design/ux/` directory does not exist
+**시작 상태:**
+- `design/gdd/inventory-system.md` — 완료
+- `design/gdd/combat-system.md` — 완료
+- `design/player-journey.md` — 완료 (6단계 아크 정의됨)
+- 아직 UX 명세 없음
+- `design/ux/` 디렉터리 존재하지 않음
 
-**Session Duration:** ~90 minutes across two sessions (HUD design, then inventory screen)
-**Turns:** 16
-**Outcome:** `design/ux/hud.md` and `design/ux/screens/inventory.md` created and reviewed; team-ui handed off for visual implementation
+**세션 소요 시간:** 두 세션에 걸쳐 약 90분 (HUD 설계, 이후 인벤토리 화면)
+**턴 수:** 16
+**결과:** `design/ux/hud.md` 와 `design/ux/screens/inventory.md` 생성 및 검토 완료; 비주얼 구현을 위해 team-ui로 인계
 
 ---
 
-## Part 1: HUD Design with /ux-design
+## 파트 1: /ux-design 으로 HUD 설계하기
 
-### Turn 1: User Starts HUD Design
+### 턴 1: 사용자가 HUD 설계를 시작
 
-**User:**
+**사용자:**
 > /ux-design hud
 
-### Turn 2: Agent Loads Context and Presents the Approach
+### 턴 2: 에이전트가 맥락을 불러오고 접근 방식을 제시
 
-**Agent (ux-designer, via /ux-design):**
-> Starting HUD design. Loading context...
+**에이전트 (ux-designer, /ux-design 을 통해):**
+> HUD 설계를 시작합니다. 맥락을 불러오는 중...
 >
-> - `design/player-journey.md` read — key states: Calm Exploration, Tension (threat detected), Crisis (low HP/stamina), Combat
-> - `design/gdd/combat-system.md` — HUD needs: HP bar, stamina bar, active ability cooldowns (up to 3), damage numbers
-> - `design/gdd/inventory-system.md` — HUD needs: quick slots (4 slots), active item indicator
+> - `design/player-journey.md` 읽음 — 핵심 상태: 평온한 탐험, 긴장(위협 감지), 위기(낮은 HP/스태미나), 전투
+> - `design/gdd/combat-system.md` — HUD에 필요한 것: HP 바, 스태미나 바, 활성 어빌리티 쿨다운(최대 3개), 피해 숫자
+> - `design/gdd/inventory-system.md` — HUD에 필요한 것: 퀵 슬롯(4칸), 활성 아이템 표시
 >
-> **HUD Philosophy question:** What is the player's primary attention focus during play?
+> **HUD 철학 질문:** 플레이 중 플레이어의 주된 주의 집중 대상은 무엇인가요?
 >
-> This determines how aggressive the HUD should be:
-> - **Option A: Diegetic (low presence)** — HP shown only when damaged, stamina shown only when draining. World-first, HUD recedes unless urgent.
-> - **Option B: Persistent minimal** — HP and stamina always visible, small and unobtrusive. Quick reference without mode-switching.
-> - **Option C: Full tactical** — All info always visible (HP, stamina, cooldowns, map, inventory slots). Player always has full awareness.
+> 이것이 HUD가 얼마나 적극적으로 표시되어야 하는지를 결정합니다.
+> - **옵션 A: 다이제틱(존재감 낮음)** — HP는 피해를 입었을 때만, 스태미나는 소진될 때만 표시. 월드 우선, 급할 때가 아니면 HUD가 뒤로 물러남
+> - **옵션 B: 지속적 미니멀** — HP와 스태미나가 항상 보이지만 작고 눈에 거슬리지 않음. 모드 전환 없이 빠르게 참조 가능
+> - **옵션 C: 완전 전술형** — 모든 정보(HP, 스태미나, 쿨다운, 맵, 인벤토리 슬롯)가 항상 보임. 플레이어가 항상 완전한 인지 상태를 유지
 >
-> Given your survival game and "lone survivor" fantasy, A or B is most consistent with the genre.
+> 서바이벌 게임과 "고독한 생존자" 판타지를 고려하면 A나 B가 장르에 가장 부합합니다.
 
-**User:**
-> B — I want it always there but minimal. The player is always managing resources.
+**사용자:**
+> B - 항상 표시되되 미니멀했으면 좋겠어. 플레이어가 항상 자원을 관리하고 있으니까.
 
-### Turn 3: Agent Drafts HUD Philosophy Section
+### 턴 3: 에이전트가 HUD 철학 섹션 초안을 작성
 
-**Agent:**
-> **HUD Philosophy draft:**
+**에이전트:**
+> **HUD 철학 초안:**
 >
-> > **Approach: Persistent Minimal**
-> > The HUD is always visible but occupies minimal screen real estate. The player is a resource-managing survivor — denying HP/stamina visibility creates frustration, not tension. All critical stats are readable at a glance without interrupting exploration focus. Elements scale in visual weight when they become urgent (HP below 30% pulses, stamina at 0 flashes), then return to minimal state.
+> > **접근 방식: 지속적 미니멀**
+> > HUD는 항상 표시되지만 화면 공간을 최소한으로 차지합니다. 플레이어는 자원을 관리하는 생존자입니다 — HP/스태미나 가시성을 숨기는 것은 긴장감이 아니라 좌절감을 만듭니다. 모든 핵심 스탯은 탐험 몰입을 방해하지 않고 한눈에 읽을 수 있어야 합니다. 요소들은 긴급해지면 시각적 무게가 커지고(HP가 30% 아래로 떨어지면 깜빡임, 스태미나가 0이 되면 점멸), 이후 다시 미니멀 상태로 돌아갑니다.
 >
-> May I write this to `design/ux/hud.md` as the Philosophy section?
+> 이 내용을 Philosophy 섹션으로 `design/ux/hud.md` 에 작성해도 될까요?
 
-**User:**
-> Yes
+**사용자:**
+> 응
 
-**Agent creates `design/ux/hud.md` and writes Philosophy section.**
+**에이전트가 `design/ux/hud.md` 를 생성하고 Philosophy 섹션을 작성합니다.**
 
-*(Turns 4–7 continue the section-by-section HUD authoring: Info Architecture, Zones, Element Specs, State Machine, Visual Budget, Platform Adaptation — each drafted, approved, and written to file.)*
+*(턴 4-7에서는 Info Architecture, Zones, Element Specs, State Machine, Visual Budget, Platform Adaptation 등 HUD 문서를 섹션별로 계속 작성 — 각각 초안 작성, 승인, 파일 기록의 과정을 거칩니다.)*
 
 ---
 
-**Final HUD structure after all sections:**
+**모든 섹션 작성 후 최종 HUD 구조:**
 
 ```
 design/ux/hud.md
@@ -78,133 +78,133 @@ design/ux/hud.md
 
 ---
 
-## Part 2: Inventory Screen with /ux-design
+## 파트 2: /ux-design 으로 인벤토리 화면 설계하기
 
-### Turn 8: User Starts Inventory Screen
+### 턴 8: 사용자가 인벤토리 화면 설계를 시작
 
-**User:**
+**사용자:**
 > /ux-design screen inventory
 
-### Turn 9: Agent Scans GDD and Player Journey
+### 턴 9: 에이전트가 GDD와 플레이어 여정을 훑어봄
 
-**Agent:**
-> Loading context for inventory screen...
+**에이전트:**
+> 인벤토리 화면 맥락을 불러오는 중...
 >
-> From `design/gdd/inventory-system.md`:
-> - Grid inventory, 6×8 slots
-> - Items have weight (affects movement) and stack size
-> - Player can equip, drop, inspect, split stacks
+> `design/gdd/inventory-system.md` 에서:
+> - 그리드형 인벤토리, 6×8 슬롯
+> - 아이템은 무게(이동에 영향)와 스택 크기를 가짐
+> - 플레이어는 장착, 버리기, 살펴보기, 스택 분할이 가능
 >
-> From `design/player-journey.md`:
-> - Inventory opens frequently during Calm Exploration
-> - Players should feel "organized and in control" when opening inventory
-> - Anxiety moment: "I need to decide what to drop" — should be clear, not panicked
+> `design/player-journey.md` 에서:
+> - 인벤토리는 평온한 탐험 중 자주 열림
+> - 인벤토리를 열 때 플레이어는 "정돈되고 통제하고 있다"는 느낌을 받아야 함
+> - 불안 순간: "뭘 버려야 할지 결정해야 해" — 당황스럽지 않고 명확해야 함
 >
-> **Player Need (from journey):** *I need to quickly assess what I'm carrying, decide what to keep or drop, and get back into the world.*
+> **플레이어 니즈 (여정 문서 기준):** *내가 들고 있는 것을 빠르게 파악하고, 무엇을 남길지 버릴지 결정한 뒤, 다시 월드로 돌아가고 싶다.*
 >
-> **Key design question:** How do players navigate to inventory actions?
-> - **Option A: Right-click context menu** — hover item → right-click → menu appears (Escape/common)
-> - **Option B: Drag-based** — drag to drop zone to drop; drag to equipment slot to equip (Stardew Valley)
-> - **Option C: Inspect panel** — click item → details panel appears on right with action buttons
+> **핵심 설계 질문:** 플레이어는 인벤토리 액션에 어떻게 접근하나요?
+> - **옵션 A: 우클릭 컨텍스트 메뉴** — 아이템에 마우스를 올리고 우클릭하면 메뉴 표시 (익숙하고 흔한 방식)
+> - **옵션 B: 드래그 기반** — 드롭 존으로 드래그하면 버리기, 장비 슬롯으로 드래그하면 장착 (스타듀 밸리 방식)
+> - **옵션 C: 검사 패널** — 아이템 클릭 시 오른쪽에 상세 패널과 액션 버튼이 표시됨
 
-**User:**
-> B — drag-based. I want it tactile.
+**사용자:**
+> B - 드래그 기반으로 하자. 촉각적인 느낌을 원해.
 
-*(Turns 10–12 continue section-by-section for the inventory screen spec: Player Need, Layout Zones, States, Interaction Map, Data Requirements, Events Fired, Accessibility, Localization.)*
+*(턴 10-12에서는 인벤토리 화면 명세를 섹션별로 계속 작성: Player Need, Layout Zones, States, Interaction Map, Data Requirements, Events Fired, Accessibility, Localization.)*
 
 ---
 
-## Part 3: /ux-review
+## 파트 3: /ux-review
 
-### Turn 13: User Runs Review
+### 턴 13: 사용자가 리뷰를 실행
 
-**User:**
+**사용자:**
 > /ux-review design/ux/
 
-### Turn 14: Agent Reviews Both Documents
+### 턴 14: 에이전트가 두 문서를 검토
 
-**Agent (via /ux-review):**
-> Reviewing all UX specs in `design/ux/`...
+**에이전트 (/ux-review 를 통해):**
+> `design/ux/` 안의 모든 UX 명세를 검토 중...
 >
 > ---
-> **HUD Review (`hud.md`):**
+> **HUD 검토 (`hud.md`):**
 >
-> | Check | Status | Notes |
+> | 항목 | 상태 | 비고 |
 > |-------|--------|-------|
-> | GDD alignment — all required elements present | ✅ | HP, stamina, quick slots, cooldowns all specced |
-> | State machine coverage | ✅ | All 4 gameplay states covered |
-> | Accessibility tier | ⚠️ | No colorblind mode specified for HP/stamina bars (red/yellow convention) |
-> | Visual budget | ✅ | 8% screen coverage, within budget |
-> | Platform notes | ✅ | Controller variant documented |
+> | GDD 정합성 — 필요한 요소가 모두 존재 | ✅ | HP, 스태미나, 퀵 슬롯, 쿨다운 모두 명세됨 |
+> | 상태 머신 커버리지 | ✅ | 4개 게임플레이 상태 모두 커버됨 |
+> | 접근성 등급 | ⚠️ | HP/스태미나 바(빨강/노랑 관례)에 색맹 모드가 명세되지 않음 |
+> | 비주얼 버짓 | ✅ | 화면 점유율 8%, 예산 내 |
+> | 플랫폼 참고사항 | ✅ | 컨트롤러 변형이 문서화됨 |
 >
-> **Inventory Screen Review (`screens/inventory.md`):**
+> **인벤토리 화면 검토 (`screens/inventory.md`):**
 >
-> | Check | Status | Notes |
+> | 항목 | 상태 | 비고 |
 > |-------|--------|-------|
-> | Player Need stated | ✅ | |
-> | All GDD actions covered | ✅ | Equip, drop, inspect, split all in interaction map |
-> | Drag-drop interaction fully specified | ⚠️ | Drop target behavior when inventory is full not defined — what happens? |
-> | Accessibility: keyboard alternative for drag | ❌ | MISSING — drag-only with no keyboard path fails motor accessibility |
-> | Localization: all strings tagged | ✅ | |
-> | Data events fired | ✅ | `item_equipped`, `item_dropped`, `stack_split` all mapped |
+> | 플레이어 니즈 명시 | ✅ | |
+> | GDD의 모든 액션이 커버됨 | ✅ | 장착, 버리기, 살펴보기, 분할이 모두 인터랙션 맵에 있음 |
+> | 드래그-드롭 인터랙션이 완전히 명세됨 | ⚠️ | 인벤토리가 가득 찼을 때 드롭 대상의 동작이 정의되지 않음 — 어떻게 되나요? |
+> | 접근성: 드래그의 키보드 대안 | ❌ | 누락 — 드래그 전용에 키보드 경로가 없어 운동 접근성 기준을 충족하지 못함 |
+> | 로컬라이제이션: 모든 문자열 태깅 | ✅ | |
+> | 데이터 이벤트 발생 | ✅ | `item_equipped`, `item_dropped`, `stack_split` 모두 매핑됨 |
 >
 > ---
-> **Verdict: NEEDS REVISION**
+> **판정: 수정 필요**
 >
-> Two issues must be resolved before handoff to /team-ui:
+> /team-ui 로 인계하기 전에 해결해야 할 문제 2가지:
 >
-> 1. **BLOCKING (Accessibility):** Inventory screen has no keyboard alternative to drag-drop. Motor accessibility requires a non-drag interaction path. Add a "press X to pick up / press X again to place" toggle, or a details panel with keyboard-accessible action buttons.
+> 1. **차단 요건 (접근성):** 인벤토리 화면에 드래그-드롭의 키보드 대안이 없습니다. 운동 접근성을 위해서는 드래그를 사용하지 않는 인터랙션 경로가 필요합니다. "X를 눌러 집기 / 다시 X를 눌러 놓기" 토글을 추가하거나, 키보드로 접근 가능한 액션 버튼이 있는 상세 패널을 추가하세요.
 >
-> 2. **ADVISORY (HUD):** HP/stamina bars use color alone to convey state. Add a secondary indicator (shape, icon, or pattern) for colorblind users. Can be resolved in visual pass.
-> 3. **ADVISORY (Inventory):** Full-inventory drop behavior is unspecified. Resolve in GDD before implementation, or document as out-of-scope.
+> 2. **권고 사항 (HUD):** HP/스태미나 바가 상태 표현에 색상만 사용합니다. 색맹 사용자를 위해 보조 표시(모양, 아이콘, 패턴)를 추가하세요. 비주얼 작업 단계에서 해결 가능합니다.
+> 3. **권고 사항 (인벤토리):** 인벤토리가 가득 찼을 때의 드롭 동작이 명세되어 있지 않습니다. 구현 전에 GDD에서 해결하거나 스코프 외로 문서화하세요.
 
-### Turn 15: User Resolves Blocking Issue
+### 턴 15: 사용자가 차단 요건을 해결
 
-**User:**
-> For keyboard: press F to pick up item at cursor, press F again on target slot to place it. Add this to the inventory spec.
+**사용자:**
+> 키보드는: 커서 위치의 아이템을 F로 집고, 대상 슬롯에서 F를 다시 누르면 놓는 걸로 하자. 인벤토리 명세에 추가해줘.
 
-**Agent:**
-> Adding to Interaction Map under "Keyboard / Controller Path":
+**에이전트:**
+> "키보드 / 컨트롤러 경로" 아래 Interaction Map 에 추가합니다.
 >
-> > Press F (or South button) to pick up item at cursor. Item enters "held" state with visual indicator. Press F again on target slot to place. Press Escape to cancel and return item.
+> > F(또는 South 버튼)를 눌러 커서 위치의 아이템을 집습니다. 아이템은 시각적 표시와 함께 "들고 있음" 상태가 됩니다. 대상 슬롯에서 F를 다시 누르면 놓습니다. Escape 를 누르면 취소하고 아이템을 되돌립니다.
 >
-> May I write this to `design/ux/screens/inventory.md` and re-run the accessibility check?
+> 이 내용을 `design/ux/screens/inventory.md` 에 작성하고 접근성 체크를 다시 실행해도 될까요?
 
-**User:**
-> Yes
+**사용자:**
+> 응
 
-**Agent writes update. Re-checks accessibility — now passes.**
+**에이전트가 업데이트를 작성합니다. 접근성 체크를 재실행 — 이제 통과합니다.**
 
 ---
 
-## Part 4: Handoff to /team-ui
+## 파트 4: /team-ui 로 인계
 
-### Turn 16: User Kicks Off Team UI
+### 턴 16: 사용자가 Team UI를 시작
 
-**User:**
+**사용자:**
 > /team-ui
 
-**Agent (via /team-ui):**
-> Running UX pipeline context check...
+**에이전트 (/team-ui 를 통해):**
+> UX 파이프라인 맥락 체크를 실행 중...
 >
-> - `design/ux/hud.md` — reviewed ✅
-> - `design/ux/screens/inventory.md` — reviewed ✅
-> - `/ux-review` verdict: NEEDS REVISION was resolved — current state: APPROVED ✅
+> - `design/ux/hud.md` — 검토됨 ✅
+> - `design/ux/screens/inventory.md` — 검토됨 ✅
+> - `/ux-review` 판정: 수정 필요가 해결됨 — 현재 상태: 승인됨 ✅
 >
-> Proceeding to **Phase 2: Visual Design**
+> **Phase 2: Visual Design** 으로 진행합니다
 >
-> Handing off to `art-director` for visual spec (color palette, typography, iconography aligned to art bible)...
+> 비주얼 명세(아트 바이블에 맞춘 컬러 팔레트, 타이포그래피, 아이콘그래피)를 위해 `art-director` 에게 인계 중...
 >
-> *(team-ui continues through visual design → layout implementation → accessibility audit → final review)*
+> *(team-ui 는 비주얼 디자인 → 레이아웃 구현 → 접근성 감사 → 최종 검토로 계속 진행됩니다)*
 
 ---
 
-## What This Example Demonstrates
+## 이 예제가 보여주는 것
 
-- **Context-driven design**: agent reads player-journey.md to ground HUD decisions in player emotional state, not just feature lists
-- **UX review is a hard gate**: `/team-ui` checks for a passing `/ux-review` before proceeding to visual design
-- **Accessibility caught early**: the missing keyboard alternative was flagged by review, not discovered by a QA tester in the final week
-- **Blocking vs. advisory**: the missing keyboard path was BLOCKING (stops handoff); the colorblind colors were ADVISORY (can be fixed in visual pass)
-- **Section-by-section UX authoring**: same incremental pattern as `/design-system` — each section written to file before moving on
-- **Separate HUD and screen files**: `design/ux/hud.md` is the whole-game HUD; per-screen specs live in `design/ux/screens/`
-- **Pattern library enforced by /team-ui**: after this session, inventory drag-drop becomes a documented pattern in `design/ux/interaction-patterns.md` for all future screens to reference
+- **맥락 기반 설계**: 에이전트가 기능 목록만이 아니라 플레이어의 감정 상태에 HUD 결정의 근거를 두기 위해 player-journey.md 를 읽음
+- **UX 리뷰는 강제 게이트**: `/team-ui` 는 비주얼 디자인으로 넘어가기 전에 `/ux-review` 통과 여부를 확인함
+- **접근성이 초기에 발견됨**: 누락된 키보드 대안은 마지막 주에 QA 테스터가 발견한 것이 아니라 리뷰 단계에서 발견됨
+- **차단 요건 대 권고 사항**: 누락된 키보드 경로는 차단 요건(인계를 막음)이었고, 색맹 관련 색상 문제는 권고 사항(비주얼 작업 단계에서 수정 가능)이었음
+- **섹션별 UX 작성**: `/design-system` 과 동일한 점진적 패턴 — 다음으로 넘어가기 전에 각 섹션을 파일에 기록함
+- **HUD와 화면 파일을 분리**: `design/ux/hud.md` 는 게임 전체 HUD를, 화면별 명세는 `design/ux/screens/` 에 둠
+- **/team-ui 가 강제하는 패턴 라이브러리**: 이 세션 이후, 인벤토리 드래그-드롭은 앞으로 모든 화면이 참조할 수 있는 문서화된 패턴으로 `design/ux/interaction-patterns.md` 에 등록됨

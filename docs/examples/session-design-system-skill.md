@@ -1,269 +1,270 @@
-# Example Session: Using /design-system to Author a GDD
+# 예시 세션: /design-system으로 GDD 작성하기
 
-**Context:** Solo indie dev, week 3 of project. `/map-systems` already ran and produced `design/gdd/systems-index.md`. The movement system is listed as MVP tier, Foundation priority.
+**맥락:** 1인 인디 개발자, 프로젝트 3주 차. `/map-systems`가 이미 실행되어 `design/gdd/systems-index.md`가 만들어짐. 이동 시스템은 MVP 등급, Foundation 우선순위로 등록되어 있음.
 
-**Starting State:**
-- `design/gdd/game-concept.md` exists (survival-crafting game, 2D, Godot 4.6)
-- `design/gdd/systems-index.md` exists (15 systems identified, movement is first in design order)
-- No per-system GDDs written yet
-- No upstream dependencies for movement (it is the foundation)
+**시작 상태:**
+- `design/gdd/game-concept.md` 존재 (생존-제작 게임, 2D, Godot 4.6)
+- `design/gdd/systems-index.md` 존재 (시스템 15개 식별, 이동이 설계 순서상 첫 번째)
+- 시스템별 GDD는 아직 작성되지 않음
+- 이동 시스템에는 상위 의존성이 없음 (기반이 되는 시스템이기 때문)
 
-**Session Duration:** ~60 minutes
-**Turns:** 14
-**Outcome:** Complete `design/gdd/movement-system.md` with all 8 required sections written to file, ready for `/design-review`
+**세션 소요 시간:** 약 60분
+**턴 수:** 14
+**결과:** 8개 필수 섹션이 모두 작성된 완전한 `design/gdd/movement-system.md`, `/design-review` 준비 완료
 
 ---
 
-## Turn 1: User Invokes the Skill
+## 턴 1: 사용자가 스킬을 호출함
 
-**User:**
+**사용자:**
 > /design-system movement
 
-## Turn 2: Agent Loads Context and Presents the Plan
+## 턴 2: 에이전트가 맥락을 로드하고 계획을 제시함
 
-**Agent (game-designer, via /design-system):**
-> I'm loading context before we start:
+**에이전트 (game-designer, /design-system 경유):**
+> 시작하기 전에 맥락을 로드하고 있습니다:
 >
-> - Read `design/gdd/game-concept.md` — survival-crafting, exploration-heavy, lone survivor stranded on alien planet
-> - Read `design/gdd/systems-index.md` — movement is **Foundation / MVP**, no upstream deps, downstream: combat, exploration, stamina
-> - No prior GDD found for movement — starting fresh
+> - `design/gdd/game-concept.md` 읽음 — 생존-제작, 탐험 중심, 외계 행성에 좌초된 홀로 생존자
+> - `design/gdd/systems-index.md` 읽음 — 이동은 **Foundation / MVP**, 상위 의존성 없음, 하위 의존: 전투, 탐험, 스태미나
+> - 이동에 대한 기존 GDD 없음 — 처음부터 시작합니다
 >
-> **Technical Feasibility Pre-Check:**
+> **기술적 실현 가능성 사전 점검:**
 >
-> | Domain | Signal |
+> | 영역 | 시그널 |
 > |--------|--------|
-> | Engine | Godot 4.6 — CharacterBody2D with move_and_slide() is well-supported |
-> | Physics | Jolt is now the default in 4.6 — 2D movement unaffected, but note for future 3D work |
-> | Downstream risk | Stamina system listed as downstream dep — movement must expose a stamina callback hook |
+> | 엔진 | Godot 4.6 — CharacterBody2D와 move_and_slide()가 잘 지원됨 |
+> | 물리 | 4.6에서 Jolt가 기본값이 됨 — 2D 이동에는 영향 없지만 향후 3D 작업 시 유의 |
+> | 하위 리스크 | 스태미나 시스템이 하위 의존으로 등록됨 — 이동 시스템은 스태미나 콜백 훅을 노출해야 함 |
 >
-> The GDD template has **8 required sections**. We'll go one at a time:
+> GDD 템플릿에는 **8개 필수 섹션**이 있습니다. 하나씩 진행하겠습니다:
 > `Overview → Player Fantasy → Detailed Rules → Formulas → Edge Cases → Dependencies → Tuning Knobs → Acceptance Criteria`
 >
-> I'll show you a draft of each section, you approve or revise, then I write it to the file before we move on.
+> 각 섹션의 초안을 보여드리면 승인하시거나 수정을 요청하시고, 그 후 다음으로 넘어가기 전에 파일에 작성하겠습니다.
 >
-> Creating the file skeleton now with empty section headers — may I write `design/gdd/movement-system.md` with placeholders?
+> 지금 빈 섹션 헤더로 파일 스켈레톤을 만들겠습니다 — `design/gdd/movement-system.md`를 플레이스홀더 상태로 작성해도 될까요?
 
-**User:**
-> Yes
+**사용자:**
+> 네
 
-**Agent writes** `design/gdd/movement-system.md` with 8 empty section headers.
+**에이전트가** `design/gdd/movement-system.md`를 8개의 빈 섹션 헤더와 함께 **작성함**.
 
 ---
 
-## Turn 3: Section 1 — Overview
+## 턴 3: 섹션 1 — Overview
 
-**Agent:**
-> **Section 1 draft — Overview:**
+**에이전트:**
+> **섹션 1 초안 — Overview:**
 >
-> > The movement system is the player's primary interface with the world. It governs how the lone survivor walks, runs, rolls, and traverses alien terrain. Movement is physically grounded — the planet has heavier-than-Earth gravity, and the survivor is physically exhausted — but remains responsive enough to stay out of the player's way. The system feeds directly into exploration pacing, combat positioning, and the stamina system.
+> > 이동 시스템은 플레이어가 세계와 상호작용하는 주된 인터페이스입니다. 홀로 남은 생존자가 외계 지형을 걷고, 달리고, 구르고, 이동하는 방식을 관장합니다. 이동은 물리적으로 현실감 있게 구현됩니다 — 행성의 중력은 지구보다 무겁고, 생존자는 육체적으로 지쳐 있습니다 — 하지만 플레이어를 방해하지 않을 만큼 충분히 반응성이 좋습니다. 이 시스템은 탐험 페이싱, 전투 포지셔닝, 스태미나 시스템에 직접적으로 연결됩니다.
 >
-> Does this capture what you want?
+> 원하시는 내용을 담고 있나요?
 
-**User:**
-> Good but add something about the terrain — surfaces slow you down or have friction modifiers.
+**사용자:**
+> 좋은데 지형에 대한 내용도 추가해줘요 — 표면에 따라 속도가 느려지거나 마찰 보정이 적용된다는 내용으로요.
 
-**Agent:**
-> Revised:
+**에이전트:**
+> 수정했습니다:
 >
-> > The movement system is the player's primary interface with the world. It governs how the lone survivor walks, runs, rolls, and traverses alien terrain. Movement is physically grounded — the planet has heavier-than-Earth gravity, and the survivor is physically exhausted — but remains responsive enough to stay out of the player's way. Terrain surfaces apply friction and speed modifiers (slick rock, sand, shallow water) that make navigation a meaningful skill. The system feeds directly into exploration pacing, combat positioning, and the stamina system.
+> > 이동 시스템은 플레이어가 세계와 상호작용하는 주된 인터페이스입니다. 홀로 남은 생존자가 외계 지형을 걷고, 달리고, 구르고, 이동하는 방식을 관장합니다. 이동은 물리적으로 현실감 있게 구현됩니다 — 행성의 중력은 지구보다 무겁고, 생존자는 육체적으로 지쳐 있습니다 — 하지만 플레이어를 방해하지 않을 만큼 충분히 반응성이 좋습니다. 지형 표면은 마찰과 속도 보정(미끄러운 바위, 모래, 얕은 물)을 적용하여 내비게이션을 의미 있는 스킬로 만듭니다. 이 시스템은 탐험 페이싱, 전투 포지셔닝, 스태미나 시스템에 직접적으로 연결됩니다.
 >
-> May I write this to Section 1 in the file?
+> 이 내용을 섹션 1에 작성해도 될까요?
 
-**User:**
-> Yes
+**사용자:**
+> 네
 
-**Agent writes Section 1 to file.**
+**에이전트가 섹션 1을 파일에 작성함.**
 
 ---
 
-## Turn 4: Section 2 — Player Fantasy
+## 턴 4: 섹션 2 — Player Fantasy
 
-**Agent:**
-> **Section 2 draft — Player Fantasy:**
+**에이전트:**
+> **섹션 2 초안 — Player Fantasy:**
 >
-> > The player should feel like a tired but capable survivor — not a superhero, not helpless. Early game movement is deliberate and taxing; the player earns fluency over time. When traversing alien terrain, the goal is careful navigation with moments of urgency (running from threats, leaping a gap). The fantasy is "I know this terrain" — every surface type becomes readable and manageable as the player internalizes the friction system.
+> > 플레이어는 지쳤지만 유능한 생존자처럼 느껴야 합니다 — 슈퍼히어로도, 무력한 존재도 아닙니다. 초반 이동은 신중하고 부담스러우며, 플레이어는 시간이 지나면서 숙련도를 쌓아갑니다. 외계 지형을 이동할 때 목표는 신중한 내비게이션이면서도 간간이 긴박한 순간(위협으로부터 도망치기, 틈 뛰어넘기)이 있는 것입니다. 판타지는 "나는 이 지형을 안다"입니다 — 플레이어가 마찰 시스템을 내재화함에 따라 모든 표면 유형이 읽어낼 수 있고 관리 가능한 것이 됩니다.
 >
-> Approve, revise, or change direction?
+> 승인하시나요, 수정하시나요, 아니면 방향을 바꿀까요?
 
-**User:**
-> Love it. Write it.
+**사용자:**
+> 완전 좋아요. 작성해주세요.
 
-**Agent writes Section 2 to file.**
+**에이전트가 섹션 2를 파일에 작성함.**
 
 ---
 
-## Turn 5: Section 3 — Detailed Rules
+## 턴 5: 섹션 3 — Detailed Rules
 
-**Agent:**
-> **Section 3 draft — Detailed Rules:**
+**에이전트:**
+> **섹션 3 초안 — Detailed Rules:**
 >
-> > **Base States:**
-> > - **Walk** (default): Full directional control, moderate speed, low stamina drain
-> > - **Run** (hold Shift): Faster, medium stamina drain per second — cancels automatically when stamina hits 0
-> > - **Roll/Dodge** (tap Space): Quick burst in movement direction, brief invincibility frames, high stamina cost (flat)
-> > - **Idle**: Zero movement input, stamina regenerates at full rate
+> > **기본 상태:**
+> > - **걷기** (기본값): 완전한 방향 조작, 보통 속도, 낮은 스태미나 소모
+> > - **달리기** (Shift 유지): 더 빠름, 초당 중간 수준 스태미나 소모 — 스태미나가 0이 되면 자동 취소
+> > - **구르기/회피** (Space 탭): 이동 방향으로 짧게 돌진, 짧은 무적 프레임, 높은 스태미나 소모 (고정값)
+> > - **대기**: 이동 입력 없음, 스태미나가 최대 속도로 재생
 > >
-> > **Terrain Modifiers:**
-> > - Normal ground: 1.0x speed multiplier, standard friction
-> > - Sand/loose soil: 0.8x speed, 1.1x stamina drain (harder to move)
-> > - Slick rock (wet): 1.1x speed, reduced stop friction (player overshoots)
-> > - Shallow water (ankle-deep): 0.7x speed, no friction modifier
-> > - Deep water: movement disabled, replaced by swimming (separate system, out of scope)
+> > **지형 보정:**
+> > - 일반 지면: 속도 배율 1.0배, 표준 마찰
+> > - 모래/부드러운 흙: 속도 0.8배, 스태미나 소모 1.1배 (이동이 더 힘듦)
+> > - 미끄러운 바위 (젖음): 속도 1.1배, 정지 마찰 감소 (플레이어가 미끄러져 지나침)
+> > - 얕은 물 (발목 깊이): 속도 0.7배, 마찰 보정 없음
+> > - 깊은 물: 이동 비활성화, 수영으로 대체 (별도 시스템, 범위 외)
 > >
-> > **Collision:**
-> > - CharacterBody2D + move_and_slide(); wall slide enabled
-> > - Slopes up to 45° walked normally; >45° blocked
-> > - One-way platforms supported (drop-through with Down + Jump)
+> > **충돌:**
+> > - CharacterBody2D + move_and_slide(); 벽 슬라이드 활성화
+> > - 45도 이하 경사는 일반적으로 걸어갈 수 있음; 45도 초과는 차단됨
+> > - 원웨이 플랫폼 지원 (아래 방향 + 점프로 통과)
 >
-> A lot here — want me to trim or expand anything?
+> 내용이 많네요 — 다듬거나 확장할 부분이 있나요?
 
-**User:**
-> Add that running is disabled when carrying a heavy object (like a large resource chunk).
+**사용자:**
+> 무거운 물체(큰 자원 덩어리 같은 것)를 들고 있을 때는 달리기가 비활성화된다는 내용을 추가해줘요.
 
-**Agent:**
-> Added to Run rule:
-> > - **Run** (hold Shift): Faster, medium stamina drain per second — cancels automatically when stamina hits 0. **Disabled when carrying heavy objects** (signals broadcast by inventory system).
+**에이전트:**
+> 달리기 규칙에 추가했습니다:
+> > - **달리기** (Shift 유지): 더 빠름, 초당 중간 수준 스태미나 소모 — 스태미나가 0이 되면 자동 취소. **무거운 물체를 들고 있을 때 비활성화** (인벤토리 시스템이 보내는 시그널).
 >
-> Write to file?
+> 파일에 작성할까요?
 
-**User:**
-> Yes
+**사용자:**
+> 네
 
-**Agent writes Section 3 to file.**
+**에이전트가 섹션 3을 파일에 작성함.**
 
 ---
 
-## Turn 6: Section 4 — Formulas
+## 턴 6: 섹션 4 — Formulas
 
-**Agent:**
-> **Section 4 draft — Formulas:**
+**에이전트:**
+> **섹션 4 초안 — Formulas:**
 >
-> Let me define variables first, then the formulas:
+> 먼저 변수를 정의한 후 공식을 작성하겠습니다:
 >
-> | Variable | Type | Description |
+> | 변수 | 타입 | 설명 |
 > |----------|------|-------------|
-> | `base_walk_speed` | float | Base walk speed in px/s (tunable) |
-> | `run_multiplier` | float | Run speed = walk × this |
-> | `terrain_speed_mod` | float | Per-terrain multiplier (0.7–1.1) |
-> | `stamina_drain_walk` | float | Stamina units/sec while walking |
-> | `stamina_drain_run` | float | Stamina units/sec while running |
-> | `stamina_cost_roll` | float | Flat stamina cost per roll |
-> | `terrain_drain_mod` | float | Per-terrain stamina drain multiplier |
+> | `base_walk_speed` | float | px/s 단위의 기본 걷기 속도 (조정 가능) |
+> | `run_multiplier` | float | 달리기 속도 = 걷기 속도 × 이 값 |
+> | `terrain_speed_mod` | float | 지형별 배율 (0.7~1.1) |
+> | `stamina_drain_walk` | float | 걷는 동안 초당 스태미나 소모량 |
+> | `stamina_drain_run` | float | 달리는 동안 초당 스태미나 소모량 |
+> | `stamina_cost_roll` | float | 구르기당 고정 스태미나 소모량 |
+> | `terrain_drain_mod` | float | 지형별 스태미나 소모 배율 |
 >
-> **Effective Speed:**
+> **유효 속도:**
 > ```
-> effective_speed = base_walk_speed × run_multiplier (if running, else 1.0) × terrain_speed_mod
-> ```
->
-> **Stamina Drain (per second):**
-> ```
-> drain_per_sec = stamina_drain_walk (or stamina_drain_run if running) × terrain_drain_mod
+> effective_speed = base_walk_speed × run_multiplier (달리는 경우, 아니면 1.0) × terrain_speed_mod
 > ```
 >
-> **Roll Stamina Cost (flat):**
+> **스태미나 소모 (초당):**
+> ```
+> drain_per_sec = stamina_drain_walk (달리는 경우 stamina_drain_run) × terrain_drain_mod
+> ```
+>
+> **구르기 스태미나 소모 (고정값):**
 > ```
 > stamina_after_roll = current_stamina - stamina_cost_roll
-> (clamped to 0 — roll still executes, but player lands with 0 stamina)
+> (0으로 클램프됨 — 구르기는 그대로 실행되지만, 플레이어는 스태미나 0 상태로 착지함)
 > ```
 >
-> Approve or adjust variable names/formulas?
+> 승인하시나요, 변수명이나 공식을 조정할까요?
 
-**User:**
-> Looks right. Write it.
+**사용자:**
+> 맞는 것 같아요. 작성해주세요.
 
-**Agent writes Section 4 to file.**
+**에이전트가 섹션 4를 파일에 작성함.**
 
 ---
 
-## Turn 7–9: Sections 5, 6, 7
+## 턴 7~9: 섹션 5, 6, 7
 
-*(These follow the same pattern — agent drafts, user approves or requests minor tweaks, agent writes each section to file before moving on. Abbreviated here.)*
+*(이 섹션들도 같은 패턴을 따릅니다 — 에이전트가 초안을 작성하고, 사용자가 승인하거나 사소한 수정을 요청하고, 다음으로 넘어가기 전에 에이전트가 각 섹션을 파일에 작성합니다. 여기서는 요약합니다.)*
 
-**Section 5 — Edge Cases** covered:
-- Player rolls into a wall (animation completes, no movement bonus)
-- Stamina hits 0 mid-run (transitions to walk, no lurch)
-- Two terrain types overlapping (lower multiplier wins)
-- Roll on slick rock (still applies slick friction to stopping, not to the roll itself)
+**섹션 5 — Edge Cases**에서 다룬 내용:
+- 플레이어가 벽으로 구르기 (애니메이션은 완료되지만 이동 보너스 없음)
+- 달리는 도중 스태미나가 0이 됨 (걷기로 전환, 끊김 없음)
+- 두 지형 유형이 겹침 (더 낮은 배율이 적용됨)
+- 미끄러운 바위 위에서 구르기 (구르기 자체가 아니라 정지 시에만 미끄러운 마찰 적용)
 
-**Section 6 — Dependencies** covered:
-- **Stamina system** (downstream): movement exposes `on_stamina_event(type: String, amount: float)` signal
-- **Inventory system** (downstream): listens to `carrying_heavy_object_changed(is_heavy: bool)` signal
-- **Input system**: movement direction from `InputMap` — standard Godot action names (`ui_left`, `ui_right`, etc.)
-- **Terrain layer**: tile metadata drives terrain modifier lookup
+**섹션 6 — Dependencies**에서 다룬 내용:
+- **스태미나 시스템** (하위 의존): 이동 시스템이 `on_stamina_event(type: String, amount: float)` 시그널을 노출
+- **인벤토리 시스템** (하위 의존): `carrying_heavy_object_changed(is_heavy: bool)` 시그널을 수신
+- **입력 시스템**: 이동 방향은 `InputMap`에서 가져옴 — 표준 Godot 액션명 사용 (`ui_left`, `ui_right` 등)
+- **지형 레이어**: 타일 메타데이터가 지형 보정 조회를 구동
 
-**Section 7 — Tuning Knobs** covered:
-- `base_walk_speed` (default: 120 px/s)
-- `run_multiplier` (default: 1.7)
-- Per-terrain speed and drain modifiers (table of 4 terrain types)
+**섹션 7 — Tuning Knobs**에서 다룬 내용:
+- `base_walk_speed` (기본값: 120 px/s)
+- `run_multiplier` (기본값: 1.7)
+- 지형별 속도 및 소모 보정 (지형 유형 4종 표)
 - `stamina_drain_walk`, `stamina_drain_run`, `stamina_cost_roll`
 
 ---
 
-## Turn 10: Section 8 — Acceptance Criteria
+## 턴 10: 섹션 8 — Acceptance Criteria
 
-**Agent:**
-> **Section 8 draft — Acceptance Criteria:**
+**에이전트:**
+> **섹션 8 초안 — Acceptance Criteria:**
 >
-> These are the testable conditions that prove this system is complete:
+> 이 시스템이 완성되었다고 증명하는 테스트 가능한 조건들입니다:
 >
-> - [ ] Player walks at `base_walk_speed` on normal ground (measured with debug overlay)
-> - [ ] Player runs at `base_walk_speed × run_multiplier` on normal ground
-> - [ ] Run automatically cancels when stamina reaches 0, no input required
-> - [ ] Roll executes with correct invincibility frames (verify via hitbox debug mode)
-> - [ ] Each terrain type applies the correct speed modifier (QA table in sprint plan)
-> - [ ] Carrying heavy object disables run (test with inventory integration)
-> - [ ] Stamina system receives `on_stamina_event` signals during walk, run, and roll
-> - [ ] All movement values come from exported variables — no hardcoded numbers in code
+> - [ ] 일반 지면에서 플레이어가 `base_walk_speed`로 걷는다 (디버그 오버레이로 측정)
+> - [ ] 일반 지면에서 플레이어가 `base_walk_speed × run_multiplier`로 달린다
+> - [ ] 입력 없이도 스태미나가 0에 도달하면 달리기가 자동으로 취소된다
+> - [ ] 구르기가 올바른 무적 프레임과 함께 실행된다 (히트박스 디버그 모드로 확인)
+> - [ ] 각 지형 유형이 올바른 속도 보정을 적용한다 (스프린트 계획의 QA 표)
+> - [ ] 무거운 물체를 들면 달리기가 비활성화된다 (인벤토리 연동으로 테스트)
+> - [ ] 스태미나 시스템이 걷기, 달리기, 구르기 중 `on_stamina_event` 시그널을 수신한다
+> - [ ] 모든 이동 값이 export 변수에서 나온다 — 코드에 하드코딩된 숫자 없음
 >
-> Does this cover what "done" means to you?
+> 이것이 "완료"의 의미를 충분히 담고 있나요?
 
-**User:**
-> Add one for slopes — make sure >45 degree slopes block movement.
+**사용자:**
+> 경사면 항목도 하나 추가해줘요 — 45도 초과 경사면은 이동을 확실히 막도록요.
 
-**Agent:**
-> Added:
-> - [ ] Slopes ≤45° traversed normally; slopes >45° block movement (player slides back)
+**에이전트:**
+> 추가했습니다:
+> - [ ] 45도 이하 경사면은 일반적으로 이동 가능하고, 45도 초과 경사면은 이동을 막는다 (플레이어가 뒤로 미끄러짐)
 >
-> Write to file?
+> 파일에 작성할까요?
 
-**User:**
-> Yes. Write it.
+**사용자:**
+> 네. 작성해주세요.
 
-**Agent writes Section 8 to file.**
+**에이전트가 섹션 8을 파일에 작성함.**
 
 ---
 
-## Turn 11: Completion Summary
+## 턴 11: 완료 요약
 
-**Agent:**
-> All 8 sections written to `design/gdd/movement-system.md`.
+**에이전트:**
+> `design/gdd/movement-system.md`에 8개 섹션이 모두 작성되었습니다.
 >
-> **GDD Status:**
+> **GDD 상태:**
 > - ✅ Overview
 > - ✅ Player Fantasy
 > - ✅ Detailed Rules
 > - ✅ Formulas
 > - ✅ Edge Cases
-> - ✅ Dependencies (exposes 2 signals: stamina_event, carrying_heavy)
+> - ✅ Dependencies (시그널 2개 노출: stamina_event, carrying_heavy)
 > - ✅ Tuning Knobs
 > - ✅ Acceptance Criteria
 >
-> **Key decisions made:**
-> - Terrain modifiers as tile metadata (not code constants)
-> - Rolling has a flat stamina cost (not per-second)
-> - Heavy carry disables run (signal-driven, not hardcoded check)
+> **내려진 핵심 결정:**
+> - 지형 보정은 타일 메타데이터로 처리 (코드 상수가 아님)
+> - 구르기는 고정 스태미나 소모 (초당이 아님)
+> - 무거운 물체는 달리기를 비활성화 (하드코딩된 체크가 아니라 시그널 기반)
 >
-> **Recommended next step:** Run `/design-review design/gdd/movement-system.md` before moving to the next system in your queue (stamina is next in dependency order, per systems-index).
+> **권장 다음 단계:** 다음 시스템으로 넘어가기 전에 `/design-review design/gdd/movement-system.md`를 실행하세요 (systems-index 기준 의존성 순서상 스태미나가 다음입니다).
 >
-> The review will validate completeness, internal consistency, and catch anything that needs revision before you build on this GDD.
+> 리뷰는 완결성과 내부 일관성을 검증하고, 이 GDD 위에 뭔가를 쌓기 전에 수정이 필요한 부분을 잡아낼 것입니다.
 
 ---
 
-## What This Example Demonstrates
+## 이 예시가 보여주는 것
 
-- **Incremental file writing**: each section written to disk immediately after approval — a session crash loses at most one in-progress section
-- **Template population**: the GDD template's 8 sections become concrete content through dialogue, not bulk generation
-- **Dependency signaling**: agent proactively surfaces downstream signal contracts (stamina, inventory) during the Dependencies section
-- **Technical feasibility pre-check**: agent notes Jolt physics change before design starts, not after implementation breaks
-- **Section-by-section cycle**: no full draft dumped at once — each section is a small, reviewable unit
-- **Recovery**: if the session crashes, the agent re-reads the file on restart and resumes from the first empty section
+- **점진적 파일 작성**: 승인 직후 각 섹션이 즉시 디스크에 작성됨 — 세션이 중단되어도 최대 진행 중인 섹션 하나만 잃음
+- **템플릿 채우기**: GDD 템플릿의 8개 섹션이 일괄 생성이 아니라 대화를 통해 구체적인 내용으로 채워짐
+- **의존성 시그널링**: 에이전트가 Dependencies 섹션에서 하위 시그널 계약(스태미나, 인벤토리)을 선제적으로 드러냄
+- **기술적 실현 가능성 사전 점검**: 구현이 깨진 후가 아니라 설계 시작 전에 Jolt 물리 변경 사항을 짚어줌
+- **섹션별 사이클**: 한 번에 전체 초안을 쏟아내지 않고 — 각 섹션이 검토 가능한 작은 단위로 처리됨
+- **복구**: 세션이 중단되면 에이전트가 재시작 시 파일을 다시 읽고 첫 번째 빈 섹션부터 재개함
+</content>

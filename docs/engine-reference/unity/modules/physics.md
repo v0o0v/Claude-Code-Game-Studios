@@ -1,30 +1,30 @@
-# Unity 6.3 — Physics Module Reference
+# Unity 6.3 — 물리 모듈 레퍼런스
 
-**Last verified:** 2026-02-13
-**Knowledge Gap:** Unity 6 physics improvements, solver changes
-
----
-
-## Overview
-
-Unity 6.3 uses **PhysX 5.1** (improved from PhysX 4.x in 2022 LTS):
-- Better solver stability
-- Improved performance
-- Enhanced collision detection
+**최종 확인일:** 2026-02-13
+**지식 공백:** Unity 6 물리 개선 사항, 솔버 변경
 
 ---
 
-## Key Changes from 2022 LTS
+## 개요
 
-### Default Solver Iterations Increased
-Unity 6 increased default solver iterations for better stability:
+Unity 6.3은 **PhysX 5.1**을 사용 (2022 LTS의 PhysX 4.x에서 개선됨):
+- 더 나은 솔버 안정성
+- 향상된 성능
+- 강화된 충돌 감지
+
+---
+
+## 2022 LTS 대비 주요 변경 사항
+
+### 기본 솔버 반복 횟수 증가
+Unity 6은 더 나은 안정성을 위해 기본 솔버 반복 횟수를 늘렸습니다:
 
 ```csharp
 // Default changed from 6 to 8 iterations
 Physics.defaultSolverIterations = 8; // Check if relying on old behavior
 ```
 
-### Enhanced Collision Detection
+### 강화된 충돌 감지
 
 ```csharp
 // ✅ Unity 6: Improved Continuous Collision Detection (CCD)
@@ -34,7 +34,7 @@ rigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
 ---
 
-## Core Physics Components
+## 핵심 물리 컴포넌트
 
 ### Rigidbody
 
@@ -47,7 +47,7 @@ rb.AddForce(Vector3.forward * 10f, ForceMode.Impulse);
 rb.velocity = new Vector3(0, 10, 0); // Only use when necessary
 ```
 
-### Colliders
+### Collider
 
 ```csharp
 // Primitive colliders: Box, Sphere, Capsule (cheapest)
@@ -58,9 +58,9 @@ rb.velocity = new Vector3(0, 10, 0); // Only use when necessary
 
 ---
 
-## Raycasting
+## 레이캐스팅
 
-### Efficient Raycasting (Avoid Allocations)
+### 효율적인 레이캐스팅 (할당 회피)
 
 ```csharp
 // ✅ Non-allocating raycast
@@ -79,7 +79,7 @@ for (int i = 0; i < hitCount; i++) {
 RaycastHit[] hits = Physics.RaycastAll(origin, direction); // GC allocation!
 ```
 
-### LayerMask for Selective Raycasting
+### 선택적 레이캐스팅을 위한 LayerMask
 
 ```csharp
 // ✅ Use LayerMask to filter collisions
@@ -89,9 +89,9 @@ Physics.Raycast(origin, direction, out RaycastHit hit, maxDistance, layerMask);
 
 ---
 
-## Physics Queries
+## 물리 쿼리
 
-### OverlapSphere (Check for nearby objects)
+### OverlapSphere (주변 오브젝트 확인)
 
 ```csharp
 // ✅ Non-allocating version
@@ -102,7 +102,7 @@ for (int i = 0; i < count; i++) {
 }
 ```
 
-### SphereCast (Thick raycast)
+### SphereCast (두꺼운 레이캐스트)
 
 ```csharp
 // Useful for character controllers
@@ -113,7 +113,7 @@ if (Physics.SphereCast(origin, radius, direction, out RaycastHit hit, maxDistanc
 
 ---
 
-## Collision Events
+## 충돌 이벤트
 
 ### OnCollisionEnter / Stay / Exit
 
@@ -142,9 +142,9 @@ void OnTriggerEnter(Collider other) {
 
 ---
 
-## Character Controllers
+## 캐릭터 컨트롤러
 
-### CharacterController Component
+### CharacterController 컴포넌트
 
 ```csharp
 CharacterController controller = GetComponent<CharacterController>();
@@ -162,9 +162,9 @@ controller.Move(velocity * Time.deltaTime);
 
 ---
 
-## Physics Materials
+## 물리 머티리얼
 
-### Friction & Bounciness
+### 마찰 & 탄성
 
 ```csharp
 // Create: Assets > Create > Physic Material
@@ -180,16 +180,16 @@ controller.Move(velocity * Time.deltaTime);
 
 ---
 
-## Joints
+## 조인트
 
-### Fixed Joint (Attach two rigidbodies)
+### Fixed Joint (두 리지드바디 연결)
 
 ```csharp
 FixedJoint joint = gameObject.AddComponent<FixedJoint>();
 joint.connectedBody = otherRigidbody;
 ```
 
-### Hinge Joint (Door, wheel)
+### Hinge Joint (문, 바퀴)
 
 ```csharp
 HingeJoint hinge = gameObject.AddComponent<HingeJoint>();
@@ -200,28 +200,28 @@ hinge.limits = new JointLimits { min = -90, max = 90 };
 
 ---
 
-## Performance Optimization
+## 성능 최적화
 
-### Physics Layer Collision Matrix
+### 물리 레이어 충돌 매트릭스
 `Edit > Project Settings > Physics > Layer Collision Matrix`
-- Disable unnecessary collision checks between layers
-- Massive performance gain
+- 레이어 간 불필요한 충돌 검사를 비활성화
+- 성능이 크게 향상됨
 
 ### Fixed Timestep
 `Edit > Project Settings > Time > Fixed Timestep`
-- Default: 0.02 (50 FPS physics)
-- Lower = more accurate, higher CPU cost
-- Match game's target framerate if possible
+- 기본값: 0.02 (50 FPS 물리)
+- 낮을수록 정확하지만 CPU 비용이 높아짐
+- 가능하면 게임의 목표 프레임레이트에 맞출 것
 
-### Simplified Collision Geometry
-- Use primitive colliders (box, sphere, capsule) over mesh colliders
-- Bake mesh colliders at build time, not runtime
+### 단순화된 충돌 지오메트리
+- 메시 콜라이더 대신 기본 콜라이더(box, sphere, capsule) 사용
+- 메시 콜라이더는 런타임이 아닌 빌드 타임에 베이크
 
 ---
 
-## Common Patterns
+## 자주 쓰이는 패턴
 
-### Ground Check (Character Controller)
+### 접지 확인 (Ground Check, 캐릭터 컨트롤러)
 
 ```csharp
 bool IsGrounded() {
@@ -230,7 +230,7 @@ bool IsGrounded() {
 }
 ```
 
-### Apply Explosion Force
+### 폭발력 적용
 
 ```csharp
 void ApplyExplosion(Vector3 explosionPos, float radius, float force) {
@@ -246,11 +246,11 @@ void ApplyExplosion(Vector3 explosionPos, float radius, float force) {
 
 ---
 
-## Debugging
+## 디버깅
 
 ### Physics Debugger (Unity 6+)
 - `Window > Analysis > Physics Debugger`
-- Visualize colliders, contacts, queries
+- 콜라이더, 접촉점, 쿼리를 시각화
 
 ### Gizmos
 
@@ -263,6 +263,6 @@ void OnDrawGizmos() {
 
 ---
 
-## Sources
+## 출처
 - https://docs.unity3d.com/6000.0/Documentation/Manual/PhysicsOverview.html
 - https://docs.unity3d.com/ScriptReference/Physics.html

@@ -1,23 +1,23 @@
-# Unreal Engine 5.7 — Networking Module Reference
+# Unreal Engine 5.7 — 네트워킹 모듈 레퍼런스
 
-**Last verified:** 2026-02-13
-**Knowledge Gap:** UE 5.7 networking improvements
-
----
-
-## Overview
-
-UE 5.7 networking:
-- **Client-Server Architecture**: Server-authoritative (RECOMMENDED)
-- **Replication**: Automatic state synchronization
-- **RPCs (Remote Procedure Calls)**: Call functions across network
-- **Relevancy**: Optimize bandwidth by only replicating relevant actors
+**최종 확인일:** 2026-02-13
+**지식 공백:** UE 5.7 네트워킹 개선 사항
 
 ---
 
-## Basic Multiplayer Setup
+## 개요
 
-### Enable Replication on Actor
+UE 5.7 네트워킹:
+- **클라이언트-서버 아키텍처**: 서버 권위(Server-Authoritative) 방식 (권장)
+- **Replication**: 자동 상태 동기화
+- **RPC(원격 프로시저 호출)**: 네트워크를 통해 함수를 호출
+- **Relevancy**: 관련 있는 액터만 복제하여 대역폭을 최적화
+
+---
+
+## 기본 멀티플레이어 설정
+
+### 액터에서 Replication 활성화
 
 ```cpp
 UCLASS()
@@ -26,35 +26,35 @@ class AMyActor : public AActor {
 
 public:
     AMyActor() {
-        // ✅ Enable replication
+        // ✅ Replication 활성화
         bReplicates = true;
-        bAlwaysRelevant = true; // Always replicate to all clients
+        bAlwaysRelevant = true; // 모든 클라이언트에 항상 복제
     }
 };
 ```
 
-### Network Role Checks
+### 네트워크 Role 확인
 
 ```cpp
-// Check role
+// Role 확인
 if (HasAuthority()) {
-    // Running on server
+    // 서버에서 실행 중
 }
 
 if (GetLocalRole() == ROLE_AutonomousProxy) {
-    // This is the owning client (local player)
+    // 이 인스턴스는 소유 중인 클라이언트(로컬 플레이어)임
 }
 
 if (GetRemoteRole() == ROLE_SimulatedProxy) {
-    // This is a remote client (other players)
+    // 이 인스턴스는 원격 클라이언트(다른 플레이어)임
 }
 ```
 
 ---
 
-## Replicated Variables
+## 복제되는 변수(Replicated Variables)
 
-### Basic Replication
+### 기본 Replication
 
 ```cpp
 UPROPERTY(Replicated)
@@ -63,7 +63,7 @@ int32 Health;
 UPROPERTY(Replicated)
 FVector Position;
 
-// ✅ Implement GetLifetimeReplicatedProps
+// ✅ GetLifetimeReplicatedProps 구현
 void AMyActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
@@ -72,20 +72,20 @@ void AMyActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetime
 }
 ```
 
-### Conditional Replication
+### 조건부 Replication
 
 ```cpp
-// Only replicate to owner
+// 소유자에게만 복제
 DOREPLIFETIME_CONDITION(AMyCharacter, Ammo, COND_OwnerOnly);
 
-// Skip owner (replicate to everyone else)
+// 소유자를 제외하고 복제(나머지 전원에게 복제)
 DOREPLIFETIME_CONDITION(AMyCharacter, TeamID, COND_SkipOwner);
 
-// Only when changed
+// 변경되었을 때만 복제
 DOREPLIFETIME_CONDITION(AMyCharacter, Score, COND_InitialOnly);
 ```
 
-### RepNotify (Callback on Replication)
+### RepNotify(Replication 발생 시 콜백)
 
 ```cpp
 UPROPERTY(ReplicatedUsing=OnRep_Health)
@@ -93,26 +93,26 @@ int32 Health;
 
 UFUNCTION()
 void OnRep_Health() {
-    // Called on clients when Health changes
+    // Health가 변경될 때 클라이언트에서 호출됨
     UpdateHealthUI();
 }
 
-// Implement GetLifetimeReplicatedProps (same as above)
+// GetLifetimeReplicatedProps 구현(위와 동일)
 ```
 
 ---
 
-## RPCs (Remote Procedure Calls)
+## RPC(원격 프로시저 호출)
 
-### Server RPC (Client → Server)
+### Server RPC(클라이언트 → 서버)
 
 ```cpp
-// Client calls, server executes
+// 클라이언트가 호출하고, 서버가 실행
 UFUNCTION(Server, Reliable)
 void Server_TakeDamage(int32 Damage);
 
 void AMyCharacter::Server_TakeDamage_Implementation(int32 Damage) {
-    // Runs on server only
+    // 서버에서만 실행됨
     Health -= Damage;
 
     if (Health <= 0) {
@@ -121,54 +121,54 @@ void AMyCharacter::Server_TakeDamage_Implementation(int32 Damage) {
 }
 
 bool AMyCharacter::Server_TakeDamage_Validate(int32 Damage) {
-    // Validate input (anti-cheat)
+    // 입력값 검증(치트 방지)
     return Damage >= 0 && Damage <= 100;
 }
 ```
 
-### Client RPC (Server → Client)
+### Client RPC(서버 → 클라이언트)
 
 ```cpp
-// Server calls, client executes
+// 서버가 호출하고, 클라이언트가 실행
 UFUNCTION(Client, Reliable)
 void Client_ShowDeathScreen();
 
 void AMyCharacter::Client_ShowDeathScreen_Implementation() {
-    // Runs on client only
+    // 클라이언트에서만 실행됨
     ShowDeathUI();
 }
 ```
 
-### Multicast RPC (Server → All Clients)
+### Multicast RPC(서버 → 모든 클라이언트)
 
 ```cpp
-// Server calls, all clients execute
+// 서버가 호출하고, 모든 클라이언트가 실행
 UFUNCTION(NetMulticast, Reliable)
 void Multicast_PlayExplosion(FVector Location);
 
 void AMyActor::Multicast_PlayExplosion_Implementation(FVector Location) {
-    // Runs on server and all clients
+    // 서버와 모든 클라이언트에서 실행됨
     UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionEffect, Location);
 }
 ```
 
-### RPC Reliability
+### RPC 신뢰성(Reliability)
 
 ```cpp
-// Reliable: Guaranteed delivery (important events)
+// Reliable: 전달을 보장(중요한 이벤트용)
 UFUNCTION(Server, Reliable)
 void Server_FireWeapon();
 
-// Unreliable: Best-effort delivery (frequent updates, position sync)
+// Unreliable: 최선 노력 전달(빈번한 업데이트, 위치 동기화용)
 UFUNCTION(Server, Unreliable)
 void Server_UpdateAim(FRotator AimRotation);
 ```
 
 ---
 
-## Server-Authoritative Pattern (RECOMMENDED)
+## 서버 권위 패턴(RECOMMENDED)
 
-### Movement Example
+### 이동(Movement) 예시
 
 ```cpp
 class AMyCharacter : public ACharacter {
@@ -179,19 +179,19 @@ class AMyCharacter : public ACharacter {
         Super::Tick(DeltaTime);
 
         if (GetLocalRole() == ROLE_AutonomousProxy) {
-            // Client: Send input to server
+            // 클라이언트: 입력을 서버로 전송
             FVector Input = GetMovementInput();
             Server_Move(Input);
 
-            // Client-side prediction (move locally)
+            // 클라이언트 사이드 예측(로컬에서 먼저 이동)
             AddMovementInput(Input);
         }
 
         if (HasAuthority()) {
-            // Server: Authoritative position
+            // 서버: 권위 있는 위치
             ServerPosition = GetActorLocation();
         } else {
-            // Client: Interpolate toward server position
+            // 클라이언트: 서버 위치를 향해 보간
             FVector NewPos = FMath::VInterpTo(GetActorLocation(), ServerPosition, DeltaTime, 5.0f);
             SetActorLocation(NewPos);
         }
@@ -201,7 +201,7 @@ class AMyCharacter : public ACharacter {
     void Server_Move(FVector Input);
 
     void Server_Move_Implementation(FVector Input) {
-        // Server validates and applies movement
+        // 서버가 이동을 검증하고 적용
         AddMovementInput(Input);
     }
 };
@@ -209,43 +209,43 @@ class AMyCharacter : public ACharacter {
 
 ---
 
-## Network Relevancy (Bandwidth Optimization)
+## 네트워크 Relevancy(대역폭 최적화)
 
-### Custom Relevancy
+### 커스텀 Relevancy
 
 ```cpp
 bool AMyActor::IsNetRelevantFor(const AActor* RealViewer, const AActor* ViewTarget, const FVector& SrcLocation) const {
-    // Only replicate if within range
+    // 범위 내에 있을 때만 복제
     float Distance = FVector::Dist(SrcLocation, GetActorLocation());
     return Distance < 5000.0f;
 }
 ```
 
-### Always Relevant Actors
+### 항상 관련 있는(Always Relevant) 액터
 
 ```cpp
 AMyActor() {
-    bAlwaysRelevant = true; // Replicate to all clients (e.g., GameState, PlayerController)
-    bOnlyRelevantToOwner = true; // Only replicate to owner (e.g., PlayerController)
+    bAlwaysRelevant = true; // 모든 클라이언트에 복제(예: GameState, PlayerController)
+    bOnlyRelevantToOwner = true; // 소유자에게만 복제(예: PlayerController)
 }
 ```
 
 ---
 
-## Ownership
+## 소유권(Ownership)
 
-### Set Owner
+### 소유자 설정
 
 ```cpp
-// Assign owner (important for RPCs and relevancy)
+// 소유자 지정(RPC와 relevancy에 중요함)
 MyActor->SetOwner(OwningPlayerController);
 ```
 
-### Check Owner
+### 소유자 확인
 
 ```cpp
 if (GetOwner() == PlayerController) {
-    // This actor is owned by this player
+    // 이 액터는 이 플레이어가 소유하고 있음
 }
 ```
 
@@ -253,7 +253,7 @@ if (GetOwner() == PlayerController) {
 
 ## Game Mode & Game State
 
-### Game Mode (Server Only)
+### Game Mode(서버 전용)
 
 ```cpp
 UCLASS()
@@ -261,12 +261,12 @@ class AMyGameMode : public AGameMode {
     GENERATED_BODY()
 
 public:
-    // Game mode only exists on server
-    // Use for server-side logic (spawning, scoring, rules)
+    // Game Mode는 서버에만 존재함
+    // 서버 사이드 로직(스폰, 스코어링, 규칙)에 사용
 };
 ```
 
-### Game State (Replicated to All Clients)
+### Game State(모든 클라이언트에 복제됨)
 
 ```cpp
 UCLASS()
@@ -274,7 +274,7 @@ class AMyGameState : public AGameState {
     GENERATED_BODY()
 
 public:
-    // ✅ Replicate game state to all clients
+    // ✅ Game State를 모든 클라이언트에 복제
     UPROPERTY(Replicated)
     int32 RedTeamScore;
 
@@ -293,7 +293,7 @@ public:
 
 ## Player Controller & Player State
 
-### Player Controller (One per Player)
+### Player Controller(플레이어당 하나)
 
 ```cpp
 UCLASS()
@@ -301,12 +301,12 @@ class AMyPlayerController : public APlayerController {
     GENERATED_BODY()
 
 public:
-    // Exists on server and owning client
-    // Use for player-specific logic, input handling
+    // 서버와 소유 중인 클라이언트에 존재함
+    // 플레이어별 로직, 입력 처리에 사용
 };
 ```
 
-### Player State (Replicated Player Info)
+### Player State(복제되는 플레이어 정보)
 
 ```cpp
 UCLASS()
@@ -330,9 +330,9 @@ public:
 
 ---
 
-## Sessions & Matchmaking
+## 세션 & 매치메이킹
 
-### Create Session
+### 세션 생성
 
 ```cpp
 #include "OnlineSubsystem.h"
@@ -351,7 +351,7 @@ void CreateSession() {
 }
 ```
 
-### Find Sessions
+### 세션 찾기
 
 ```cpp
 void FindSessions() {
@@ -368,42 +368,42 @@ void FindSessions() {
 
 ---
 
-## Performance Tips
+## 성능 팁
 
-### Reduce Bandwidth
+### 대역폭 줄이기
 
 ```cpp
-// Use unreliable RPCs for frequent updates
+// 빈번한 업데이트에는 unreliable RPC 사용
 UFUNCTION(Server, Unreliable)
 void Server_UpdatePosition(FVector Pos);
 
-// Conditional replication (only replicate to relevant clients)
+// 조건부 복제(관련 있는 클라이언트에만 복제)
 DOREPLIFETIME_CONDITION(AMyActor, Health, COND_OwnerOnly);
 
-// Limit replication frequency
-SetReplicationFrequency(10.0f); // Update 10 times per second (default 100)
+// 복제 빈도 제한
+SetReplicationFrequency(10.0f); // 초당 10회 업데이트(기본값 100)
 ```
 
 ---
 
-## Debugging
+## 디버깅
 
-### Network Debugging
+### 네트워크 디버깅
 
 ```cpp
-// Console commands:
-// stat net - Show network stats
-// stat netplayerupdate - Show player update stats
-// NetEmulation PktLoss=10 - Simulate 10% packet loss
-// NetEmulation PktLag=100 - Simulate 100ms latency
+// 콘솔 명령어:
+// stat net - 네트워크 통계 표시
+// stat netplayerupdate - 플레이어 업데이트 통계 표시
+// NetEmulation PktLoss=10 - 10% 패킷 손실 시뮬레이션
+// NetEmulation PktLag=100 - 100ms 지연 시뮬레이션
 
-// Draw debug for replication:
+// Replication 디버그 출력:
 UE_LOG(LogNet, Warning, TEXT("Replicating Health: %d"), Health);
 ```
 
 ---
 
-## Sources
+## 출처
 - https://docs.unrealengine.com/5.7/en-US/networking-and-multiplayer-in-unreal-engine/
 - https://docs.unrealengine.com/5.7/en-US/actor-replication-in-unreal-engine/
 - https://docs.unrealengine.com/5.7/en-US/rpcs-in-unreal-engine/

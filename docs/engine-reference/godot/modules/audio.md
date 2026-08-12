@@ -1,21 +1,21 @@
-# Godot Audio — Quick Reference
+# Godot 오디오 — 빠른 레퍼런스
 
-Last verified: 2026-02-12 | Engine: Godot 4.6
+최종 검증일: 2026-02-12 | 엔진: Godot 4.6
 
-## What Changed Since ~4.3 (LLM Cutoff)
+## ~4.3(LLM 컷오프) 이후 변경된 사항
 
-No major breaking changes to the audio API in 4.4–4.6. The core audio system
-remains stable. Key updates are workflow improvements:
+4.4–4.6에서 오디오 API에는 주요 호환성 파괴 변경 사항이 없었다. 핵심 오디오 시스템은
+안정적으로 유지되고 있다. 주요 업데이트는 워크플로 개선에 관한 것들이다.
 
-### 4.6 Changes
-- **No audio-specific breaking changes** in this release
+### 4.6 변경 사항
+- 이번 릴리스에 **오디오 관련 호환성 파괴 변경 사항 없음**
 
-### 4.5 Changes
-- **No audio-specific breaking changes** in this release
+### 4.5 변경 사항
+- 이번 릴리스에 **오디오 관련 호환성 파괴 변경 사항 없음**
 
-## Current API Patterns
+## 현재 API 패턴
 
-### Playing Audio
+### 오디오 재생
 ```gdscript
 @onready var sfx_player: AudioStreamPlayer = %SFXPlayer
 @onready var music_player: AudioStreamPlayer = %MusicPlayer
@@ -33,7 +33,7 @@ func play_music(stream: AudioStream, fade_time: float = 1.0) -> void:
     music_player.play()
 ```
 
-### 3D Spatial Audio
+### 3D 공간 오디오
 ```gdscript
 @onready var audio_3d: AudioStreamPlayer3D = %AudioPlayer3D
 
@@ -43,19 +43,19 @@ func _ready() -> void:
     audio_3d.unit_size = 10.0
 ```
 
-### Audio Buses
+### 오디오 버스
 ```gdscript
-# Set bus volumes
+# 버스 볼륨 설정
 AudioServer.set_bus_volume_db(AudioServer.get_bus_index(&"Music"), volume_db)
 AudioServer.set_bus_volume_db(AudioServer.get_bus_index(&"SFX"), volume_db)
 
-# Mute a bus
+# 버스 음소거
 AudioServer.set_bus_mute(AudioServer.get_bus_index(&"Music"), true)
 ```
 
-### Object Pooling for SFX
+### SFX용 오브젝트 풀링
 ```gdscript
-# Pre-create multiple AudioStreamPlayer nodes for concurrent sounds
+# 동시 재생되는 사운드를 위해 여러 AudioStreamPlayer 노드를 미리 생성해 둔다
 var _sfx_pool: Array[AudioStreamPlayer] = []
 
 func _ready() -> void:
@@ -73,7 +73,7 @@ func play_pooled(stream: AudioStream) -> void:
             return
 ```
 
-## Common Mistakes
-- Creating new AudioStreamPlayer nodes at runtime instead of pooling
-- Not using audio buses for volume categories (Music, SFX, UI, Voice)
-- Using `_process()` for audio timing instead of signals (`finished`)
+## 흔한 실수
+- 풀링하지 않고 런타임에 AudioStreamPlayer 노드를 계속 새로 생성하는 것
+- 볼륨 카테고리(Music, SFX, UI, Voice)별로 오디오 버스를 사용하지 않는 것
+- 오디오 타이밍에 시그널(`finished`) 대신 `_process()`를 사용하는 것

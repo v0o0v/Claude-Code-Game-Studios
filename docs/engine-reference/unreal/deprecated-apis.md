@@ -1,98 +1,98 @@
-# Unreal Engine 5.7 — Deprecated APIs
+# Unreal Engine 5.7 — 지원 중단된(Deprecated) API
 
-**Last verified:** 2026-02-13
+**최종 확인일:** 2026-02-13
 
-Quick lookup table for deprecated APIs and their replacements.
-Format: **Don't use X** → **Use Y instead**
+지원 중단된 API와 그 대체 항목을 빠르게 찾아볼 수 있는 표.
+형식: **X를 사용하지 말 것** → **대신 Y를 사용할 것**
 
 ---
 
-## Input
+## 입력
 
-| Deprecated | Replacement | Notes |
+| 지원 중단 | 대체 | 비고 |
 |------------|-------------|-------|
-| `InputComponent->BindAction()` | Enhanced Input `BindAction()` | New input system |
-| `InputComponent->BindAxis()` | Enhanced Input `BindAxis()` | New input system |
-| `PlayerController->GetInputAxisValue()` | Enhanced Input Action Values | New input system |
+| `InputComponent->BindAction()` | Enhanced Input `BindAction()` | 새로운 입력 시스템 |
+| `InputComponent->BindAxis()` | Enhanced Input `BindAxis()` | 새로운 입력 시스템 |
+| `PlayerController->GetInputAxisValue()` | Enhanced Input Action Values | 새로운 입력 시스템 |
 
-**Migration:** Install Enhanced Input plugin, create Input Actions and Input Mapping Contexts.
+**마이그레이션:** Enhanced Input 플러그인을 설치하고 Input Actions와 Input Mapping Contexts를 생성한다.
 
 ---
 
-## Rendering
+## 렌더링
 
-| Deprecated | Replacement | Notes |
+| 지원 중단 | 대체 | 비고 |
 |------------|-------------|-------|
-| Legacy material nodes | Substrate material nodes | Substrate is production-ready in 5.7 |
-| Forward shading (default) | Deferred + Lumen | Lumen is default in UE5 |
-| Old lighting workflow | Lumen Global Illumination | Real-time GI |
+| Legacy material nodes | Substrate material nodes | Substrate는 5.7에서 프로덕션 준비 완료 |
+| Forward shading(기본값) | Deferred + Lumen | Lumen이 UE5의 기본값 |
+| Old lighting workflow | Lumen Global Illumination | 실시간 GI |
 
 ---
 
-## World Building
+## 월드 빌딩
 
-| Deprecated | Replacement | Notes |
+| 지원 중단 | 대체 | 비고 |
 |------------|-------------|-------|
-| UE4 World Composition | World Partition (UE5) | Streaming large worlds |
-| Level Streaming Volumes | World Partition Data Layers | Better level streaming |
+| UE4 World Composition | World Partition(UE5) | 대규모 월드 스트리밍 |
+| Level Streaming Volumes | World Partition Data Layers | 더 나은 레벨 스트리밍 |
 
 ---
 
-## Animation
+## 애니메이션
 
-| Deprecated | Replacement | Notes |
+| 지원 중단 | 대체 | 비고 |
 |------------|-------------|-------|
-| Old animation retargeting | IK Rig + IK Retargeter | UE5 retargeting system |
-| Legacy control rig | Control Rig 2.0 | Production-ready rigging |
+| Old animation retargeting | IK Rig + IK Retargeter | UE5 리타게팅 시스템 |
+| Legacy control rig | Control Rig 2.0 | 프로덕션 준비가 완료된 리깅 |
 
 ---
 
-## Gameplay
+## 게임플레이
 
-| Deprecated | Replacement | Notes |
+| 지원 중단 | 대체 | 비고 |
 |------------|-------------|-------|
-| `UGameplayStatics::LoadStreamLevel()` | World Partition streaming | Use Data Layers |
-| Hardcoded input bindings | Enhanced Input system | Rebindable, modular input |
+| `UGameplayStatics::LoadStreamLevel()` | World Partition streaming | Data Layers를 사용할 것 |
+| Hardcoded input bindings | Enhanced Input system | 리바인딩 가능한 모듈형 입력 |
 
 ---
 
-## Niagara (VFX)
+## Niagara(VFX)
 
-| Deprecated | Replacement | Notes |
+| 지원 중단 | 대체 | 비고 |
 |------------|-------------|-------|
-| Cascade particle system | Niagara | Cascade is fully deprecated |
+| Cascade particle system | Niagara | Cascade는 완전히 지원 중단됨 |
 
 ---
 
-## Audio
+## 오디오
 
-| Deprecated | Replacement | Notes |
+| 지원 중단 | 대체 | 비고 |
 |------------|-------------|-------|
-| Old audio mixer | MetaSounds | Procedural audio system |
-| Sound Cue (for complex logic) | MetaSounds | More powerful, node-based |
+| Old audio mixer | MetaSounds | 절차적 오디오 시스템 |
+| Sound Cue(복잡한 로직용) | MetaSounds | 더 강력하고 노드 기반 |
 
 ---
 
-## Networking
+## 네트워킹
 
-| Deprecated | Replacement | Notes |
+| 지원 중단 | 대체 | 비고 |
 |------------|-------------|-------|
-| `DOREPLIFETIME()` (basic) | `DOREPLIFETIME_CONDITION()` | Conditional replication for optimization |
+| `DOREPLIFETIME()`(기본형) | `DOREPLIFETIME_CONDITION()` | 최적화를 위한 조건부 리플리케이션 |
 
 ---
 
-## C++ Scripting
+## C++ 스크립팅
 
-| Deprecated | Replacement | Notes |
+| 지원 중단 | 대체 | 비고 |
 |------------|-------------|-------|
-| `TSharedPtr<T>` for UObjects | `TObjectPtr<T>` | UE5 type-safe pointers |
-| Manual RTTI checks | `Cast<T>()` / `IsA<T>()` | Type-safe casting |
+| UObject용 `TSharedPtr<T>` | `TObjectPtr<T>` | UE5 타입 안전 포인터 |
+| 수동 RTTI 검사 | `Cast<T>()` / `IsA<T>()` | 타입 안전 캐스팅 |
 
 ---
 
-## Quick Migration Patterns
+## 빠른 마이그레이션 패턴
 
-### Input Example
+### 입력 예시
 ```cpp
 // ❌ Deprecated
 void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
@@ -110,7 +110,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 }
 ```
 
-### Material Example
+### 머티리얼 예시
 ```cpp
 // ❌ Deprecated: Legacy material
 // Use standard material graph (still works but not recommended)
@@ -120,7 +120,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 // Use Substrate nodes in material editor
 ```
 
-### World Partition Example
+### World Partition 예시
 ```cpp
 // ❌ Deprecated: Level streaming volumes
 // Load/unload levels manually
@@ -130,7 +130,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 // Use Data Layers for streaming
 ```
 
-### Particle System Example
+### 파티클 시스템 예시
 ```cpp
 // ❌ Deprecated: Cascade
 UParticleSystemComponent* PSC = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Particles"));
@@ -139,7 +139,7 @@ UParticleSystemComponent* PSC = CreateDefaultSubobject<UParticleSystemComponent>
 UNiagaraComponent* NiagaraComp = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Niagara"));
 ```
 
-### Audio Example
+### 오디오 예시
 ```cpp
 // ❌ Deprecated: Sound Cue for complex logic
 // Use Sound Cue editor nodes
@@ -150,21 +150,21 @@ UNiagaraComponent* NiagaraComp = CreateDefaultSubobject<UNiagaraComponent>(TEXT(
 
 ---
 
-## Summary: UE 5.7 Tech Stack
+## 요약: UE 5.7 기술 스택
 
-| Feature | Use This (2026) | Avoid This (Legacy) |
+| 기능 | 이것을 사용할 것(2026) | 이것은 피할 것(레거시) |
 |---------|------------------|----------------------|
-| **Input** | Enhanced Input | Legacy Input Bindings |
-| **Materials** | Substrate | Legacy Material System |
-| **Lighting** | Lumen + Megalights | Lightmaps + Limited Lights |
-| **Particles** | Niagara | Cascade |
-| **Audio** | MetaSounds | Sound Cue (for logic) |
-| **World Streaming** | World Partition | World Composition |
-| **Animation Retarget** | IK Rig + Retargeter | Old Retargeting |
-| **Geometry** | Nanite (high-poly) | Standard Static Mesh LODs |
+| **입력** | Enhanced Input | Legacy Input Bindings |
+| **머티리얼** | Substrate | Legacy Material System |
+| **조명** | Lumen + Megalights | Lightmaps + Limited Lights |
+| **파티클** | Niagara | Cascade |
+| **오디오** | MetaSounds | Sound Cue(로직용) |
+| **월드 스트리밍** | World Partition | World Composition |
+| **애니메이션 리타게팅** | IK Rig + Retargeter | Old Retargeting |
+| **지오메트리** | Nanite(고폴리곤) | Standard Static Mesh LODs |
 
 ---
 
-**Sources:**
+**출처:**
 - https://docs.unrealengine.com/5.7/en-US/deprecated-and-removed-features/
 - https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-5-7-release-notes
