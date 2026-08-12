@@ -1,6 +1,6 @@
 ---
 name: init
-description: "Bootstrap the current project for Claude Code Game Studios (ccgs): scaffolds the fixed directory layout, injects the always-on collaboration protocol into CLAUDE.md, proposes a permissions/statusLine merge, and writes the project marker that later sessions use to auto-recover the scaffold. Run this once per project, first."
+description: "Bootstrap the current project for Claude Code Game Studios (ccgs): asks which language to use, scaffolds the fixed directory layout, injects the always-on collaboration protocol and language preference into CLAUDE.md, proposes a permissions merge, and writes the project marker that later sessions use to auto-recover the scaffold. Run this once per project, first."
 argument-hint: "[--force]"
 user-invocable: true
 allowed-tools: Read, Glob, Grep, Write, Edit, Bash, AskUserQuestion
@@ -8,6 +8,25 @@ model: sonnet
 ---
 
 When this skill is invoked:
+
+## 0. Ask Language (always first, before anything else)
+
+Before checking any project state, ask via `AskUserQuestion`:
+- Prompt: "Which language should this project's Claude Code sessions use?"
+- Options: `English`, `한국어` (the tool always also offers a free-text "Other"
+  option — accept whatever the user types there, e.g. "日本語", "Español").
+
+From this point forward — for the rest of *this* skill's execution, and
+later for every other `ccgs` skill/agent interaction in this project once
+the CLAUDE.md block is written — communicate with the user, and write all
+project documents this plugin's skills produce (GDDs, ADRs, sprint plans,
+etc.), in the chosen language. Keep code identifiers, commands, file paths,
+and library/technical names in their original form; don't translate those.
+
+This choice is stored in `.ccgs/config.yaml` (`language` field) and written
+into the CLAUDE.md marker block in Phase 4, so it persists across sessions
+without needing to ask again — until the marker is re-synced (`--force`),
+which re-asks it.
 
 ## 1. Detect Current State
 
@@ -44,10 +63,10 @@ assets/
 **B. Files written:**
 - `CLAUDE.md` — a `<!-- CCGS:BEGIN --><!-- CCGS:END -->` marked block will be
   added (or replaced, if it already exists) containing the collaboration
-  protocol and directory/doc pointers. Content outside the markers is never
-  touched. If the file has no `## Technology Stack` section yet, a
-  placeholder one is also added outside the markers — `/ccgs:setup-engine`
-  fills it in later.
+  protocol, the language chosen in Phase 0, and directory/doc pointers.
+  Content outside the markers is never touched. If the file has no `##
+  Technology Stack` section yet, a placeholder one is also added outside
+  the markers — `/ccgs:setup-engine` fills it in later.
 - `.claude/docs/coordination-rules.md`, `.claude/docs/coding-standards.md`,
   `.claude/docs/context-management.md`, `.claude/docs/directory-structure.md` —
   copied from the plugin's bundled reference docs (`${CLAUDE_PLUGIN_ROOT}/docs/`)
@@ -69,7 +88,8 @@ assets/
 - `production/review-mode.txt` — written with content `lean` if missing (the
   default review mode; user can change to `full`, `lean`, or `solo` any time).
 - `.ccgs/config.yaml` — the project marker. Contains: `version` (plugin
-  version), `initialized` (today's date), `review_mode`.
+  version), `initialized` (today's date), `review_mode`, `language` (chosen
+  in Phase 0).
 
 **C. Proposed, not automatic — requires separate approval:**
 - A merge into `.claude/settings.json` adding the `deny` permission list
@@ -155,6 +175,13 @@ This project uses the `ccgs` plugin (Claude Code Game Studios) for
 structured, multi-agent game development. Skills are invoked as
 `/ccgs:<name>` (e.g. `/ccgs:brainstorm`), agents as `ccgs:<name>`.
 
+### Language
+
+Respond to the user, and write all project documents (GDDs, ADRs, sprint
+plans, and any other file this plugin's skills produce), in [chosen
+language from Phase 0]. Keep code identifiers, commands, file paths, and
+library/technical names in their original form — do not translate those.
+
 ### Project Structure
 
 @.claude/docs/directory-structure.md
@@ -190,6 +217,10 @@ Every task follows: **Question -> Options -> Decision -> Draft -> Approval**
 <!-- CCGS:END -->
 ```
 
+Fill in `[chosen language from Phase 0]` with the actual language the user
+picked (e.g. "한국어(Korean)", "English") before writing — this is a
+substitution, not literal placeholder text.
+
 Copy the reference docs from `${CLAUDE_PLUGIN_ROOT}/docs/` into
 `.claude/docs/` for each file listed in Phase 2B that doesn't already exist.
 Do the same for the `technical-preferences.md` blank template — but check
@@ -208,6 +239,7 @@ do not hardcode a version number):
 version: "[plugin.json version, e.g. 1.0.0]"
 initialized: "[today's date, YYYY-MM-DD]"
 review_mode: "lean"
+language: "[language code chosen in Phase 0, e.g. ko, en, ja]"
 ```
 
 If option `[B]` was chosen, also perform the settings.json merge now (Phase 5).
