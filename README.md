@@ -130,6 +130,90 @@ Release ◀── Polish ◀── Production ◀──────────�
 
 > **리뷰 강도**: 기본은 `lean`(단계 게이트만 확인)입니다. 모든 디렉터의 승인을 받고 싶다면 `--review full`을, 혼자 빠르게 진행하고 싶다면 `--review solo`를 스킬 실행 시 붙이세요. `production/review-mode.txt`를 편집하면 프로젝트 기본값을 바꿀 수 있습니다.
 
+### 페이즈별 스킬 상세
+
+각 페이즈에서 어떤 스킬을 어떤 순서로 쓰고, 그 스킬이 실제로 무엇을 하는지 정리했습니다.
+
+**① Concept — 게임 컨셉 확정**
+
+| 스킬 | 동작 |
+|---|---|
+| `/ccgs:init` | 프로젝트 최초 1회. 언어 선택 후 `design/`·`production/`·`tests/` 등 디렉터리, `.claude/docs/`, `.claude/rules/`, `CLAUDE.md` 협업 프로토콜 블록을 승인 받아가며 생성 |
+| `/ccgs:setup-engine` | 엔진(Godot/Unity/UE5/Web)과 버전 확정 → 해당 엔진 레퍼런스 팩을 프로젝트로 복사, `technical-preferences.md` 채움 |
+| `/ccgs:brainstorm` | MDA 프레임워크·자기결정이론·바틀 플레이어 유형 등 전문 기법으로 아이디어부터 구조화된 게임 컨셉 문서까지 유도 |
+| `/ccgs:prototype` | (선택) brainstorm+setup-engine 직후, GDD를 쓰기 전에 "이 아이디어가 재미있는가"만 빠르게 검증. HTML/엔진/페이퍼 경로 중 자동 라우팅 → PROCEED/PIVOT/KILL 판정 |
+
+**② Systems Design — 시스템 설계**
+
+| 스킬 | 동작 |
+|---|---|
+| `/ccgs:art-bible` | brainstorm 승인 직후, GDD 작성 전에 실행 — 이후 모든 에셋 제작의 기준이 되는 비주얼 아이덴티티 문서를 섹션별로 작성 |
+| `/ccgs:map-systems` | 컨셉을 개별 시스템으로 분해, 의존성 맵핑, 설계 우선순위 산정 → 시스템 인덱스 생성 |
+| `/ccgs:design-system [system]` | 시스템 1개당 1회 반복 실행. 관련 문서 컨텍스트 수집 → 8개 필수 섹션(개요/플레이어 판타지/규칙/공식/엣지케이스/의존성/튜닝노브/승인기준)을 대화로 채워가며 파일에 즉시 저장 |
+| `/ccgs:quick-design` | 시스템 GDD가 이미 있거나 변경이 작을 때 풀 GDD 대신 쓰는 경량 스펙 — 스토리 파일에 바로 임베드 |
+| `/ccgs:design-review` | 개별 GDD를 프로그래머에게 넘기기 전 완결성·내적 일관성·구현 가능성 검토 |
+| `/ccgs:review-all-gdds` | 모든 MVP GDD가 다 써진 뒤, 아키텍처 착수 전 — 전체 GDD를 동시에 읽어 모순·죽은 참조·소유권 충돌·공식 불일치·게임 디자인 이론 위반(지배 전략, 경제 불균형 등)을 홀리스틱 검토 |
+| `/ccgs:consistency-check` | 엔티티 레지스트리 기준으로 GDD 간 동일 엔티티/아이템 스탯 불일치 스캔 |
+
+**③ Technical Setup — 기술 아키텍처**
+
+| 스킬 | 동작 |
+|---|---|
+| `/ccgs:create-architecture` | 모든 GDD·시스템 인덱스·기존 ADR·엔진 레퍼런스를 읽어 마스터 아키텍처 문서를 섹션별로 작성. 엔진 버전 지식 공백을 감지해 검증 |
+| `/ccgs:architecture-decision [title]` | 개별 기술 결정마다 반복 — 배경/대안/결과를 담은 ADR(Architecture Decision Record) 생성 |
+| `/ccgs:architecture-review` | GDD 기술 요구사항 → ADR 추적 매트릭스를 만들어 커버리지 공백, ADR 간 충돌, 엔진 호환성 일관성을 검증 → PASS/CONCERNS/FAIL |
+| `/ccgs:create-control-manifest` | 승인된(Accepted) ADR + 기술 선호도 + 엔진 레퍼런스에서 "반드시 해야 함/절대 하면 안 됨" 룰만 뽑아 프로그래머용 실행 규칙표로 압축 |
+| `/ccgs:test-setup` | 이 페이즈에서 1회. 엔진별 `tests/` 디렉터리 구조, 테스트 러너 설정, CI 워크플로(GitHub Actions) 스캐폴딩 |
+
+**④ Pre-Production — 에픽/스토리 및 검증**
+
+| 스킬 | 동작 |
+|---|---|
+| `/ccgs:create-epics` | 승인된 GDD + 아키텍처를 아키텍처 모듈 단위 에픽으로 변환. 범위, 근거 ADR, 엔진 리스크, 미추적 요구사항 명시 |
+| `/ccgs:create-stories [epic]` | 에픽 1개당 실행. 에픽·GDD·근거 ADR·컨트롤 매니페스트를 읽어 각 스토리에 GDD 요구사항 ID, ADR 가이드, 승인 기준, 스토리 타입, 테스트 증거 경로를 임베드한 스토리 파일 생성 |
+| `/ccgs:story-readiness` | 스토리에 GDD 요구사항/ADR 참조/엔진 노트/명확한 승인 기준이 있고 미결 디자인 질문이 없는지 검증 → READY/NEEDS WORK/BLOCKED |
+| `/ccgs:estimate` | 복잡도·의존성·과거 속도·리스크 요인으로 작업 공수 산정 |
+| `/ccgs:vertical-slice` | Production 진입 직전 게이트 — 전체 게임 루프가 실제로 재미있는지 검증하는 프로덕션 품질 엔드투엔드 빌드 제작 |
+
+**⑤ Production — 실제 구현**
+
+| 스킬 | 동작 |
+|---|---|
+| `/ccgs:sprint-plan` | 현재 마일스톤·완료 작업·가용 역량 기준으로 스프린트 계획 생성/갱신 |
+| `/ccgs:dev-story [story]` | 핵심 구현 스킬. 스토리+GDD 요구사항+임베드된 ADR 가이드+컨트롤 매니페스트를 로드 → 시스템/엔진에 맞는 프로그래머 에이전트로 라우팅 → 코드+테스트 구현, 승인 기준 각각 확인 |
+| `/ccgs:code-review` | 구현된 파일에 대해 코딩 표준·아키텍처 패턴 준수·SOLID·테스트 가능성·성능 검토 |
+| `/ccgs:story-done [story]` | 승인 기준을 구현과 대조 검증, GDD/ADR 이탈 여부 확인, 코드 리뷰 유도, 상태를 Complete로 갱신, 다음 실행 가능 스토리 안내 |
+| `/ccgs:sprint-status` | 스프린트 플랜+스토리 상태를 읽어 번다운 평가와 리스크가 담긴 진행 스냅샷 생성 |
+| `/ccgs:qa-plan`, `/ccgs:smoke-check` | 스토리를 테스트 유형별로 분류해 QA 계획 수립 → 스프린트 구현 완료 후 수동 QA 전 크리티컬 패스 스모크 테스트로 게이트 |
+| `/ccgs:bug-report`, `/ccgs:bug-triage` | 버그 발견 시 구조화된 리포트 작성 → 우선순위/심각도 재평가 및 스프린트 배정 |
+| `/ccgs:team-combat` 등 팀 스킬 | 전투·내러티브·레벨·UI·오디오처럼 여러 부서가 얽힌 기능은 해당 팀 스킬이 관련 에이전트들을 조율해 설계→구현→검증까지 한 번에 진행 |
+
+**⑥ Polish — 성능·QA·회귀**
+
+| 스킬 | 동작 |
+|---|---|
+| `/ccgs:perf-profile` | 병목 식별, 성능 예산 대비 측정, 우선순위가 매겨진 최적화 권고 생성 |
+| `/ccgs:team-polish` | performance-analyst+technical-artist+sound-designer+qa-tester를 조율해 릴리스 품질로 최적화·다듬기 |
+| `/ccgs:regression-suite` | 테스트 커버리지를 GDD 크리티컬 패스에 매핑, 회귀 테스트 없는 수정된 버그를 식별 |
+| `/ccgs:soak-test` | 장시간 플레이 세션에서 느린 메모리 누수·피로 효과 등을 관찰하는 프로토콜 생성 |
+| `/ccgs:test-flakiness` | CI 로그/테스트 이력을 집계해 비결정적(플레이키) 테스트를 찾아 격리/수정 권고 |
+| `/ccgs:test-evidence-review` | 테스트 파일·수동 증거 문서의 어서션 커버리지·엣지케이스 처리 품질 검토 → ADEQUATE/INCOMPLETE/MISSING |
+| `/ccgs:security-audit` | 공개/멀티플레이어 출시 전 필수 — 세이브 변조, 치트 벡터, 네트워크 취약점, 데이터 노출 감사 |
+
+**⑦ Release — 출시**
+
+| 스킬 | 동작 |
+|---|---|
+| `/ccgs:release-checklist` | 빌드 검증·인증 요건·스토어 메타데이터 등 출시 전 검증 체크리스트 생성 |
+| `/ccgs:launch-checklist` | 코드/콘텐츠/스토어/마케팅/커뮤니티/인프라/법무 전 부서의 go/no-go 사인오프까지 포함한 완전한 출시 준비 검증 |
+| `/ccgs:team-release` | release-manager+qa-lead+devops-engineer+producer를 조율해 릴리스 후보→배포까지 실행 |
+| `/ccgs:changelog`, `/ccgs:patch-notes` | git 커밋/스프린트 데이터로 내부용 체인지로그와 플레이어용 패치노트를 각각 생성 |
+| `/ccgs:hotfix`, `/ccgs:day-one-patch` | 정식 스프린트 절차를 건너뛰는 긴급 수정(전체 감사 추적 포함) / 출시 직후 발견된 이슈를 미니 스프린트로 다룸 |
+
+**페이즈 전환 게이트 (공통)**
+
+`/ccgs:gate-check [phase]` — 다음 페이즈로 넘어갈 준비가 됐는지 필요 산출물 기준으로 PASS/CONCERNS/FAIL과 구체적 블로커를 산출합니다. 위 명령어 시퀀스에서는 편의상 한 번만 표기했지만, 실제로는 **각 페이즈를 나갈 때마다** 실행하는 것이 의도된 사용법입니다.
+
 ## 4. 에이전트 · 스킬 · 훅
 
 ### 에이전트 (56개)
