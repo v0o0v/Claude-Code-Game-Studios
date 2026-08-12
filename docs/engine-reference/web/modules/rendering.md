@@ -1,26 +1,26 @@
-# Web — Rendering Module Reference
+# Web — 렌더링 모듈 레퍼런스
 
-**Last verified:** 2026-08-06
-**Knowledge Gap:** WebGPU is production-ready in both libraries; Three's post-processing class was renamed in r183
+**최종 검증일:** 2026-08-06
+**지식 격차:** WebGPU는 두 라이브러리 모두에서 프로덕션 사용이 가능하다. Three의 후처리 클래스는 r183에서 이름이 변경되었다
 
 ---
 
-## Overview
+## 개요
 
-| Layer | PixiJS v8 | Three.js r185 |
+| 레이어 | PixiJS v8 | Three.js r185 |
 |-------|-----------|---------------|
-| Backend | WebGPU → WebGL2 fallback (auto) | `WebGPURenderer` → `WebGLRenderer` |
-| Init | `await app.init()` | `await renderer.init()` |
-| Shading | Filters (WGSL + GLSL) | TSL / `NodeMaterial` |
-| Post-FX | `Filter` on containers | `RenderPipeline` |
+| 백엔드 | WebGPU → WebGL2 폴백 (자동) | `WebGPURenderer` → `WebGLRenderer` |
+| 초기화 | `await app.init()` | `await renderer.init()` |
+| 셰이딩 | 필터 (WGSL + GLSL) | TSL / `NodeMaterial` |
+| 후처리 | 컨테이너에 `Filter` 적용 | `RenderPipeline` |
 
-**Both initialize asynchronously.** Entry points must be `async`.
+**둘 다 비동기로 초기화된다.** 진입점은 반드시 `async`여야 한다.
 
 ---
 
-## PixiJS Rendering
+## PixiJS 렌더링
 
-### Setup
+### 설정
 ```ts
 import { Application } from 'pixi.js';
 
@@ -35,30 +35,30 @@ await app.init({
 document.body.appendChild(app.canvas);   // NOT app.view
 ```
 
-### Draw-call batching
-Draw calls are the primary 2D bottleneck. Pixi batches aggressively; these break a batch:
+### 드로우 콜 배칭
+드로우 콜은 2D의 주된 병목이다. Pixi는 공격적으로 배칭하지만, 다음 상황에서는 배치가 끊긴다.
 
-| Batch breaker | Fix |
+| 배치를 깨뜨리는 요인 | 해결책 |
 |---------------|-----|
-| Texture change between siblings | Pack into one atlas |
-| Filter on a mid-list child | Apply at container level, or reorder |
-| `blendMode` change between siblings | Group by blend mode |
-| `Graphics` interleaved with `Sprite` | Separate into layers |
+| 형제 노드 사이의 텍스처 변경 | 하나의 아틀라스로 묶는다 |
+| 목록 중간 자식 노드에 걸린 필터 | 컨테이너 레벨에서 적용하거나 순서를 바꾼다 |
+| 형제 노드 사이의 `blendMode` 변경 | 블렌드 모드별로 그룹화한다 |
+| `Graphics`와 `Sprite`가 번갈아 배치됨 | 레이어를 분리한다 |
 
-Measure the renderer's draw-call count before and after any change. Do not guess.
+변경 전후로 렌더러의 드로우 콜 수를 측정한다. 추측하지 않는다.
 
-### Culling
+### 컬링
 ```ts
 container.cullable = true;
 container.cullArea = new Rectangle(0, 0, worldWidth, worldHeight);
 ```
-Prefer this over hand-rolled visibility checks for large scrolling worlds.
+큰 스크롤 월드에서는 직접 만든 가시성 검사보다 이 방식을 우선한다.
 
 ---
 
-## Three.js Rendering
+## Three.js 렌더링
 
-### Setup
+### 설정
 ```ts
 import { WebGPURenderer } from 'three/webgpu';
 
@@ -68,10 +68,10 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // cap DPR
 renderer.setSize(window.innerWidth, window.innerHeight);
 ```
 
-Capping `devicePixelRatio` at 2 is standard — beyond it the fill-rate cost rarely
-justifies the visual gain, especially on mobile.
+`devicePixelRatio`를 2로 제한하는 것이 표준이다. 그 이상에서는 특히 모바일에서
+필레이트 비용이 시각적 이득을 정당화하는 경우가 드물다.
 
-### Post-processing — `RenderPipeline`
+### 후처리 — `RenderPipeline`
 ```ts
 // ❌ Pre-r183 — the name that dominates training data
 import { PostProcessing } from 'three/webgpu';
@@ -81,31 +81,31 @@ import { RenderPipeline } from 'three/webgpu';
 const pipeline = new RenderPipeline(renderer);
 ```
 
-### Instancing
+### 인스턴싱
 ```ts
 const mesh = new InstancedMesh(geometry, material, count);
-// update matrices in place, then:
+// 행렬을 제자리에서 갱신한 뒤:
 mesh.instanceMatrix.needsUpdate = true;
 ```
-- `InstancedMesh` — many copies of one geometry+material → one draw call
-- `BatchedMesh` — many *different* geometries sharing a material
+- `InstancedMesh` — 하나의 geometry+material을 여러 벌 복제 → 드로우 콜 1회
+- `BatchedMesh` — 하나의 material을 공유하는 *서로 다른* geometry 여럿
 
-Never recreate the mesh per frame.
+프레임마다 메시를 다시 생성하지 않는다.
 
-### Lighting (r185)
-`ClusteredLighting` (Forward+ clustered shading) landed on `WebGPURenderer` in
-r185, which raises the affordable light count considerably. Verify against
-current docs before assuming the old "keep lights under 4" heuristic applies.
+### 라이팅 (r185)
+`ClusteredLighting`(Forward+ 클러스터드 셰이딩)이 r185에서 `WebGPURenderer`에
+도입되어, 감당 가능한 라이트 수가 상당히 늘어났다. "라이트는 4개 미만으로 유지하라"는
+과거의 경험칙이 여전히 유효하다고 가정하기 전에 최신 문서를 확인한다.
 
-Shadows remain expensive regardless — cast from as few lights as possible, and
-tune `shadow.camera` bounds tightly to the play area.
+그림자는 여전히 비싸다 — 가능한 한 적은 수의 라이트에서만 그림자를 드리우고,
+`shadow.camera` 경계를 플레이 영역에 꼭 맞게 조인다.
 
 ---
 
-## Disposal — Applies to Both
+## 해제 — 양쪽 모두 해당
 
-Neither library frees GPU memory automatically. Removing an object from the
-scene graph does **not** dispose it.
+어느 라이브러리도 GPU 메모리를 자동으로 해제하지 않는다. 씬 그래프에서 객체를
+제거하는 것만으로는 해제되지 **않는다**.
 
 ```ts
 // Three.js
@@ -117,37 +117,37 @@ texture.dispose();
 container.destroy({ children: true, texture: false });
 ```
 
-Symptom of missing disposal: memory climbs across every level transition until
-the tab crashes. Test by cycling scenes repeatedly while watching memory.
+해제 누락의 증상: 레벨 전환마다 메모리가 계속 올라가다가 결국 탭이 죽는다.
+메모리를 관찰하면서 씬을 반복 전환해 테스트한다.
 
 ---
 
-## Resolution and DPR
+## 해상도와 DPR
 
 ```ts
 // Cap DPR — full DPR on a 4K display is 8M+ fragments per full-screen pass
 const dpr = Math.min(window.devicePixelRatio, 2);
 ```
 
-Rendering post-processing at reduced resolution and upsampling is standard for
-bloom, blur, and AO — those effects tolerate it invisibly.
+후처리를 낮은 해상도로 렌더링한 뒤 업샘플링하는 것은 bloom, blur, AO에서 표준적인
+방식이다. 이런 효과들은 그 차이를 눈에 띄지 않게 흡수한다.
 
 ---
 
-## Common Errors
+## 흔한 오류
 
-| Symptom | Cause |
+| 증상 | 원인 |
 |---------|-------|
-| `app.view is undefined` | v7 pattern — use `app.canvas` |
-| `PostProcessing is not exported` | Renamed to `RenderPipeline` in r183 |
-| Renderer methods fail right after construction | Missing `await init()` |
-| Memory climbs across scenes | Missing `dispose()` / `destroy()` |
-| Framerate tanks on 4K | Uncapped `devicePixelRatio` |
-| High draw calls in 2D | Unpacked textures breaking batches |
+| `app.view is undefined` | v7 패턴 — `app.canvas`를 사용한다 |
+| `PostProcessing is not exported` | r183에서 `RenderPipeline`으로 이름이 바뀌었다 |
+| 생성 직후 렌더러 메서드가 실패한다 | `await init()` 누락 |
+| 씬을 넘길 때마다 메모리가 증가한다 | `dispose()` / `destroy()` 누락 |
+| 4K에서 프레임레이트가 급락한다 | `devicePixelRatio`를 제한하지 않음 |
+| 2D에서 드로우 콜이 많다 | 텍스처를 묶지 않아 배치가 깨짐 |
 
 ---
 
-## Sources
+## 출처
 
 - https://pixijs.com/8.x/guides/migrations/v8
 - https://github.com/mrdoob/three.js/releases/tag/r185

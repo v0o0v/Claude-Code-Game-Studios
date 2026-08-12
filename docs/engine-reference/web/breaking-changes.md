@@ -1,23 +1,23 @@
-# Web Stack — Breaking Changes
+# Web 스택 — 파괴적 변경 사항
 
-**Last verified:** 2026-08-06
+**최종 검증일:** 2026-08-06
 
-Breaking API changes and behavioral differences between what the model likely
-learned and the currently pinned stack. Organized by library, then risk level.
+모델이 학습했을 법한 내용과 현재 고정된 스택 사이의 파괴적 API 변경과 동작 차이를
+정리한다. 라이브러리별로, 그 안에서는 위험 수준별로 정렬했다.
 
 ---
 
 # PixiJS
 
-## HIGH RISK — v7 Patterns That Are Hard Breaks in v8
+## HIGH RISK — v8에서 하드 브레이크인 v7 패턴
 
-The model's training data contains a large volume of PixiJS v7 code. These
-patterns **will not run** on v8.
+모델의 학습 데이터에는 PixiJS v7 코드가 대량으로 들어 있다. 아래 패턴들은 v8에서
+**동작하지 않는다**.
 
-### Application initialization is now asynchronous
+### Application 초기화가 이제 비동기다
 
-Detecting WebGPU vs WebGL2 requires an async handshake, so the renderer can no
-longer be built in a constructor.
+WebGPU와 WebGL2를 판별하려면 비동기 핸드셰이크가 필요하므로, 렌더러를 더 이상
+생성자에서 만들 수 없다.
 
 ```ts
 // ❌ OLD (v7): synchronous constructor
@@ -32,11 +32,11 @@ await app.init({ width: 800, height: 600 });
 document.body.appendChild(app.canvas);
 ```
 
-**Migration:** every entry point becomes async. `app.view` → `app.canvas`.
+**마이그레이션:** 모든 진입점이 async가 된다. `app.view` → `app.canvas`.
 
 ---
 
-### `BaseTexture` no longer exists
+### `BaseTexture`는 더 이상 존재하지 않는다
 
 ```ts
 // ❌ OLD (v7)
@@ -50,14 +50,14 @@ const texture = await Assets.load('sprite.png');
 const sprite = new Sprite(texture);
 ```
 
-**Why:** in v8 textures no longer know how to load anything. Loading is the
-`Assets` manager's job, and `Texture` wraps an already-resolved
-`TextureSource`. Constructing a `Texture` from a URL string silently produced
-an unloaded texture in v7; in v8 it is simply not supported.
+**이유:** v8에서 텍스처는 더 이상 무언가를 로드하는 방법을 알지 못한다. 로딩은
+`Assets` 매니저의 역할이고, `Texture`는 이미 해석이 끝난 `TextureSource`를
+감싼다. URL 문자열로 `Texture`를 생성하면 v7에서는 조용히 로드되지 않은 텍스처가
+만들어졌는데, v8에서는 아예 지원하지 않는다.
 
 ---
 
-### The global `PIXI` namespace is gone
+### 전역 `PIXI` 네임스페이스가 사라졌다
 
 ```ts
 // ❌ OLD (v7)
@@ -68,11 +68,11 @@ import { Sprite } from 'pixi.js';
 const sprite = new Sprite(texture);
 ```
 
-v8 also reverted to a **single package** — do not install `@pixi/*` sub-packages.
+v8은 **단일 패키지**로도 되돌아갔다 — `@pixi/*` 하위 패키지를 설치하지 말 것.
 
 ---
 
-### Only `Container` can have children
+### `Container`만 자식을 가질 수 있다
 
 ```ts
 // ❌ OLD (v7): Sprite could parent other display objects
@@ -85,27 +85,26 @@ group.addChild(sprite, childSprite);
 
 ---
 
-### `ParticleContainer` reworked
+### `ParticleContainer` 재구성
 
-`ParticleContainer` no longer accepts `Sprite` children. It takes particle
-records instead, which is what allows the far higher particle counts in v8.
-Any v7 particle code needs rewriting, not adjusting.
+`ParticleContainer`는 더 이상 `Sprite` 자식을 받지 않는다. 대신 파티클 레코드를
+받으며, 이것이 v8에서 훨씬 많은 파티클 수를 감당할 수 있게 해 주는 요인이다.
+v7 파티클 코드는 조정이 아니라 다시 작성해야 한다.
 
 ---
 
-## MEDIUM RISK — Behavioral Changes
+## MEDIUM RISK — 동작 변경
 
-### WebGPU is the default renderer
-v8 auto-detects and prefers WebGPU, falling back to WebGL2. Shader code written
-against a WebGL-only assumption may need a WGSL counterpart. Force a backend
-with `await app.init({ preference: 'webgl' })` only when a specific reason
-demands it.
+### WebGPU가 기본 렌더러다
+v8은 자동으로 감지해 WebGPU를 우선하고, WebGL2로 폴백한다. WebGL만 가정하고 작성된
+셰이더 코드는 WGSL 대응본이 필요할 수 있다. 명확한 이유가 있을 때만
+`await app.init({ preference: 'webgl' })`로 백엔드를 강제한다.
 
 ---
 
 # Three.js
 
-## HIGH RISK — Renamed and Removed
+## HIGH RISK — 이름이 바뀌거나 제거된 것
 
 ### `PostProcessing` → `RenderPipeline` (r183)
 
@@ -119,93 +118,90 @@ import { RenderPipeline } from 'three/webgpu';
 const pipeline = new RenderPipeline(renderer);
 ```
 
-**Why:** the class was renamed to reflect that it drives the whole render
-pipeline, not just a post-pass. This is the single most likely stale API an
-agent will suggest, because the old name dominates training data.
+**이유:** 이 클래스는 단순한 포스트 패스가 아니라 렌더 파이프라인 전체를 구동한다는
+점을 반영해 이름이 바뀌었다. 옛 이름이 학습 데이터를 지배하고 있어서, 에이전트가
+제안할 가능성이 가장 높은 낡은 API다.
 
 ---
 
-### Deprecated code is removed almost every release
+### 거의 매 릴리스마다 deprecated 코드가 제거된다
 
-r175 and r185 each ran a deprecation-removal pass, and this is routine practice
-rather than an exception. An API that merely warned in the version the model
-learned may be **absent** in r185.
+r175와 r185는 각각 deprecated 제거 작업을 수행했으며, 이는 예외가 아니라 통상적인
+관행이다. 모델이 학습한 버전에서는 경고만 뜨던 API가 r185에서는 **아예 없을** 수 있다.
 
-**Rule:** before suggesting any Three.js API you have not verified in this
-reference set, check `deprecated-apis.md`, then WebSearch the current docs.
+**규칙:** 이 레퍼런스 세트에서 확인하지 않은 Three.js API를 제안하기 전에
+`deprecated-apis.md`를 확인하고, 이어서 WebSearch로 현재 문서를 확인한다.
 
 ---
 
 ### `Matrix3.scale()` / `.rotate()` / `.translate()` deprecated (r185)
 
-Marked for removal. Compose the transform explicitly rather than mutating
-through these helpers.
+제거 예정으로 표시되었다. 이 헬퍼로 변형을 변이시키지 말고 트랜스폼을 명시적으로
+합성한다.
 
 ---
 
-### Loader changes (r185)
+### 로더 변경 (r185)
 
-| Change | Action |
+| 변경 | 조치 |
 |--------|--------|
-| `DRACOLoader.setDecoderConfig()` deprecated | Configure the decoder through the current documented path |
-| `LWOLoader` deprecated | Convert assets to glTF |
+| `DRACOLoader.setDecoderConfig()` deprecated | 현재 문서화된 경로로 디코더를 설정한다 |
+| `LWOLoader` deprecated | 에셋을 glTF로 변환한다 |
 
 ---
 
-## MEDIUM RISK — WebGPU Is Now the Recommended Path
+## MEDIUM RISK — 이제 WebGPU가 권장 경로다
 
-`WebGPURenderer` has been production-ready since **r171** (Sept 2025), and
-Safari 26 shipping WebGPU closed the last browser gap. Training-era advice to
-treat WebGPU as experimental is out of date.
+`WebGPURenderer`는 **r171**(2025년 9월)부터 프로덕션 준비를 마쳤고, Safari 26이
+WebGPU를 탑재하며 마지막 브라우저 공백이 메워졌다. WebGPU를 실험적인 것으로 다루라던
+학습 시절의 조언은 낡았다.
 
 ```ts
-// Current recommended setup
+// 현재 권장 설정
 import { WebGPURenderer } from 'three/webgpu';
 const renderer = new WebGPURenderer({ antialias: true });
 await renderer.init(); // async, like PixiJS v8
 ```
 
-`WebGLRenderer` remains supported. Choosing it is now a deliberate
-compatibility decision, not the default.
+`WebGLRenderer`는 계속 지원된다. 다만 이제 그것을 고르는 것은 기본값이 아니라
+의도적인 호환성 결정이다.
 
-**New in r185 for WebGPU:** `ClusteredLighting` (Forward+ clustered shading),
-render-to-texture-array, full `ExternalTexture` support, and WebXR on WebGPU.
-
----
-
-### TSL (Three Shading Language) is the node-material path
-
-TSL continues to expand each release. r185 added `textureGather`,
-`textureGatherCompare`, `storageTexture3D`, an `ambientOcclusion` property, and
-made vector `not()` component-wise. TSL — not raw GLSL strings — is the
-supported way to author materials for `WebGPURenderer`.
+**r185의 WebGPU 신규 사항:** `ClusteredLighting`(Forward+ 클러스터드 셰이딩),
+render-to-texture-array, 완전한 `ExternalTexture` 지원, WebGPU 상의 WebXR.
 
 ---
 
-# Toolchain
+### TSL (Three Shading Language)이 노드 머티리얼 경로다
 
-## TypeScript 7.0 (Aug 2026) — MEDIUM RISK
+TSL은 매 릴리스마다 계속 확장된다. r185는 `textureGather`,
+`textureGatherCompare`, `storageTexture3D`, `ambientOcclusion` 프로퍼티를 추가했고
+벡터 `not()`을 성분 단위로 동작하게 바꿨다. `WebGPURenderer`용 머티리얼을 작성하는
+지원 경로는 원시 GLSL 문자열이 아니라 TSL이다.
 
-TypeScript 7.0 replaced the compiler with a **native Go implementation**,
-delivering 8–12x faster builds. Type-checking semantics are intended to be
-compatible, but build tooling, flags, and editor integration changed. Verify
-`tsconfig.json` options against current docs rather than memory.
+---
 
-## Vite 8.0 (Apr 2026) — MEDIUM RISK
+# 툴체인
 
-Vite 8 ships **Rolldown** (Rust) as its single unified bundler, replacing the
-esbuild-plus-Rollup split, with 10–30x faster builds. Plugin compatibility is
-broadly maintained, but any custom Rollup plugin behavior and bundler-specific
-config should be re-verified.
+## TypeScript 7.0 (2026년 8월) — MEDIUM RISK
+
+TypeScript 7.0은 컴파일러를 **네이티브 Go 구현**으로 교체해 빌드를 8–12배 빠르게
+만들었다. 타입 검사 의미론은 호환을 목표로 하지만, 빌드 툴링·플래그·에디터 연동이
+바뀌었다. `tsconfig.json` 옵션은 기억이 아니라 현재 문서를 기준으로 확인한다.
+
+## Vite 8.0 (2026년 4월) — MEDIUM RISK
+
+Vite 8은 esbuild + Rollup 이원 구조를 대체해 **Rolldown**(Rust)을 단일 통합
+번들러로 탑재했고, 빌드가 10–30배 빨라졌다. 플러그인 호환성은 대체로 유지되지만,
+커스텀 Rollup 플러그인 동작과 번들러 종속 설정은 다시 검증해야 한다.
 
 ## Node.js 24 LTS
 
-Node 24 is the Active LTS line; Node 26 enters LTS in October 2026. Node is used
-only for tooling and CI here, not at runtime, so risk to game code is low.
+Node 24가 Active LTS 라인이며, Node 26은 2026년 10월에 LTS로 진입한다. 여기서
+Node는 런타임이 아니라 툴링과 CI에만 쓰이므로 게임 코드에 대한 위험은 낮다.
 
 ---
 
-## Sources
+## 출처
 
 - https://pixijs.com/8.x/guides/migrations/v8
 - https://github.com/pixijs/pixijs/releases

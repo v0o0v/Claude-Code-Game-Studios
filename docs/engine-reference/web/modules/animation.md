@@ -1,30 +1,30 @@
-# Web — Animation Module Reference
+# Web — Animation 모듈 레퍼런스
 
-**Last verified:** 2026-08-06
-**Knowledge Gap:** none major — the recurring hazard is animation driven by render delta instead of the fixed timestep
+**최종 검증일:** 2026-08-06
+**지식 격차:** 큰 격차는 없다 — 반복해서 발생하는 위험은 고정 타임스텝 대신 렌더 델타로 애니메이션을 구동하는 것이다
 
 ---
 
-## Overview
+## 개요
 
-| Animation type | PixiJS | Three.js |
+| 애니메이션 종류 | PixiJS | Three.js |
 |----------------|--------|----------|
-| Sprite / frame | `AnimatedSprite` | — |
-| Skeletal | Spine / DragonBones runtime | `AnimationMixer` (GLTF clips) |
-| Tweens | Manual or a tween library | Manual or a tween library |
-| Morph targets | — | Morph target influences |
-| Procedural | Custom, in the update loop | Custom, in the update loop |
+| 스프라이트 / 프레임 | `AnimatedSprite` | — |
+| 스켈레탈 | Spine / DragonBones 런타임 | `AnimationMixer` (GLTF clips) |
+| 트윈 | 직접 구현하거나 트윈 라이브러리 | 직접 구현하거나 트윈 라이브러리 |
+| 모프 타깃 | — | 모프 타깃 influence |
+| 프로시저럴 | 커스텀, update 루프 안에서 | 커스텀, update 루프 안에서 |
 
-Neither library ships a tween system. This is a small dependency decision or
-~100 lines of your own code.
+두 라이브러리 모두 트윈 시스템을 기본 제공하지 않는다. 작은 의존성을 하나 추가하거나
+직접 100줄 정도를 작성하는 선택의 문제다.
 
 ---
 
-## The Timestep Rule
+## 타임스텝 규칙
 
-Animation state advances in the **fixed update**, not the render pass. Driving it
-off render delta makes animation speed frame-rate dependent, so a 144Hz monitor
-plays different animations than a 60Hz one.
+애니메이션 상태는 렌더 패스가 아니라 **고정 업데이트(fixed update)** 에서 진행한다.
+렌더 델타로 구동하면 애니메이션 속도가 프레임레이트에 종속되어, 144Hz 모니터가
+60Hz와 다른 애니메이션을 재생하게 된다.
 
 ```ts
 // ✅ In fixed update
@@ -34,12 +34,12 @@ function update(dt: number): void {
 }
 ```
 
-The exception is purely cosmetic interpolation with no gameplay meaning, which
-can be done at render time using the interpolation alpha.
+예외는 게임플레이 의미가 전혀 없는 순수 시각적 보간이다. 이런 것은 보간 알파를 써서
+렌더 시점에 처리해도 된다.
 
 ---
 
-## PixiJS — Sprite Animation
+## PixiJS — 스프라이트 애니메이션
 
 ```ts
 import { AnimatedSprite, Assets } from 'pixi.js';
@@ -50,13 +50,13 @@ run.animationSpeed = 0.2;
 run.play();
 ```
 
-- Pack all animation frames into **one atlas** — frames spread across textures break batching
-- For gameplay-relevant timing (attack active frames, i-frames), drive the frame index from your own state machine rather than `animationSpeed`, so timing is deterministic and testable
-- `AnimatedSprite` uses the shared ticker; if the game is paused, stop it explicitly
+- 모든 애니메이션 프레임을 **하나의 atlas**에 팩킹한다 — 프레임이 여러 텍스처에 흩어지면 배칭이 깨진다
+- 게임플레이에 영향을 주는 타이밍(공격 유효 프레임, 무적 프레임)은 `animationSpeed`가 아니라 직접 만든 상태 머신에서 프레임 인덱스를 구동한다. 그래야 타이밍이 결정론적이고 테스트 가능하다
+- `AnimatedSprite`는 공유 ticker를 사용한다. 게임을 일시정지했다면 명시적으로 멈춰야 한다
 
 ---
 
-## Three.js — Skeletal Animation
+## Three.js — 스켈레탈 애니메이션
 
 ```ts
 import { AnimationMixer } from 'three';
@@ -67,28 +67,27 @@ const clip = gltf.animations.find((c) => c.name === 'Run');
 const action = mixer.clipAction(clip!);
 action.play();
 
-// in fixed update
+// 고정 업데이트에서
 mixer.update(dt);
 ```
 
-### Blending between clips
+### 클립 간 블렌딩
 ```ts
 current.crossFadeTo(next, 0.25, false);
 next.play();
 ```
-Crossfade duration is a feel parameter — expose it as a tuning knob rather than
-hardcoding it.
+크로스페이드 길이는 손맛(feel) 파라미터다 — 하드코딩하지 말고 튜닝 노브로 노출한다.
 
-### Cost
-- Skinned meshes are more expensive than static ones; skinning cost scales with bone count and vertex count
-- Share one `AnimationMixer` per character, not per clip
-- `mixer.stopAllAction()` and dispose on scene teardown, or animation state leaks
+### 비용
+- 스킨드 메시는 정적 메시보다 비싸다. 스키닝 비용은 본 개수와 버텍스 개수에 비례해 증가한다
+- 클립마다가 아니라 캐릭터마다 `AnimationMixer` 하나를 공유한다
+- 씬을 정리할 때 `mixer.stopAllAction()`을 호출하고 dispose한다. 그러지 않으면 애니메이션 상태가 누수된다
 
 ---
 
-## Tweens
+## 트윈
 
-A minimal tween is often better than a dependency:
+최소한의 트윈 구현이 의존성 추가보다 나은 경우가 많다.
 
 ```ts
 interface Tween {
@@ -106,17 +105,17 @@ function stepTween(tw: Tween, dt: number): boolean {
 }
 ```
 
-Common easings — `easeOutCubic` for UI entrances, `easeInOutQuad` for camera
-moves, `easeOutBack` for satisfying pops.
+자주 쓰는 이징 — UI 등장에는 `easeOutCubic`, 카메라 이동에는 `easeInOutQuad`,
+경쾌한 팝 효과에는 `easeOutBack`.
 
-**Allocation warning:** creating tween objects per frame is a GC source. Pool
-them, or use a fixed-size array of tween slots.
+**할당 주의:** 매 프레임 트윈 객체를 생성하면 GC의 원인이 된다. 풀링하거나 고정 크기
+트윈 슬롯 배열을 쓴다.
 
 ---
 
-## CSS Animation for DOM UI
+## DOM UI에는 CSS 애니메이션
 
-For DOM UI, prefer CSS over JS animation:
+DOM UI에서는 JS 애니메이션보다 CSS를 우선한다.
 
 ```css
 .panel { transition: transform 200ms ease, opacity 200ms ease; }
@@ -125,26 +124,26 @@ For DOM UI, prefer CSS over JS animation:
 }
 ```
 
-- Only animate `transform` and `opacity` — everything else forces reflow
-- Never `transition: all`
-- Always provide a `prefers-reduced-motion` variant
+- `transform`과 `opacity`만 애니메이션한다 — 나머지는 전부 리플로우를 강제한다
+- `transition: all`은 절대 쓰지 않는다
+- `prefers-reduced-motion` 변형을 항상 제공한다
 
 ---
 
-## Common Errors
+## 자주 발생하는 오류
 
-| Symptom | Cause |
+| 증상 | 원인 |
 |---------|-------|
-| Animations run faster on a high-refresh monitor | Driven by render delta, not fixed timestep |
-| Animation continues while paused | `AnimatedSprite`/mixer not stopped on pause |
-| Sprite animation breaks batching | Frames spread across multiple textures |
-| Memory grows across character spawns | `AnimationMixer` not disposed |
-| GC spikes during heavy tweening | Tween objects allocated per frame |
-| Motion sickness complaints | No `prefers-reduced-motion` handling |
+| 고주사율 모니터에서 애니메이션이 더 빠르게 재생됨 | 고정 타임스텝이 아니라 렌더 델타로 구동 |
+| 일시정지 중에도 애니메이션이 계속됨 | 일시정지 시 `AnimatedSprite`/mixer를 멈추지 않음 |
+| 스프라이트 애니메이션이 배칭을 깨뜨림 | 프레임이 여러 텍스처에 흩어져 있음 |
+| 캐릭터를 스폰할수록 메모리가 증가함 | `AnimationMixer`를 dispose하지 않음 |
+| 트윈이 많을 때 GC 스파이크 | 매 프레임 트윈 객체를 할당 |
+| 멀미를 호소하는 피드백 | `prefers-reduced-motion` 미처리 |
 
 ---
 
-## Sources
+## 출처
 
 - https://threejs.org/docs/#manual/en/introduction/Animation-system
 - https://pixijs.com/
