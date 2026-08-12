@@ -1,0 +1,15 @@
+{
+  "name": "ccgs-marketplace",
+  "owner": {
+    "name": "v0o0v"
+  },
+  "plugins": [
+    {
+      "name": "ccgs",
+      "displayName": "Claude Code Game Studios",
+      "description": "Turn a Claude Code session into a coordinated game development studio: directors, specialists, and a phase-gated pipeline from brainstorm to release.",
+      "version": "1.0.0",
+      "source": "./plugin"
+    }
+  ]
+}

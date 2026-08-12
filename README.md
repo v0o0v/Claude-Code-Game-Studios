@@ -133,17 +133,50 @@ Claude Code에서 `/`를 입력하면 73개의 스킬 전체에 접근할 수 �
 
 ### 사전 준비물
 
-- [Git](https://git-scm.com/)
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (`npm install -g @anthropic-ai/claude-code`)
-- **권장**: [jq](https://jqlang.github.io/jq/) (훅 검증용) 및 Python 3 (JSON 검증용)
+- 방법 B(템플릿 클론)를 쓸 경우에만 [Git](https://git-scm.com/) 필요, 그리고 선택적으로 [jq](https://jqlang.github.io/jq/)와 Python 3 (훅 검증용 — 없어도 모든 훅은 정상적으로 실패 처리되어 아무것도 깨지지 않습니다)
 
-선택적 도구가 없어도 모든 훅은 정상적으로 실패 처리됩니다 — 아무것도 깨지지 않으며, 단지 검증 기능만 빠집니다.
+### 방법 A — 플러그인으로 설치 (권장)
 
-### 설정
+리포를 클론하지 않고, 어느 게임 프로젝트 디렉터리에서든 바로 `/ccgs:` 스킬을 쓸 수 있는 가장 빠른 방법입니다.
+
+```bash
+claude plugin marketplace add v0o0v/Claude-Code-Game-Studios
+```
+
+```bash
+claude plugin install ccgs@ccgs-marketplace
+```
+
+게임 프로젝트 디렉터리에서 Claude Code를 열고:
+
+```bash
+claude
+```
+
+그리고 다음을 실행해 현재 프로젝트를 스캐폴드합니다 (디렉터리 구조, `.claude/docs/` 참조 문서, `.claude/rules/` 코딩 규칙, `CLAUDE.md` 협업 프로토콜 블록을 생성 — 실제로 무엇을 쓸지 먼저 설명하고, 승인 후에만 씁니다):
+
+```
+/ccgs:init
+```
+
+이후 모든 스킬은 `/ccgs:` 접두사로, 에이전트는 `ccgs:` 접두사로 호출됩니다 (예: `/ccgs:brainstorm`, `/ccgs:setup-engine godot 4.6`).
+
+- **업데이트**: `claude plugin marketplace update ccgs-marketplace` 후 `claude plugin install ccgs@ccgs-marketplace`로 재설치하면 최신 버전이 적용됩니다.
+- **로컬에서 포크를 직접 수정하며 테스트하려면** 원격 대신 로컬 경로로 마켓플레이스를 추가하세요:
+  ```bash
+  git clone https://github.com/v0o0v/Claude-Code-Game-Studios.git
+  claude plugin marketplace add ./Claude-Code-Game-Studios
+  claude plugin install ccgs@ccgs-marketplace
+  ```
+
+### 방법 B — 템플릿으로 클론 (레거시)
+
+플러그인 대신 리포 전체를 프로젝트로 복제하고 싶다면(예: `.claude/` 내용을 직접 커스터마이징하며 시작하고 싶은 경우):
 
 1. **클론하거나 템플릿으로 사용**:
    ```bash
-   git clone https://github.com/Donchitos/Claude-Code-Game-Studios.git my-game
+   git clone https://github.com/v0o0v/Claude-Code-Game-Studios.git my-game
    cd my-game
    ```
 

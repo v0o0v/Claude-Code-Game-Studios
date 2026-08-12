@@ -1,0 +1,13 @@
+{
+  "name": "ccgs",
+  "displayName": "Claude Code Game Studios",
+  "version": "1.0.0",
+  "description": "Turn a Claude Code session into a coordinated game development studio: 56 directors and specialists, 74 phase-gated skills from brainstorm to release, 11 auto-apply coding rules, and curated engine reference packs for Godot, Unity, Unreal, and Web.",
+  "author": {
+    "name": "v0o0v"
+  },
+  "homepage": "https://github.com/v0o0v/Claude-Code-Game-Studios",
+  "repository": "https://github.com/v0o0v/Claude-Code-Game-Studios",
+  "license": "MIT",
+  "keywords": ["game-development", "multi-agent", "game-design", "studio"]
+}
