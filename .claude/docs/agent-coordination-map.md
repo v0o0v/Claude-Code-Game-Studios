@@ -30,6 +30,11 @@
     live-ops-designer       -- Seasons, events, battle passes, retention, live economy
     community-manager       -- Patch notes, player feedback, crisis comms
 
+  Additional Specialists (report to a Tier 2 lead, not shown in the tree above):
+    game-pipeline-developer -- Reports to lead-programmer: standalone pipeline tools
+                                (asset processors, level generators, format converters)
+                                that run outside the game engine
+
   Engine Specialists (use the SET matching your engine):
     unreal-specialist  -- UE5 lead: Blueprint/C++, GAS overview, UE subsystems
       ue-gas-specialist         -- GAS: abilities, effects, attributes, tags, prediction
@@ -81,7 +86,7 @@ art-dir = art-director
 | technical-director | lead-programmer, devops-engineer, performance-analyst, technical-artist (technical decisions) |
 | producer | Any agent (task assignment within their domain only) |
 | game-designer | systems-designer, level-designer, economy-designer |
-| lead-programmer | gameplay-programmer, engine-programmer, ai-programmer, network-programmer, tools-programmer, ui-programmer |
+| lead-programmer | gameplay-programmer, engine-programmer, ai-programmer, network-programmer, tools-programmer, ui-programmer, game-pipeline-developer |
 | art-director | technical-artist, ux-designer |
 | audio-director | sound-designer |
 | narrative-director | writer, world-builder |

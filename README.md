@@ -3,14 +3,14 @@
   <p align="center">
     하나의 Claude Code 세션을 완전한 게임 개발 스튜디오로 바꾸는 플러그인.
     <br />
-    56개 에이전트. 74개 스킬. 클론 없이 설치 한 번으로.
+    57개 에이전트. 75개 스킬. 클론 없이 설치 한 번으로.
   </p>
 </p>
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
-  <a href="plugin/agents"><img src="https://img.shields.io/badge/agents-56-blueviolet" alt="56 Agents"></a>
-  <a href="plugin/skills"><img src="https://img.shields.io/badge/skills-74-green" alt="74 Skills"></a>
+  <a href="plugin/agents"><img src="https://img.shields.io/badge/agents-57-blueviolet" alt="57 Agents"></a>
+  <a href="plugin/skills"><img src="https://img.shields.io/badge/skills-75-green" alt="75 Skills"></a>
   <a href="plugin/rules"><img src="https://img.shields.io/badge/rules-11-red" alt="11 Rules"></a>
   <a href="plugin/engine-reference"><img src="https://img.shields.io/badge/engines-4-teal" alt="4 Engine Packs"></a>
   <a href="https://docs.anthropic.com/en/docs/claude-code"><img src="https://img.shields.io/badge/built%20for-Claude%20Code-f5f5f5?logo=anthropic" alt="Built for Claude Code"></a>
@@ -32,7 +32,7 @@
 
 AI와 함께 혼자 게임을 만드는 것은 강력하지만, 단일 채팅 세션에는 구조가 없습니다. 매직 넘버를 하드코딩하거나, 디자인 문서를 건너뛰거나, 스파게티 코드를 작성하는 것을 막아줄 사람이 없습니다. QA 패스도, 디자인 리뷰도, "이게 정말 게임의 비전에 맞는가?"라고 물어봐줄 사람도 없습니다.
 
-**Claude Code Game Studios(`ccgs`)**는 Claude Code 세션에 실제 스튜디오의 구조를 부여함으로써 이 문제를 해결하는 **플러그인**입니다. 하나의 범용 어시스턴트 대신, 스튜디오 계층구조로 조직된 56개의 전문 에이전트를 얻게 됩니다:
+**Claude Code Game Studios(`ccgs`)**는 Claude Code 세션에 실제 스튜디오의 구조를 부여함으로써 이 문제를 해결하는 **플러그인**입니다. 하나의 범용 어시스턴트 대신, 스튜디오 계층구조로 조직된 57개의 전문 에이전트를 얻게 됩니다:
 
 ```
 Tier 1 — Directors      비전을 지키고 최종 승인을 내리는 디렉터 3명
@@ -216,7 +216,7 @@ Release ◀── Polish ◀── Production ◀──────────�
 
 ## 4. 에이전트 · 스킬 · 훅
 
-### 에이전트 (56개)
+### 에이전트 (57개)
 
 ```
 Tier 1 — Directors (Opus)
@@ -235,7 +235,7 @@ Tier 3 — Specialists (Sonnet/Haiku)
   ccgs:world-builder        ccgs:ux-designer             ccgs:prototyper
   ccgs:performance-analyst  ccgs:devops-engineer         ccgs:analytics-engineer
   ccgs:security-engineer    ccgs:qa-tester               ccgs:accessibility-specialist
-  ccgs:live-ops-designer    ccgs:community-manager
+  ccgs:live-ops-designer    ccgs:community-manager    ccgs:game-pipeline-developer
 ```
 
 **엔진 전문가** — `/ccgs:setup-engine`으로 고른 엔진에 맞는 세트가 자동으로 라우팅됩니다:
@@ -249,12 +249,12 @@ Tier 3 — Specialists (Sonnet/Haiku)
 
 에이전트는 구조화된 위임 모델을 따릅니다: 디렉터는 리드에게, 리드는 전문가에게 위임하고(**수직 위임**), 같은 티어끼리는 협의는 하되 구속력 있는 결정은 내리지 않으며(**수평 협의**), 의견 충돌은 공통 상위 에이전트로 올라갑니다(디자인은 `ccgs:creative-director`, 기술은 `ccgs:technical-director`).
 
-### 스킬 (74개)
+### 스킬 (75개)
 
-`/`를 입력하면 74개 스킬 전체에 접근할 수 있습니다:
+`/`를 입력하면 75개 스킬 전체에 접근할 수 있습니다:
 
 **온보딩 및 내비게이션**
-`/ccgs:init` `/ccgs:start` `/ccgs:help` `/ccgs:project-stage-detect` `/ccgs:setup-engine` `/ccgs:adopt`
+`/ccgs:init` `/ccgs:start` `/ccgs:help` `/ccgs:project-stage-detect` `/ccgs:setup-engine` `/ccgs:adopt` `/ccgs:setup-tool`
 
 **게임 디자인**
 `/ccgs:brainstorm` `/ccgs:map-systems` `/ccgs:design-system` `/ccgs:quick-design` `/ccgs:review-all-gdds` `/ccgs:propagate-design-change`
