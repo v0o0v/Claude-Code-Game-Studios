@@ -35,6 +35,7 @@ domain lead) should delegate to specialists.
 | `ai-programmer` | AI systems | Sonnet | Behavior trees, pathfinding, NPC logic, state machines |
 | `network-programmer` | Networking | Sonnet | Netcode, replication, lag compensation, matchmaking |
 | `tools-programmer` | Dev tools | Sonnet | Editor extensions, pipeline tools, debug utilities |
+| `game-pipeline-developer` | Standalone pipeline tools | Sonnet | Asset processors, level generators, data exporters, format converters that run outside the engine |
 | `ui-programmer` | UI implementation | Sonnet | UI framework, screens, widgets, data binding |
 | `technical-artist` | Tech art | Sonnet | Shaders, VFX, optimization, art pipeline tools |
 | `sound-designer` | Sound design | Sonnet | SFX design docs, audio event lists, mixing notes |
